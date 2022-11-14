@@ -107,18 +107,9 @@ public class OpenSubRule extends SimpleRule {
 			return true; //if no applicability is set, allow all
 		}
 		
-		RuleType rule = subCheck.getApplicability().getRule();
+		RulesType rules = subCheck.getApplicability().getRules();
 		
-		Object operand1_obj = ruleIDtoValueMap.get(rule.getOperand1());
-		
-		if (operand1_obj instanceof INTEGER) {
-			Integer operand2 = Integer.parseInt(rule.getOperand2());
-			INTEGER operand1 = (INTEGER) operand1_obj;
-			
-			return operand1.getValue()==operand2;
-		}
-		
-		return false;
+		return interpretRules(rules);
 	}
 
 	private boolean interpret(Object rulesOrFilterOrRule) {

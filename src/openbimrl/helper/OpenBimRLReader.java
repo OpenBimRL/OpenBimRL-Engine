@@ -11,7 +11,6 @@ import javax.xml.stream.XMLStreamException;
 import model.RuleBase;
 import openbimrl.OpenRule;
 import de.rub.bi.inf.openbimrl.BIMRuleType;
-import de.rub.bi.inf.openbimrl.io.OpenBimRLImporter;
 
 /**
  * A helper class to store and convert OpenBimRL files in a {@link RuleBase} context and hold them for execution.
@@ -23,7 +22,8 @@ public class OpenBimRLReader {
 	
 	public OpenBimRLReader(List<File> files) {
 		for(File f : files) {
-			OpenBimRLImporter ruleImporter = new OpenBimRLImporter();
+			de.rub.bi.inf.openbimrl.io.OpenBimRLReader ruleImporter =
+					new de.rub.bi.inf.openbimrl.io.OpenBimRLReader();
 			try {
 
 				Object obj = ruleImporter.readFromFile(f.getAbsolutePath());
