@@ -31,6 +31,9 @@ public class OpenBimRLReader {
 				JAXBElement<?> element = (JAXBElement<?>) obj;
 				BIMRuleType bimRuleType = (BIMRuleType) element.getValue();
 				
+				System.out.println(bimRuleType.getModelCheck());
+				System.out.println(bimRuleType.getPrecalculations());
+				
 				OpenRule openRule = new OpenRule(bimRuleType.getModelCheck(), bimRuleType.getPrecalculations());
 				
 				RuleBase.getInstance().addRule(openRule);

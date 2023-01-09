@@ -10,14 +10,14 @@ import openbimrl.NodeProxy;
 import openbimrl.functions.AbstractFunction;
 
 /**
- * Performes an addition operator given two number values.
+ * Performes an subtraction operator given two number values.
  * 
  * @author Marcel Stepien
  *
  */
-public class Addition extends AbstractFunction {
+public class Subtraction extends AbstractFunction {
 
-	public Addition(NodeProxy nodeProxy) {
+	public Subtraction(NodeProxy nodeProxy) {
 		super(nodeProxy);
 	}
 
@@ -33,26 +33,26 @@ public class Addition extends AbstractFunction {
 			
 			for(int i = 0; i < ((Collection)object0).size(); i++) {
 				results.add(
-						Double.valueOf(((List)object0).get(i).toString()) + Double.valueOf(((List)object1).get(i).toString())
+						Double.valueOf(((List)object0).get(i).toString()) - Double.valueOf(((List)object1).get(i).toString())
 				);
 			}
 			
 		}else if(object0 instanceof List && !(object1 instanceof List)) {
 			for(int i = 0; i < ((Collection)object0).size(); i++) {
 				results.add(
-						Double.valueOf(((List)object0).get(i).toString()) + Double.valueOf(object1.toString())
+						Double.valueOf(((List)object0).get(i).toString()) - Double.valueOf(object1.toString())
 				);
 			}
 		}else if(object1 instanceof List && !(object0 instanceof List)) {
 			for(int i = 0; i < ((Collection)object1).size(); i++) {
 				results.add(
-						Double.valueOf(object0.toString()) + Double.valueOf(((List)object1).get(i).toString())
+						Double.valueOf(object0.toString()) - Double.valueOf(((List)object1).get(i).toString())
 				);
 			}
 		}else {
 			Double operand0 = Double.valueOf(object0.toString());
 			Double operand1 = Double.valueOf(object1.toString());
-			results.add(operand0 + operand1);
+			results.add(operand0 - operand1);
 		}
 		
 		if(results.size() == 1) {			

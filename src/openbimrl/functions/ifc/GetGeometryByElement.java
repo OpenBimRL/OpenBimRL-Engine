@@ -58,12 +58,7 @@ public class GetGeometryByElement extends AbstractFunction {
 			
 		}
 		
-		if(resultValues.size()==1) {
-			setResult(0, resultValues.get(0));
-		} else {
-			setResult(0, resultValues);
-		}
-
+		setResult(0, resultValues);
 	}
 
 }

@@ -3,7 +3,9 @@ package openbimrl.functions;
 import openbimrl.NodeProxy;
 import openbimrl.functions.filter.FilterByMasks;
 import openbimrl.functions.filter.FilterInvert;
+import openbimrl.functions.geometry.CalculateClosestDistanceToBounds;
 import openbimrl.functions.geometry.CalculateDistancesByOrderedGraphEdges;
+import openbimrl.functions.geometry.CheckIncludedInBounds;
 import openbimrl.functions.geometry.CheckIntersection;
 import openbimrl.functions.geometry.CheckIntersectionByBounds;
 import openbimrl.functions.geometry.CheckLinecasts;
@@ -52,12 +54,15 @@ import openbimrl.functions.ifc.GetRepresentationItems;
 import openbimrl.functions.ifc.GetStorey;
 import openbimrl.functions.input.TextInput;
 import openbimrl.functions.list.AllElementIncludedInList;
+import openbimrl.functions.list.AsList;
 import openbimrl.functions.list.Count;
 import openbimrl.functions.list.CreateMapByPairs;
 import openbimrl.functions.list.ElementIncludedInList;
 import openbimrl.functions.list.FlattenCollection;
 import openbimrl.functions.list.GetElementAt;
+import openbimrl.functions.list.GetItemIndexInList;
 import openbimrl.functions.list.GetMapValueAtKey;
+import openbimrl.functions.list.GetMapValueByKeyList;
 import openbimrl.functions.list.GroupBy;
 import openbimrl.functions.list.JoinCollections;
 import openbimrl.functions.list.JoinItemByItem;
@@ -68,9 +73,11 @@ import openbimrl.functions.list.MapValueCount;
 import openbimrl.functions.list.MapValues;
 import openbimrl.functions.list.OrderBy;
 import openbimrl.functions.list.RemoveFromList;
+import openbimrl.functions.list.RepeatAsList;
 import openbimrl.functions.list.Sum;
 import openbimrl.functions.math.Addition;
-import openbimrl.functions.math.Substraction;
+import openbimrl.functions.math.Maximum;
+import openbimrl.functions.math.Subtraction;
 
 /**
  * This class manages a collection of available functions for OpenBimRL execution,
@@ -116,11 +123,15 @@ public class FunctionFactory {
 			case "ifc.getOpeningElements": function = new GetOpeningElements(nodeProxy); break;
 			
 			case "math.addition" : function = new Addition(nodeProxy); break;
-			case "math.substraction" : function = new Substraction(nodeProxy); break;
-
+			case "math.subtraction" : function = new Subtraction(nodeProxy); break;
+			case "math.maximum" : function = new Maximum(nodeProxy); break;
+			
 			case "geometry.loadRepresentationItemGeometry" : function = new LoadRepresentationItemGeometry(nodeProxy); break;
 			case "geometry.convertStrToVectorList" : function = new ConvertStrToVectorList(nodeProxy); break;
+			case "geometry.calculateClosestDistanceToBounds" : function = new CalculateClosestDistanceToBounds(nodeProxy); break;
+			
 			case "geometry.checkIntersectionByBounds" : function = new CheckIntersectionByBounds(nodeProxy); break;
+			case "geometry.checkIncludedInBounds" : function = new CheckIncludedInBounds(nodeProxy); break;
 			case "geometry.colorizeGeometryAppearance" : function = new ColorizeGeometryAppearance(nodeProxy); break;
 			case "geometry.checkNeighborhoodByDistance" : function = new CheckNeighborhoodByDistance(nodeProxy); break;
 			case "geometry.createCollisionSphere" : function = new CreateCollisionSphere(nodeProxy); break;
@@ -145,8 +156,11 @@ public class FunctionFactory {
 			case "filter.filterInvert" : function = new FilterInvert(nodeProxy); break;
 			
 			case "list.getElementAt" : function = new GetElementAt(nodeProxy); break;
+			case "list.getItemIndexInList" : function = new GetItemIndexInList(nodeProxy); break;
+			
 			case "list.removeFromList" : function = new RemoveFromList(nodeProxy); break;
 			case "list.joinCollections" : function = new JoinCollections(nodeProxy); break;
+			case "list.asList" : function = new AsList(nodeProxy); break;
 			case "list.orderBy" : function = new OrderBy(nodeProxy); break;
 			case "list.sum" : function = new Sum(nodeProxy); break;
 			case "list.groupBy" : function = new GroupBy(nodeProxy); break;
@@ -155,6 +169,8 @@ public class FunctionFactory {
 			case "list.elementIncludedInList" : function = new ElementIncludedInList(nodeProxy); break;
 			case "list.allElementIncludedInList" : function = new AllElementIncludedInList(nodeProxy); break;
 			case "list.joinItemByItem" : function = new JoinItemByItem(nodeProxy); break;
+			case "list.repeatAsList" : function = new RepeatAsList(nodeProxy); break;
+			
 			
 			case "list.createMapByPairs" : function = new CreateMapByPairs(nodeProxy); break;
 			case "list.mapInvert" : function = new MapInvert(nodeProxy); break;
@@ -163,6 +179,7 @@ public class FunctionFactory {
 			case "list.mapKeySet" : function = new MapKeySet(nodeProxy); break;
 			case "list.mapValues" : function = new MapValues(nodeProxy); break;
 			case "list.getMapValueAtKey" : function = new GetMapValueAtKey(nodeProxy); break;
+			case "list.getMapValueByKeyList" : function = new GetMapValueByKeyList(nodeProxy); break;
 			
 			case "input.textInput" : function = new TextInput(nodeProxy); break;
 			default: break;

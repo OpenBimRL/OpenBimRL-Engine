@@ -180,29 +180,38 @@ public class OpenSubRule extends SimpleRule {
 	private boolean handleQuantifierDefault(RuleType rule) {
 		
 		Object ruleOperand1 = ruleIDtoValueMap.get(rule.getOperand1());
+		if(ruleOperand1 == null) {
+			ruleOperand1 = rule.getOperand1();
+		}
+		
+		Object ruleOperand2 = ruleIDtoValueMap.get(rule.getOperand2());
+		if(ruleOperand2 == null) {
+			ruleOperand2 = rule.getOperand2();
+		}
+		
 		
 		if (ruleOperand1 instanceof BOOLEAN) {
-			Boolean operand1 = ((BOOLEAN) ruleOperand1).getValue();
-			Boolean operand2 = Boolean.parseBoolean(rule.getOperand2());
+			Boolean operand1 = Boolean.parseBoolean(ruleOperand1.toString());
+			Boolean operand2 = Boolean.parseBoolean(ruleOperand2.toString());
 			return compare(operand1, operand2, rule.getOperator());
 		}
 		else if (ruleOperand1 instanceof Boolean) {
-			Boolean operand2 = Boolean.parseBoolean(rule.getOperand2());
+			Boolean operand2 = Boolean.parseBoolean(ruleOperand2.toString());
 			return compare(ruleOperand1, operand2, rule.getOperator());
 		}
 		else if (ruleOperand1 instanceof Double) {
-			Double operand2 = Double.parseDouble(rule.getOperand2());
+			Double operand2 = Double.parseDouble(ruleOperand2.toString());
 			return compare(ruleOperand1, operand2, rule.getOperator());
 		}
 		else if (ruleOperand1 instanceof Integer) {
-			Integer operand2 = Integer.parseInt(rule.getOperand2());
+			Integer operand2 = Integer.parseInt(ruleOperand2.toString());
 			return compare(ruleOperand1, operand2, rule.getOperator());
 		}
 		else {
 			//Default Case
 			return compare(
 					ruleOperand1.toString(), 
-					rule.getOperand2().toString(), 
+					ruleOperand2.toString(), 
 					rule.getOperator()
 			);
 		}
@@ -215,19 +224,20 @@ public class OpenSubRule extends SimpleRule {
 
 		//Handle as Map
 		if(ruleIDtoValueMap.get(rule.getOperand1()) instanceof Map<?, ?>) {
-			Map<?, ?> operands = (Map<?, ?>)ruleIDtoValueMap.get(rule.getOperand1());
+			Map<?, ?> operands1 = (Map<?, ?>)ruleIDtoValueMap.get(rule.getOperand1());
 			
-			if(operands != null && mask != null) {
-				if(operands.keySet().size() != mask.size()) {
+			if(operands1 != null && mask != null) {
+				if(operands1.keySet().size() != mask.size()) {
 					this.checkingProtocol.add("List size of the filter do not match on for: " + rule.getOperand1());
 					return false;
 				}
 			}
 			
 			int index = -1;
-			for(Object n0 : operands.keySet()) {
-				
-				Object o = operands.get(n0);
+			//for(Object n0 : operands1.keySet()) {
+			for(Object n0 : operands1.keySet()) {
+
+				Object o1 = operands1.get(n0);
 				
 				index++;
 				if(mask != null) {
@@ -241,10 +251,20 @@ public class OpenSubRule extends SimpleRule {
 				}
 				
 				boolean comp = false;
-				if(o instanceof ArrayList<?>) {
-					for(Object n1 : ((ArrayList<?>)o)) {
+				if(o1 instanceof ArrayList<?>) {
+					//for(Object n1 : ((ArrayList<?>)o)) {
+					for(int n1Index = 0; n1Index < ((ArrayList<?>)o1).size(); n1Index++) {
+						Object n1 = ((ArrayList<?>)o1).get(n1Index);
 						
-						comp = comp || compare(n1, rule.getOperand2(), rule.getOperator());
+						Object operator2Value = rule.getOperand2();
+						if(ruleIDtoValueMap.get(operator2Value) != null) {
+							Map<?, ?> operands2 = (Map<?, ?>)ruleIDtoValueMap.get(operator2Value);
+							Object o2 = operands2.get(n0);
+							Object n2 = ((ArrayList<?>)o2).get(n1Index);
+							operator2Value = n2;
+						}
+						
+						comp = comp || compare(n1, operator2Value, rule.getOperator());
 						
 						if(comp && (n1 instanceof IfcProduct)) {
 							successes.getChildren().add(new ResultObject((IfcProduct)n0));
@@ -277,9 +297,10 @@ public class OpenSubRule extends SimpleRule {
 				}
 			}
 
-			int index = -1;
-			for(Object nO : operands) {
-				index++;
+			Object[] operandArr = operands.toArray();
+			for(int index = 0; index < operandArr.length; index++) {
+				
+				Object nO = operandArr[index];
 				
 				if(mask != null) {
 					Object maskObj = mask.get(index);
@@ -293,7 +314,16 @@ public class OpenSubRule extends SimpleRule {
 				}
 				
 				if(nO != null) {
-					boolean comp = compare(nO, rule.getOperand2(), rule.getOperator());
+
+					Object operator2Value = rule.getOperand2();
+					if(ruleIDtoValueMap.get(operator2Value) != null) {
+						AbstractCollection<?> operands2 = (AbstractCollection<?>)ruleIDtoValueMap.get(operator2Value);
+						Object[] operandArr2 = operands2.toArray();
+						Object n2 = operandArr2[index];
+						operator2Value = n2;
+					}
+					
+					boolean comp = compare(nO, operator2Value, rule.getOperator());
 					
 					if(comp && (nO instanceof IfcProduct)) {
 						successes.getChildren().add(new ResultObject((IfcProduct)nO));
@@ -328,19 +358,18 @@ public class OpenSubRule extends SimpleRule {
 
 		//Handle as Map
 		if(ruleIDtoValueMap.get(rule.getOperand1()) instanceof Map<?, ?>) {
-			Map<?, ?> operands = (Map<?, ?>)ruleIDtoValueMap.get(rule.getOperand1());
+			Map<?, ?> operands1 = (Map<?, ?>)ruleIDtoValueMap.get(rule.getOperand1());
 			
-			if(operands != null && mask != null) {
-				if(operands.keySet().size() != mask.size()) {
+			if(operands1 != null && mask != null) {
+				if(operands1.keySet().size() != mask.size()) {
 					this.checkingProtocol.add("List size of the filter do not match on for: " + rule.getOperand1());
 					return false;
 				}
 			}
 			
 			int index = -1;
-			for(Object n0 : operands.keySet()) {
-				
-				Object o = operands.get(n0);
+			for(Object n0 : operands1.keySet()) {
+				Object o1 = operands1.get(n0);
 				
 				index++;
 				if(mask != null) {
@@ -354,10 +383,19 @@ public class OpenSubRule extends SimpleRule {
 				}
 				
 				boolean comp = false;
-				if(o instanceof ArrayList<?>) {
-					for(Object n1 : ((ArrayList<?>)o)) {
+				if(o1 instanceof ArrayList<?>) {
+					for(int n1Index = 0; n1Index < ((ArrayList<?>)o1).size(); n1Index++) {
+						Object n1 = ((ArrayList<?>)o1).get(n1Index);
 						
-						comp = comp || compare(n1, rule.getOperand2(), rule.getOperator());
+						Object operator2Value = rule.getOperand2();
+						if(ruleIDtoValueMap.get(operator2Value) != null) {
+							Map<?, ?> operands2 = (Map<?, ?>)ruleIDtoValueMap.get(operator2Value);
+							Object o2 = operands2.get(n0);
+							Object n2 = ((ArrayList<?>)o2).get(n1Index);
+							operator2Value = n2;
+						}
+						
+						comp = comp || compare(n1, operator2Value, rule.getOperator());
 						
 						//System.out.println(nO + " | " + rule.getOperand2() + " | " + rule.getOperator());
 						
@@ -407,7 +445,15 @@ public class OpenSubRule extends SimpleRule {
 					
 				}
 				
-				boolean comp = compare(nO, rule.getOperand2(), rule.getOperator());
+				Object operator2Value = rule.getOperand2();
+				if(ruleIDtoValueMap.get(operator2Value) != null) {
+					AbstractCollection<?> operands2 = (AbstractCollection<?>)ruleIDtoValueMap.get(operator2Value);
+					Object[] operandArr2 = operands2.toArray();
+					Object n2 = operandArr2[index];
+					operator2Value = n2;
+				}
+				
+				boolean comp = compare(nO, operator2Value, rule.getOperator());
 				
 				if(comp && (nO instanceof IfcProduct)) {
 					successes.getChildren().add(new ResultObject((IfcProduct)nO));

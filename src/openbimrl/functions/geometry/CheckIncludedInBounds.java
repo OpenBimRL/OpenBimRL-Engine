@@ -4,29 +4,32 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.apstex.gm3d.util.UtilGeometry2D;
+import org.apache.commons.geometry.euclidean.threed.Bounds3D;
+
 import com.apstex.gui.core.model.applicationmodel.ApplicationModelNode;
 import com.apstex.j3d.utils.geometry.GeometryInfo;
-import com.apstex.javax.media.j3d.BoundingBox;
+import com.apstex.j3d.utils.picking.PickTool;
 import com.apstex.javax.media.j3d.Bounds;
 import com.apstex.javax.media.j3d.GeometryArray;
+import com.apstex.javax.media.j3d.IndexedTriangleArray;
 import com.apstex.javax.media.j3d.Shape3D;
 import com.apstex.javax.media.j3d.Transform3D;
 import com.apstex.javax.vecmath.Point3d;
+import com.apstex.javax.vecmath.Point3f;
 import com.apstex.javax.vecmath.Vector3d;
 
 import openbimrl.NodeProxy;
 import openbimrl.functions.AbstractFunction;
 
 /**
- * Checks if the bounds of geometic objects are intersecting.
+ * Checks if points of a geometry are included in the the bounds of a geometic objects.
  * 
  * @author Marcel Stepien
  *
  */
-public class CheckIntersectionByBounds extends AbstractFunction {
+public class CheckIncludedInBounds extends AbstractFunction {
 
-	public CheckIntersectionByBounds(NodeProxy nodeProxy) {
+	public CheckIncludedInBounds(NodeProxy nodeProxy) {
 		super(nodeProxy);
 	}
 
@@ -62,7 +65,7 @@ public class CheckIntersectionByBounds extends AbstractFunction {
 			if(og1 instanceof ArrayList<?>) {
 				for(Object o1 : (ArrayList<?>)og1) {
 					if(o1 instanceof GeometryArray) {
-						
+												
 						GeometryInfo geoA = new GeometryInfo((GeometryArray)o1);
 						geoA.recomputeIndices();
 						
@@ -93,44 +96,24 @@ public class CheckIntersectionByBounds extends AbstractFunction {
 						for(Object og2 : geometryGroupB) {
 							if(og2 instanceof ArrayList<?>) {
 								
-								boolean flag = false;
+								boolean inclusionCheck = true;
 								
 								for(Object o2 : (ArrayList<?>)og2) {									
 									if(o2 instanceof GeometryArray) {
 										GeometryInfo geoB = new GeometryInfo((GeometryArray)o2);
 										geoB.recomputeIndices();
 										
-										Bounds geoBoundsB = new Shape3D(geoB.getIndexedGeometryArray()).getBounds();
-										
-										Point3d center = new Point3d();
-										geoBoundsB.getCenter(center);
-										
-										double[] translateArr = { 0.0, 0.0, 0.0 };
-										center.get(translateArr);
-										
-										Transform3D translate = new Transform3D();
-										translate.setTranslation(new Vector3d(translateArr));
-										translate.invert();
-										
-										Transform3D scale = new Transform3D();
-										scale.setScale(1.0);
-										
-										Transform3D translateBack = new Transform3D();
-										translateBack.setTranslation(new Vector3d(translateArr));
-										
-										geoBoundsB.transform(translate);
-										geoBoundsB.transform(scale);
-										geoBoundsB.transform(translateBack);
-										
-										if(geoBoundsA.intersect(geoBoundsB)) {											
-											flag = true;
+										for(Point3f coodinate : geoB.getCoordinates()) {
+											if(!geoBoundsA.intersect(new Point3d(coodinate))) {											
+												inclusionCheck = false;
+											}
 										}
 										
 									}
 									
 								}
 								
-								mask.add(flag);
+								mask.add(inclusionCheck);
 								
 							}
 						}
