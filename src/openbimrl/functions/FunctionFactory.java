@@ -3,6 +3,7 @@ package openbimrl.functions;
 import openbimrl.NodeProxy;
 import openbimrl.functions.filter.FilterByMasks;
 import openbimrl.functions.filter.FilterInvert;
+import openbimrl.functions.geometry.CalculateAStarSearch;
 import openbimrl.functions.geometry.CalculateClosestDistanceToBounds;
 import openbimrl.functions.geometry.CalculateDistancesByOrderedGraphEdges;
 import openbimrl.functions.geometry.CheckIncludedInBounds;
@@ -23,6 +24,7 @@ import openbimrl.functions.geometry.DecomposeGeometry;
 import openbimrl.functions.geometry.DecomposeVector3D;
 import openbimrl.functions.geometry.ShowGraph;
 import openbimrl.functions.geometry.ShowGraphColoredByValues;
+import openbimrl.functions.geometry.ShowPaths;
 import openbimrl.functions.geometry.UnifyRegionBSPTree;
 import openbimrl.functions.geometry.GetCentroidOfRegionBSPTree;
 import openbimrl.functions.geometry.GroupGraphEdges;
@@ -145,12 +147,15 @@ public class FunctionFactory {
 			case "geometry.createPointGraphEdgesByReference" : function = new CreatePointGraphEdgesByReference(nodeProxy); break;
 			case "geometry.groupGraphEdges" : function = new GroupGraphEdges(nodeProxy); break;
 			case "geometry.calculateDistancesByOrderedGraphEdges" : function = new CalculateDistancesByOrderedGraphEdges(nodeProxy); break;
+			case "geometry.calculateAStarSearch" : function = new CalculateAStarSearch(nodeProxy); break;
 			case "geometry.unifyRegionBSPTree" : function = new UnifyRegionBSPTree(nodeProxy); break;
 			case "geometry.checkLinecasts" : function = new CheckLinecasts(nodeProxy); break;
 			case "geometry.showGraph" : function = new ShowGraph(nodeProxy); break;
 			case "geometry.showGraphColoredByValues" : function = new ShowGraphColoredByValues(nodeProxy); break;
+			case "geometry.showPaths" : function = new ShowPaths(nodeProxy); break;
 			case "geometry.getCentroidOfRegionBSPTree" : function = new GetCentroidOfRegionBSPTree(nodeProxy); break;
 			case "geometry.convertToVector3D" : function = new ConvertToVector3D(nodeProxy); break;
+			
 
 			case "filter.filterByMasks" : function = new FilterByMasks(nodeProxy); break;
 			case "filter.filterInvert" : function = new FilterInvert(nodeProxy); break;

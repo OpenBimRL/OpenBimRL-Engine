@@ -83,8 +83,8 @@ public class CalculateDistancesByOrderedGraphEdges extends AbstractFunction {
 			HashMap nodeEdges, 
 			HashSet<Vector3D> visited,
 			int precision) {
+		
 		HashSet<Vector3D> nextStartNodes = new HashSet<Vector3D>();
-
 		
 		for(Object startNode : startNodes) {
 			if(startNode instanceof Vector3D) {
