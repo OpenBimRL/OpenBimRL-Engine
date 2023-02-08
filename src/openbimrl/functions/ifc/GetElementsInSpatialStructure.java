@@ -42,16 +42,20 @@ public class GetElementsInSpatialStructure extends AbstractFunction {
 		for(Object o : objects) {
 			if(o instanceof IfcSpatialStructureElement) {
 				
-				for(IfcRelContainedInSpatialStructure relContains : 
-					((IfcSpatialStructureElement)o).getContainsElements_Inverse()) {
-					SET<?> elements = relContains.getRelatedElements();
-					resultValues.addAll(elements);				
+				if(((IfcSpatialStructureElement)o).getContainsElements_Inverse() != null) {
+					for(IfcRelContainedInSpatialStructure relContains : 
+						((IfcSpatialStructureElement)o).getContainsElements_Inverse()) {
+						SET<?> elements = relContains.getRelatedElements();
+						resultValues.addAll(elements);				
+					}
 				}
 				
-				for(IfcRelAggregates relAggregates : 
-					((IfcSpatialStructureElement.Ifc4)o).getIsDecomposedBy_Inverse()) {
-					SET<?> elements = relAggregates.getRelatedObjects();
-					resultValues.addAll(elements);				
+				if(((IfcSpatialStructureElement.Ifc4)o).getIsDecomposedBy_Inverse() != null) {
+					for(IfcRelAggregates relAggregates : 
+						((IfcSpatialStructureElement.Ifc4)o).getIsDecomposedBy_Inverse()) {
+						SET<?> elements = relAggregates.getRelatedObjects();
+						resultValues.addAll(elements);				
+					}
 				}
 				
 			}
