@@ -159,11 +159,15 @@ public class CalculateAStarSearch extends AbstractFunction {
 		for(Vector3D startVec : truncatedStartNodes) {
 			for(Vector3D endVec : truncatedEndNodes) {
 				List<NodeWithXYCoordinates> shortestPath = findAndPrintShortestPath(graph, nodeMap.get(startVec), nodeMap.get(endVec));
-				ArrayList<Vector3D> path = new ArrayList();
-				for(NodeWithXYCoordinates nodeXY : shortestPath) {
-					path.add(Vector3D.of(nodeXY.getX(), nodeXY.getY(), nodeXY.getHeight()));
+				if(shortestPath != null) {
+					ArrayList<Vector3D> path = new ArrayList();
+					for(NodeWithXYCoordinates nodeXY : shortestPath) {
+						path.add(Vector3D.of(nodeXY.getX(), nodeXY.getY(), nodeXY.getHeight()));
+					}
+					paths.add(path);
+				}else {
+					System.err.println("A path could not be found from " + startVec.toString() + " to destination " + endVec.toString());
 				}
-				paths.add(path);
 			}
 		}
 		

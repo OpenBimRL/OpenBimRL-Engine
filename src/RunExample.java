@@ -34,6 +34,10 @@ public class RunExample {
 				ruleDef.check(
 					Kernel.getApplicationModelRoot().getNode(0)
 				);
+				
+				System.out.println(ruleDef.getCheckedStatus());
+				System.out.println(ruleDef.getResultObjects().size());
+				System.out.println(ruleDef.getCheckingProtocol());
 			}
 			
 		} catch (FileNotFoundException | NotSupportedException e) {

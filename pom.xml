@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-   <modelVersion>0.0.12</modelVersion>
+   <modelVersion>4.0.0</modelVersion>
    <groupId>inf.bi.rub.de</groupId>
    <artifactId>OpenBIMRL-Engine</artifactId>
    <version>2022.11.1</version>
@@ -46,31 +46,17 @@
 		    <version>1.0.2</version>
 		</dependency>
 		
-		<!-- https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-xjc -->
 		<dependency>
-		    <groupId>com.sun.xml.bind</groupId>
-		    <artifactId>jaxb-xjc</artifactId>
-		    <version>2.2.11</version>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.1</version>
 		</dependency>
-		
-		<!-- https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-core -->
+
+		<!-- Runtime -->
 		<dependency>
-		    <groupId>com.sun.xml.bind</groupId>
-		    <artifactId>jaxb-core</artifactId>
-		    <version>2.2.11</version>
-		</dependency>
-		
-		<!-- https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-impl -->
-		<dependency>
-		    <groupId>com.sun.xml.bind</groupId>
-		    <artifactId>jaxb-impl</artifactId>
-		    <version>2.2.11</version>
-		</dependency>
-		
-		<dependency>
-		  <groupId>javax.xml.bind</groupId>
-		  <artifactId>jaxb-api</artifactId>
-		  <version>2.2.11</version>
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
+			<version>2.3.1</version>
 		</dependency>
 		
 	    <!-- ================================================= -->

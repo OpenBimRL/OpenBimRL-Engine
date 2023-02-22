@@ -9,11 +9,16 @@ import org.apache.commons.geometry.euclidean.threed.line.Segment3D;
 
 import com.apstex.gui.core.j3d.model.cadobjectmodel.CadObjectJ3D;
 import com.apstex.gui.core.model.applicationmodel.ApplicationModelNode;
+import com.apstex.ifctoolbox.ifc.IfcPolyline;
 import com.apstex.j3d.utils.geometry.Sphere;
 import com.apstex.javax.media.j3d.Appearance;
 import com.apstex.javax.media.j3d.BranchGroup;
 import com.apstex.javax.media.j3d.ColoringAttributes;
+import com.apstex.javax.media.j3d.GeometryArray;
 import com.apstex.javax.media.j3d.LineArray;
+import com.apstex.javax.media.j3d.LineAttributes;
+import com.apstex.javax.media.j3d.LineStripArray;
+import com.apstex.javax.media.j3d.PolygonAttributes;
 import com.apstex.javax.media.j3d.Shape3D;
 import com.apstex.javax.media.j3d.Transform3D;
 import com.apstex.javax.media.j3d.TransformGroup;
@@ -52,7 +57,7 @@ public class ShowPaths extends AbstractFunction {
 			}
 		}
 		
-		Appearance nodeAppearance = createAppearance(Color.GRAY);
+		//Appearance nodeAppearance = createAppearance(Color.GRAY);
 		Appearance edgeAppearance = createAppearance(Color.GREEN);
 	
 		BranchGroup group = new BranchGroup();
@@ -60,7 +65,7 @@ public class ShowPaths extends AbstractFunction {
 		for(Object path : paths) {
 			if(path instanceof ArrayList) {
 				ArrayList pathList = (ArrayList)path;
-				handleNodes(pathList, group, nodeAppearance);
+				//handleNodes(pathList, group, nodeAppearance);
 				showPathEdge(pathList, group, edgeAppearance);
 			}
 		}
@@ -106,41 +111,54 @@ public class ShowPaths extends AbstractFunction {
 	
 	private void showPathEdge(ArrayList path, BranchGroup group, Appearance appearance){
 								
-		Vector3D prevPointOnLine = null;
+		int vertexCounts[] = {path.size()};
+		LineStripArray lineArr = new LineStripArray(path.size(), GeometryArray.COORDINATES, vertexCounts);
+		Point3d[] points = new Point3d[path.size()];
+		
+		int index = 0;
 		for(Object vecObj : path) {
 			if(vecObj instanceof Vector3D) {
-				Vector3D pointOnLine = (Vector3D)vecObj;
-				if(prevPointOnLine != null) {	
-					LineArray lineArr = new LineArray(2, LineArray.COORDINATES);
-					lineArr.setCoordinate(0, new Point3d(
-							prevPointOnLine.getX(), 
-							prevPointOnLine.getY(), 
-							prevPointOnLine.getZ())
-					);
-					lineArr.setCoordinate(1, new Point3d(
-							pointOnLine.getX(), 
-							pointOnLine.getY(), 
-							pointOnLine.getZ())
-					);
-				
-					Shape3D lineShape = new Shape3D(lineArr, appearance);
-					group.addChild(lineShape);
+				Vector3D pointOnLine = (Vector3D)vecObj;	
+					
+				points[index] = new Point3d(
+					pointOnLine.getX(), 
+					pointOnLine.getY(), 
+					pointOnLine.getZ()
+				);
 
-				}
-				prevPointOnLine = pointOnLine;
+				index++;
 			}
-			
 		}
+		
+		lineArr.setCoordinates(0, points);
+
+		Shape3D lineShape = new Shape3D(lineArr, appearance);
+		group.addChild(lineShape);
 		
 	}
 	
 	private Appearance createAppearance(Color color) {
 		Appearance appearance = new Appearance();
+    	appearance.setCapability(Appearance.ALLOW_COLORING_ATTRIBUTES_WRITE);
+		appearance.setCapability(Appearance.ALLOW_COLORING_ATTRIBUTES_READ);
+
 		ColoringAttributes coloringAttributes = new ColoringAttributes(
 				new Color3f(color), 
 				ColoringAttributes.FASTEST
 		);
 		appearance.setColoringAttributes(coloringAttributes);
+		
+		LineAttributes lineAttributes = new LineAttributes();
+		lineAttributes.setLinePattern(LineAttributes.PATTERN_SOLID);
+		lineAttributes.setLineWidth(5.0f);
+		lineAttributes.setLineAntialiasingEnable(true);
+		appearance.setLineAttributes(lineAttributes);
+		
+		PolygonAttributes polygonAttributes = new PolygonAttributes();
+		polygonAttributes.setCullFace(PolygonAttributes.CULL_NONE);
+		polygonAttributes.setPolygonMode(PolygonAttributes.POLYGON_FILL);
+		appearance.setPolygonAttributes(polygonAttributes);
+		
 		return appearance;
 	}
 
