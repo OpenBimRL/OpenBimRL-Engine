@@ -236,7 +236,7 @@ public class OpenSubRule extends SimpleRule {
 			int index = -1;
 			//for(Object n0 : operands1.keySet()) {
 			for(Object n0 : operands1.keySet()) {
-
+				
 				Object o1 = operands1.get(n0);
 				
 				index++;
@@ -283,11 +283,8 @@ public class OpenSubRule extends SimpleRule {
 					exists = true;
 				}
 			}
-			
-		}
 
-		//Handle as Collection
-		if(ruleIDtoValueMap.get(rule.getOperand1()) instanceof AbstractCollection<?>) {
+		}else if(ruleIDtoValueMap.get(rule.getOperand1()) instanceof AbstractCollection<?>) { //Handle as Collection
 			AbstractCollection<?> operands = (AbstractCollection<?>)ruleIDtoValueMap.get(rule.getOperand1());
 			
 			if(operands != null && mask != null) {
@@ -313,31 +310,32 @@ public class OpenSubRule extends SimpleRule {
 					
 				}
 				
-				if(nO != null) {
-
-					Object operator2Value = rule.getOperand2();
-					if(ruleIDtoValueMap.get(operator2Value) != null) {
-						AbstractCollection<?> operands2 = (AbstractCollection<?>)ruleIDtoValueMap.get(operator2Value);
-						Object[] operandArr2 = operands2.toArray();
-						Object n2 = operandArr2[index];
-						operator2Value = n2;
-					}
-					
-					boolean comp = compare(nO, operator2Value, rule.getOperator());
-					
-					if(comp && (nO instanceof IfcProduct)) {
-						successes.getChildren().add(new ResultObject((IfcProduct)nO));
-					}
-					
-					if(!comp && (nO instanceof IfcProduct)) {
-						failures.getChildren().add(new ResultObject((IfcProduct)nO));
-					}
-					
-					//Add to new Mask for ruleID save
-					newMask.add(comp);
-					if(comp==true) {
-						exists = true;
-					}
+				if(nO == null) {
+					nO = "null";
+				}
+				
+				Object operator2Value = rule.getOperand2();
+				if(ruleIDtoValueMap.get(operator2Value) != null) {
+					AbstractCollection<?> operands2 = (AbstractCollection<?>)ruleIDtoValueMap.get(operator2Value);
+					Object[] operandArr2 = operands2.toArray();
+					Object n2 = operandArr2[index];
+					operator2Value = n2;
+				}
+				
+				boolean comp = compare(nO, operator2Value, rule.getOperator());
+				
+				if(comp && (nO instanceof IfcProduct)) {
+					successes.getChildren().add(new ResultObject((IfcProduct)nO));
+				}
+				
+				if(!comp && (nO instanceof IfcProduct)) {
+					failures.getChildren().add(new ResultObject((IfcProduct)nO));
+				}
+				
+				//Add to new Mask for ruleID save
+				newMask.add(comp);
+				if(comp==true) {
+					exists = true;
 				}
 				
 			}
@@ -417,10 +415,7 @@ public class OpenSubRule extends SimpleRule {
 				}
 			}
 			
-		}
-		
-		//Handle as Collection
-		if(ruleIDtoValueMap.get(rule.getOperand1()) instanceof AbstractCollection<?>) {
+		}else if(ruleIDtoValueMap.get(rule.getOperand1()) instanceof AbstractCollection<?>) { //Handle as Collection
 			AbstractCollection<?> operands = (AbstractCollection<?>)ruleIDtoValueMap.get(rule.getOperand1());
 			
 			if(operands != null && mask != null) {
@@ -492,7 +487,7 @@ public class OpenSubRule extends SimpleRule {
 				("t".equals(b2) || "f".equals(b2) || "true".equals(b2.toLowerCase()) || "false".equals(b2) || "0".equals(b2) || "1".equals(b2))) {	
 				return Boolean.parseBoolean(b1) == Boolean.parseBoolean(b2);
 			}else {				
-				return operand1.equals(operand2);
+				return operand1.toString().equals(operand2.toString());
 			}
 			
 		case "includes":
