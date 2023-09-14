@@ -126,5 +126,11 @@
 		</dependency>
 
 	</dependencies>
+
+	<parent>
+		<groupId>inf.bi.rub.de</groupId>
+		<artifactId>OpenBIMRL-APP</artifactId>
+		<version>1</version>
+	</parent>
 	
 </project>
