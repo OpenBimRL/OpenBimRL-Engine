@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.apstex.gui.core.model.applicationmodel.ApplicationModelNode;
-
+import engine.openbimrl.inf.bi.rub.de.ifc.IIFCModel;
 import openbimrl.NodeProxy;
 import openbimrl.functions.AbstractFunction;
 
@@ -22,7 +21,7 @@ public class Addition extends AbstractFunction {
 	}
 
 	@Override
-	public void execute(ApplicationModelNode ifcModel) {
+	public void execute(IIFCModel ifcModel) {
 		Object object0 = getInput(0);
 		Object object1 = getInput(1);
 		

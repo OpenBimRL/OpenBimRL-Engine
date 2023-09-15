@@ -3,15 +3,12 @@ package openbimrl.functions.ifc;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.apstex.gui.core.model.applicationmodel.ApplicationModelNode;
-import com.apstex.ifctoolbox.ifc.IfcLabel;
-import com.apstex.ifctoolbox.ifc.IfcProduct;
 import com.apstex.ifctoolbox.ifc.IfcProductRepresentation;
 import com.apstex.ifctoolbox.ifc.IfcRepresentation;
 import com.apstex.ifctoolbox.ifc.IfcRepresentationItem;
 import com.apstex.ifctoolbox.ifc.IfcShapeRepresentation;
-import com.apstex.step.core.ClassInterface;
 
+import engine.openbimrl.inf.bi.rub.de.ifc.*;
 import openbimrl.NodeProxy;
 import openbimrl.functions.AbstractFunction;
 
@@ -23,15 +20,15 @@ import openbimrl.functions.AbstractFunction;
  */
 public class AddRepresentationItemToEntity extends AbstractFunction {
 
-	private ArrayList<IfcProductRepresentation> reps = new ArrayList<IfcProductRepresentation>();
-	private ArrayList<IfcRepresentation> memory = new ArrayList<IfcRepresentation>();
+	private ArrayList<IIFCProductRepresentation> reps = new ArrayList<>();
+	private ArrayList<IIFCRepresentation> memory = new ArrayList<>();
 	
 	public AddRepresentationItemToEntity(NodeProxy nodeProxy) {
 		super(nodeProxy);
 	}
 
 	@Override
-	public void execute(ApplicationModelNode ifcModel) {
+	public void execute(IIFCModel ifcModel) {
 	
 		Object input0 = getInput(0);
 		Object input1 = getInput(1);
@@ -77,19 +74,19 @@ public class AddRepresentationItemToEntity extends AbstractFunction {
 		//reset Memory
 		this.memReset(ifcModel);
 
-		ArrayList<IfcRepresentation> resultValues = new ArrayList<IfcRepresentation>();
+		ArrayList<IIFCRepresentation> resultValues = new ArrayList<>();
 		
 		for(Object element : elements) {
-			ClassInterface classInterface = (ClassInterface) element;
+			IIFCClass classInterface = (IIFCClass) element;
 			
-			if(classInterface instanceof IfcProduct) {
-				IfcProductRepresentation prodRep = ((IfcProduct)classInterface).getRepresentation();
+			if(classInterface instanceof IIFCProduct) {
+				var prodRep = ((IIFCProduct)classInterface).getRepresentation();
 				if(prodRep != null) {
 					reps.add(prodRep);
 					
 					for(Object repItemObj : polylines) {
-						if(repItemObj instanceof IfcRepresentationItem) {
-							IfcShapeRepresentation.Ifc4 rep = new IfcShapeRepresentation.Ifc4.Instance();
+						if(repItemObj instanceof IIFCRepresentationItem) {
+							var rep = IIFCShapeRepresentation.IFC4.Instance.create();
 							rep.addItems((IfcRepresentationItem)repItemObj);
 							rep.setRepresentationIdentifier(new IfcLabel.Ifc4(identifier));
 							rep.setRepresentationType(new IfcLabel.Ifc4(type));
@@ -117,13 +114,13 @@ public class AddRepresentationItemToEntity extends AbstractFunction {
 
 	}
 
-	private void memReset(ApplicationModelNode ifcModel) {
+	private void memReset(IIFCModel ifcModel) {
 		for(IfcProductRepresentation rep : reps) {
 			rep.removeAllRepresentations(memory);
 		}
 		
 		for(ClassInterface obj : memory) {
-			ifcModel.getStepModel().removeObject(obj);
+			ifcModel.removeObject(obj);
 		}
 		
 		memory = new ArrayList<IfcRepresentation>();

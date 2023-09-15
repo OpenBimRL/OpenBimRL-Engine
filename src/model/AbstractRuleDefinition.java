@@ -2,7 +2,7 @@ package model;
 
 import java.util.ArrayList;
 
-import com.apstex.gui.core.model.applicationmodel.ApplicationModelNode;
+import engine.openbimrl.inf.bi.rub.de.ifc.IIFCModel;
 
 /**
  * The abstract super-type of an {@link SimpleRule} or {@link RuleSet}.
@@ -18,9 +18,9 @@ public abstract class AbstractRuleDefinition {
 	protected CheckedStatus checkedStatus = CheckedStatus.UNCHECKED;
 	protected ArrayList<ResultObjectGroup> resultObjects = new ArrayList<>();
 	protected ArrayList<String> checkingProtocol = new ArrayList<>();
-	protected ApplicationModelNode modelNode;
+	protected IIFCModel modelNode;
 	
-	public ApplicationModelNode getModelNode() {
+	public IIFCModel getModelNode() {
 		return modelNode;
 	}
 	
@@ -55,7 +55,7 @@ public abstract class AbstractRuleDefinition {
 	 *  
 	 * @param ifcModel
 	 */
-	public abstract void check(ApplicationModelNode ifcModel);
+	public abstract void check(IIFCModel ifcModel);
 	
 	public String getCheckingProtocol() {
 		String text = "";
@@ -74,7 +74,7 @@ public abstract class AbstractRuleDefinition {
 	}
 	
 	public enum CheckedStatus{
-		SUCCESS, FAILED, WARNING, UNCHECKED; 
-	}
+		SUCCESS, FAILED, WARNING, UNCHECKED
+    }
 
 }

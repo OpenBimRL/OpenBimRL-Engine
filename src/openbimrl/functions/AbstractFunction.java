@@ -2,8 +2,7 @@ package openbimrl.functions;
 
 import java.util.ArrayList;
 
-import com.apstex.gui.core.model.applicationmodel.ApplicationModelNode;
-
+import engine.openbimrl.inf.bi.rub.de.ifc.IIFCModel;
 import openbimrl.EdgeProxy;
 import openbimrl.NodeProxy;
 
@@ -37,7 +36,7 @@ public abstract class AbstractFunction {
 	 * 
 	 * @param ifcModel
 	 */
-	public abstract void execute(ApplicationModelNode ifcModel);
+	public abstract void execute(IIFCModel ifcModel);
 
 	@SuppressWarnings("unchecked")
 	protected <T> T getInput(int pos) {
