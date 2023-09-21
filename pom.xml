@@ -173,6 +173,11 @@
 			<artifactId>OpenBIMRL-API</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>inf.bi.rub.de</groupId>
+			<artifactId>OpenBimRL-Engine-Adapter-IFC.JAVA</artifactId>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
 		<dependency>
 			<groupId>com.google.guava</groupId>
