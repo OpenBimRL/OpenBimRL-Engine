@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>inf.bi.rub.de</groupId>
-	<artifactId>OpenBIMRL-Engine</artifactId>
+	<artifactId>OpenBimRL-Engine</artifactId>
 	<version>2022.11.1</version>
 
 	<build>
@@ -175,7 +175,12 @@
 
 		<dependency>
 			<groupId>inf.bi.rub.de</groupId>
-			<artifactId>OpenBimRL-Engine-Adapter-IFC.JAVA</artifactId>
+			<artifactId>OpenBimRL-Engine-Adapter-IFC_JAVA</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>inf.bi.rub.de</groupId>
+			<artifactId>OpenBimRL-Engine-Adapter</artifactId>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
@@ -197,7 +202,7 @@
 
 	<parent>
 		<groupId>inf.bi.rub.de</groupId>
-		<artifactId>OpenBIMRL-APP</artifactId>
+		<artifactId>OpenBimRL-APP</artifactId>
 		<version>1</version>
 	</parent>
 
