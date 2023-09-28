@@ -2,13 +2,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-import com.apstex.gui.core.kernel.Kernel;
-import com.apstex.gui.ifc.controller.IfcLoadManager;
-import com.apstex.loader3d.core.NotSupportedException;
-
-import model.AbstractRuleDefinition;
-import model.RuleBase;
-import openbimrl.helper.OpenBimRLReader;
+import de.rub.bi.inf.model.AbstractRuleDefinition;
+import de.rub.bi.inf.model.RuleBase;
+import de.rub.bi.inf.openbimrl.helper.OpenBimRLReader;
 
 public class RunExample {
 

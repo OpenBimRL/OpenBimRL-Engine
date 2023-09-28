@@ -1,0 +1,27 @@
+package de.rub.bi.inf.openbimrl.functions.list;
+
+import java.util.Collection;
+
+import de.rub.bi.inf.openbimrl.NodeProxy;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
+import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
+
+/**
+ * Counts the items in a list and returns the number.
+ * 
+ * @author Marcel Stepien
+ *
+ */
+public class Count extends AbstractFunction {
+
+	public Count(NodeProxy nodeProxy) {
+		super(nodeProxy);
+	}
+
+	@Override
+	public void execute(IIFCModel ifcModel) {
+		Collection<?> list = (Collection<?>) getInput(0);
+		setResult(0, list.size());
+	}
+
+}

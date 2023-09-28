@@ -1,92 +1,48 @@
-package openbimrl.functions.geometry;
+package engine.openbimrl.inf.bi.rub.de.de.rub.bi.inf.openbimrl.functions.geometry
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-
-import org.apache.commons.geometry.euclidean.threed.RegionBSPTree3D;
-
-import com.apstex.gui.core.model.applicationmodel.ApplicationModelNode;
-
-import openbimrl.NodeProxy;
-import openbimrl.functions.AbstractFunction;
-
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel
+import de.rub.bi.inf.openbimrl.NodeProxy
+import de.rub.bi.inf.openbimrl.functions.AbstractFunction
+import org.apache.commons.geometry.euclidean.threed.RegionBSPTree3D
 
 /**
  * Checks if geometies of two RegionalBSPTree3D are intersecting.
- * 
- * @author Marcel Stepien
  *
+ * @author Marcel Stepien
  */
-public class CheckIntersection extends AbstractFunction {
-	
-	public CheckIntersection(NodeProxy nodeProxy) {
-		super(nodeProxy);
-	}
+class CheckIntersection(nodeProxy: NodeProxy?) : AbstractFunction(nodeProxy) {
+    override fun execute(ifcModel: IIFCModel) {
+        val elements0 = getInputAsCollection(0)
+        val elements1 = getInputAsCollection(1)
+        if (elements0.isEmpty() || elements1.isEmpty()) return
 
-	@Override
-	public void execute(ApplicationModelNode ifcModel) {
-	
-		Object input0 = getInput(0);
-		Object input1 = getInput(1);
-		
-		if(input0 == null || input1 == null)
-			return;
-		
-		Collection<?> elements0 = null;
-		if(input0 instanceof Collection<?>) {
-			elements0 = (Collection<?>) input0;
-		}else {
-			ArrayList<Object> newList = new ArrayList<Object>();
-			newList.add(input0);
-			elements0 = newList;
-		}
-		
-		Collection<?> elements1 = null;
-		if(input1 instanceof Collection<?>) {
-			elements1 = (Collection<?>) input1;
-		}else {
-			ArrayList<Object> newList = new ArrayList<Object>();
-			newList.add(input1);
-			elements1 = newList;
-		}
-		
-		LinkedHashMap<Object, ArrayList<Boolean>> resultValues = new LinkedHashMap<Object, ArrayList<Boolean>>();
-		
-		for(Object ele0 : elements0) {
-			if(ele0 instanceof RegionBSPTree3D) {
+        val resultValues = LinkedHashMap<Any, ArrayList<Boolean>>()
+        for (ele0 in elements0) {
+            if (ele0 !is RegionBSPTree3D)
+                continue
+            // else
+            val filter = ArrayList<Boolean>()
+            for (ele1 in elements1) { // TODO extract
+                if (ele1 !is RegionBSPTree3D)
+                    continue
+                // else
+                try {
+                    val regionM1 = ele0.copy()
+                    val regionM2 = ele1.copy()
+                    regionM1.intersection(regionM2)
+                    if (regionM1.size > 0.0) // may be reduced to: filter.add(regionM1.size > 0.0)
+                        filter.add(true)
+                    else
+                        filter.add(false)
 
-				ArrayList<Boolean> filter = new ArrayList<Boolean>();
-				
-				for(Object ele1 : elements1) {
-					if(ele1 instanceof RegionBSPTree3D) {
-						
-						try {
-							RegionBSPTree3D regionM1 = ((RegionBSPTree3D)ele0).copy();
-							RegionBSPTree3D regionM2 = ((RegionBSPTree3D)ele1).copy();
-							
-							regionM1.intersection(regionM2);
-							if(regionM1.getSize() > 0.0) {
-								filter.add(true);
-							}else {
-								filter.add(false);
-							}
-							
-							
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						
-					}
-				}
-				
-				resultValues.put(ele0, filter);
-				
-			}
-		}
-		
-		setResult(0, resultValues);
-		
-	}
-	
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
+            }
+            resultValues[ele0] = filter
+
+        }
+        setResult(0, resultValues)
+    }
 }

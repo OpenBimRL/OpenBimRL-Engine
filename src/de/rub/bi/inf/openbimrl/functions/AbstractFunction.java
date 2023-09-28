@@ -1,10 +1,11 @@
-package openbimrl.functions;
+package de.rub.bi.inf.openbimrl.functions;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-import engine.openbimrl.inf.bi.rub.de.ifc.IIFCModel;
-import openbimrl.EdgeProxy;
-import openbimrl.NodeProxy;
+import de.rub.bi.inf.openbimrl.NodeProxy;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 
 /**
  * An abstact super-type of all funktions supported by the OpenBimRL engine.
@@ -16,8 +17,8 @@ import openbimrl.NodeProxy;
  *
  */
 public abstract class AbstractFunction {
-	
-	private ArrayList<Object> results;
+
+	private final ArrayList<Object> results;
 	protected NodeProxy nodeProxy;
 	
 	public AbstractFunction(NodeProxy nodeProxy) {
@@ -40,8 +41,16 @@ public abstract class AbstractFunction {
 
 	@SuppressWarnings("unchecked")
 	protected <T> T getInput(int pos) {
-		EdgeProxy inputEdge = nodeProxy.getInputEdge(pos);
+		final var inputEdge = nodeProxy.getInputEdge(pos);
 		return inputEdge != null ? (T)inputEdge.getCurrentData() : null;
+	}
+
+	protected Collection<?> getInputAsCollection(int pos) {
+		final var in = getInput(pos);
+		if (in instanceof Collection<?> out)
+			return out;
+
+		return List.of(in);
 	}
 	
 	protected void setResult(int pos, Object result) {

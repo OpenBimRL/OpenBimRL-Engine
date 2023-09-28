@@ -1,92 +1,50 @@
-package openbimrl.functions.geometry;
+package engine.openbimrl.inf.bi.rub.de.de.rub.bi.inf.openbimrl.functions.geometry
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import org.apache.commons.geometry.euclidean.threed.RegionBSPTree3D;
-import org.apache.commons.geometry.euclidean.threed.line.LinecastPoint3D;
-import org.apache.commons.geometry.euclidean.threed.line.Segment3D;
-
-import com.apstex.gui.core.model.applicationmodel.ApplicationModelNode;
-
-import openbimrl.NodeProxy;
-import openbimrl.functions.AbstractFunction;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel
+import de.rub.bi.inf.openbimrl.NodeProxy
+import de.rub.bi.inf.openbimrl.functions.AbstractFunction
+import org.apache.commons.geometry.euclidean.threed.RegionBSPTree3D
+import org.apache.commons.geometry.euclidean.threed.line.Segment3D
 
 /**
  * Checks if a ray passing through the scene has an intersection with a geometric object.
- * 
- * @author Marcel Stepien
  *
+ * @author Marcel Stepien
  */
-public class CheckLinecasts extends AbstractFunction {
-	
-	public CheckLinecasts(NodeProxy nodeProxy) {
-		super(nodeProxy);
-	}
+class CheckLinecasts(nodeProxy: NodeProxy?) : AbstractFunction(nodeProxy) {
 
-	@Override
-	public void execute(ApplicationModelNode ifcModel) {
-	
-		Object input0 = getInput(0);
-		Object input1 = getInput(1);
-		
-		if(input0 == null || input1 == null)
-			return;
-		
-		Collection<?> elements0 = null;
-		if(input0 instanceof Collection<?>) {
-			elements0 = (Collection<?>) input0;
-		}else {
-			ArrayList<Object> newList = new ArrayList<Object>();
-			newList.add(input0);
-			elements0 = newList;
-		}
-		
-		Collection<?> elements1 = null;
-		if(input1 instanceof Collection<?>) {
-			elements1 = (Collection<?>) input1;
-		}else {
-			ArrayList<Object> newList = new ArrayList<Object>();
-			newList.add(input1);
-			elements1 = newList;
-		}
-		
-		ArrayList<Boolean> filter = new ArrayList<Boolean>();
-		for(Object ele1 : elements1) {
-			if(ele1 instanceof Segment3D) {
-				
-				filter.add(
-					handleRegionBSPTrees((Segment3D)ele1, elements0)
-				);
-				
-			}
-		}
-		
-		
-		setResult(0, filter);
-		
-	}
-	
-	private boolean handleRegionBSPTrees(Segment3D segment, Collection<?> elements) {
-		boolean flag = false;
-		for(Object ele : elements) {
-			
-			if(ele instanceof Collection<?>) {
-				flag = flag || handleRegionBSPTrees(segment, (Collection)ele);
-			}
-			
-			if(ele instanceof RegionBSPTree3D) {
-				flag = flag || check(segment, ((RegionBSPTree3D)ele));
-			}
-		}
-		return flag;
-	}
-	
-	private boolean check(Segment3D segment, RegionBSPTree3D region) {
-		RegionBSPTree3D regionM1 = region.copy();
-		Segment3D line = segment;
-		List<LinecastPoint3D> casts = regionM1.linecast(line);
-		return !casts.isEmpty();
-	}
+    override fun execute(ifcModel: IIFCModel) {
+        val elements0 = getInputAsCollection(0)
+        val elements1 = getInputAsCollection(1)
+        if (elements0.isEmpty() || elements1.isEmpty()) return
+
+        val filter = ArrayList<Boolean>()
+        for (ele1 in elements1) {
+            if (ele1 is Segment3D) {
+                filter.add(
+                    handleRegionBSPTrees(ele1, elements0)
+                )
+            }
+        }
+        setResult(0, filter)
+    }
+
+    private fun handleRegionBSPTrees(segment: Segment3D, elements: Collection<*>?): Boolean {
+        var flag = false
+        for (ele in elements!!) {
+            if (ele is Collection<*>) {
+                flag = flag || handleRegionBSPTrees(segment, ele)
+            }
+            if (ele is RegionBSPTree3D) {
+                flag = flag || check(segment, ele)
+            }
+        }
+        return flag
+    }
+
+    private fun check(segment: Segment3D, region: RegionBSPTree3D): Boolean {
+        val regionM1 = region.copy()
+        val casts = regionM1.linecast(segment)
+        return casts.isNotEmpty()
+    }
 }
