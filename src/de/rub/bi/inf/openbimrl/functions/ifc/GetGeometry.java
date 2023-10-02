@@ -3,15 +3,11 @@ package de.rub.bi.inf.openbimrl.functions.ifc;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.apstex.gui.core.j3d.model.cadobjectmodel.MultiAppearanceShape3D;
-import com.apstex.gui.core.model.applicationmodel.IIFCModel;
-import com.apstex.gui.core.model.cadobjectmodel.CadObject;
-import com.apstex.gui.core.model.cadobjectmodel.SolidShape;
-import com.apstex.javax.media.j3d.Geometry;
-import com.apstex.step.core.ClassInterface;
-
 import de.rub.bi.inf.openbimrl.NodeProxy;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
+
+import javax.media.j3d.Geometry;
 
 /**
  * Retrieves the geometry of an IFC element.
@@ -27,22 +23,11 @@ public class GetGeometry extends AbstractFunction {
 
 	@Override
 	public void execute(IIFCModel ifcModel) {
-	
-		Object input0 = getInput(0);
 		
-		if(input0 == null)
-			return;
-				
-		Collection<?> objects = null;
-		if(input0 instanceof Collection<?>) {
-			objects = (Collection<?>) input0;
-		}else {
-			ArrayList<Object> newList = new ArrayList<Object>();
-			newList.add(input0);
-			objects = newList;
-		}
+		final var objects = getInputAsCollection(0);
+		if (objects.isEmpty()) return;
 		
-		ArrayList<Geometry> resultValues = new ArrayList<Geometry>();
+		final var resultValues = new ArrayList<Geometry>();
 		
 		for(Object o : objects) {
 			ClassInterface classInterface = (ClassInterface) o;

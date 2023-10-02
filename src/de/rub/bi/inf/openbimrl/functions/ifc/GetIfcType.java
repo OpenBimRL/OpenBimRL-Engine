@@ -3,10 +3,9 @@ package de.rub.bi.inf.openbimrl.functions.ifc;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.apstex.gui.core.model.applicationmodel.IIFCModel;
-import com.apstex.step.core.ClassInterface;
-
 import de.rub.bi.inf.openbimrl.NodeProxy;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCClass;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 /**
@@ -36,8 +35,7 @@ public class GetIfcType extends AbstractFunction {
 		
 		for(Object o : objects) {
 			
-			if(o instanceof ClassInterface) {				
-				ClassInterface ifcObj = (ClassInterface) o;
+			if(o instanceof IIFCClass ifcObj) {
 				resultValues.add(ifcObj.getClassName());
 			}
 			

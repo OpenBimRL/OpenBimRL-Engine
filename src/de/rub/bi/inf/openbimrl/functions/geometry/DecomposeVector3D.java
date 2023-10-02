@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 import org.apache.commons.geometry.euclidean.threed.Vector3D;
-
-import com.apstex.gui.core.model.applicationmodel.IIFCModel;
 
 /**
  * Decomposes a Vector3D into its elementary parts.

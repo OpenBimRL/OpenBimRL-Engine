@@ -55,8 +55,8 @@ public class CreatePolyline extends AbstractFunction {
             points.add(cPoint);
         }
 
-        IfcPolyline polyline = new IfcPolyline.Ifc4.Instance(points);
-        ifcModel.getStepModel().addObject(polyline);
+        IIFCPolyline polyline = Adapter.getInstance().getIFC4().create(IIFCPolyline.class, points);
+        ifcModel.addObject(polyline);
         memory.add(polyline);
 
         setResult(0, polyline);
@@ -64,10 +64,10 @@ public class CreatePolyline extends AbstractFunction {
     }
 
     private void memReset(IIFCModel ifcModel) {
-        for (ClassInterface obj : memory) {
-            ifcModel.getStepModel().removeObject(obj);
+        for (var obj : memory) {
+            ifcModel.removeObject(obj);
         }
-        memory = new ArrayList<ClassInterface>();
+        memory.clear();
     }
 
 }

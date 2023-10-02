@@ -2,14 +2,11 @@ package de.rub.bi.inf.openbimrl.functions.ifc;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
-import com.apstex.gui.core.model.applicationmodel.IIFCModel;
-import com.apstex.ifctoolbox.ifc.IfcRelAggregates;
-import com.apstex.ifctoolbox.ifc.IfcRelContainedInSpatialStructure;
-import com.apstex.ifctoolbox.ifc.IfcSpatialStructureElement;
-import com.apstex.step.core.SET;
+import java.util.Set;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCSpatialStructureElement;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 /**
@@ -40,12 +37,12 @@ public class GetElementsInSpatialStructure extends AbstractFunction {
 		//System.out.println("GetElementsInSpatialStructure: " + objects);
 		
 		for(Object o : objects) {
-			if(o instanceof IfcSpatialStructureElement) {
+			if(o instanceof IIFCSpatialStructureElement element) {
 				
-				if(((IfcSpatialStructureElement)o).getContainsElements_Inverse() != null) {
+				if(element.getContainsElements_Inverse() != null) {
 					for(IfcRelContainedInSpatialStructure relContains : 
-						((IfcSpatialStructureElement)o).getContainsElements_Inverse()) {
-						SET<?> elements = relContains.getRelatedElements();
+						element.getContainsElements_Inverse()) {
+						Set<?> elements = relContains.getRelatedElements();
 						resultValues.addAll(elements);				
 					}
 				}
@@ -53,7 +50,7 @@ public class GetElementsInSpatialStructure extends AbstractFunction {
 				if(((IfcSpatialStructureElement.Ifc4)o).getIsDecomposedBy_Inverse() != null) {
 					for(IfcRelAggregates relAggregates : 
 						((IfcSpatialStructureElement.Ifc4)o).getIsDecomposedBy_Inverse()) {
-						SET<?> elements = relAggregates.getRelatedObjects();
+						Set<?> elements = relAggregates.getRelatedObjects();
 						resultValues.addAll(elements);				
 					}
 				}

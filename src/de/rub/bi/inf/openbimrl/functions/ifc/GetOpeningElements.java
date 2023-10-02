@@ -3,13 +3,8 @@ package de.rub.bi.inf.openbimrl.functions.ifc;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.apstex.gui.core.model.applicationmodel.IIFCModel;
-import com.apstex.ifctoolbox.ifc.IfcElement;
-import com.apstex.ifctoolbox.ifc.IfcFeatureElement;
-import com.apstex.ifctoolbox.ifc.IfcRelFillsElement;
-import com.apstex.ifctoolbox.ifc.IfcRelVoidsElement;
-
 import de.rub.bi.inf.openbimrl.NodeProxy;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 /**
@@ -41,8 +36,8 @@ public class GetOpeningElements extends AbstractFunction {
 			objects = newList;
 		}
 		
-		ArrayList<IfcFeatureElement> related = new ArrayList<IfcFeatureElement>();
-		ArrayList<IfcFeatureElement> relating = new ArrayList<IfcFeatureElement>();
+		final var related = new ArrayList<IfcFeatureElement>();
+		final var relating = new ArrayList<IfcFeatureElement>();
 		
 		for(Object o : objects) {
 			if(o instanceof IfcElement) {

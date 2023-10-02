@@ -6,9 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.apstex.gui.core.model.applicationmodel.IIFCModel;
-import com.apstex.ifctoolbox.ifc.IfcProduct;
-
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCProduct;
 import de.rub.bi.inf.openbimrl.helper.FilterInterpreter;
 import de.rub.bi.inf.model.AbstractRuleDefinition;
 import de.rub.bi.inf.model.ResultObject;
@@ -51,7 +50,7 @@ public class OpenRule extends RuleSet {
 			for(Object o : (Collection<?>)value) {
 				
 				if(o instanceof IfcProduct.Ifc4) {						
-					group.getChildren().add(new ResultObject((IfcProduct)o));
+					group.getChildren().add(new ResultObject((IIFCProduct) o));
 				}
 				
 
@@ -82,7 +81,7 @@ public class OpenRule extends RuleSet {
 					for(Object o : (Collection<?>)mapValue) {
 						
 						if(o instanceof IfcProduct.Ifc4) {				
-							tempMap.get(mapKey).getChildren().add(new ResultObject((IfcProduct)o));
+							tempMap.get(mapKey).getChildren().add(new ResultObject((IIFCProduct) o));
 						}
 						
 						if(o instanceof Collection<?>) {
@@ -210,7 +209,7 @@ public class OpenRule extends RuleSet {
 		if(modelCheck.getResultSets() != null) {
 			for(ResultSetType rs : modelCheck.getResultSets().getResultSet()){
 				
-				ArrayList<IfcProduct> markedIfcElement = new ArrayList<IfcProduct>();
+				final var markedIfcElement = new ArrayList<IIFCProduct>();
 				
 				List<?> filterList = FilterInterpreter.interpret(rs.getFilter(), ruleIDtoValueMap);
 				Collection<?> elementsList = null;
@@ -245,12 +244,12 @@ public class OpenRule extends RuleSet {
 						
 					}
 					
-					if(nO instanceof IfcProduct) {						
-						markedIfcElement.add((IfcProduct)nO);
+					if(nO instanceof IIFCProduct product) {
+						markedIfcElement.add(product);
 					}
 				}
 								
-				//Register results of the precalculation to the result
+				//Register results of the pre-calculation to the result
 				ResultObjectGroup group = this.computeResultsElements(
 						"ResultSet: " + rs.getName(), 
 						markedIfcElement

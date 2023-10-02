@@ -1,9 +1,9 @@
 package de.rub.bi.inf.model;
 
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCProduct;
+
 import java.util.ArrayList;
 import java.util.Collection;
-
-import com.apstex.ifctoolbox.ifc.IfcProduct;
 
 /**
  * A group containing results of type {@link AbstractResultObject} produced by the OpenBimRL engine.
@@ -14,7 +14,7 @@ import com.apstex.ifctoolbox.ifc.IfcProduct;
 public class ResultObjectGroup extends AbstractResultObject{
 	
 	private Object identity = null;
-	private ArrayList<AbstractResultObject> children = new ArrayList<>();
+	private final ArrayList<AbstractResultObject> children = new ArrayList<>();
 	
 	public ResultObjectGroup() {
 		//Do nothing
@@ -32,7 +32,7 @@ public class ResultObjectGroup extends AbstractResultObject{
 	
 	public ResultObjectGroup(String groupName, Collection<?> products) {
 		products.forEach(r -> {
-			ResultObject resultObject = new ResultObject((IfcProduct) r);
+			ResultObject resultObject = new ResultObject((IIFCProduct) r);
 			children.add(resultObject);
 		});
 		setName(groupName);

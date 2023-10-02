@@ -9,6 +9,12 @@ import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 import org.apache.commons.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.geometry.euclidean.threed.line.Segment3D;
+import org.apache.commons.geometry.euclidean.threed.shape.Sphere;
+
+import javax.media.j3d.*;
+import javax.vecmath.Color3f;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3f;
 
 /**
  * Loads the graph information and displays it in the 3D viewer.
@@ -135,7 +141,7 @@ public class ShowGraph extends AbstractFunction {
 	private Appearance createAppearance(Color color) {
 		Appearance appearance = new Appearance();
 		ColoringAttributes coloringAttributes = new ColoringAttributes(
-				new Color3f(color), 
+				new Color3f(color),
 				ColoringAttributes.FASTEST
 		);
 		appearance.setColoringAttributes(coloringAttributes);

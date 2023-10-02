@@ -8,6 +8,8 @@ import de.rub.bi.inf.openbimrl.NodeProxy;
 import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
+import javax.vecmath.Point3f;
+
 /**
  * Calculates the distance of bounds by proximity of their coordinates in cardinal directions.
  * 

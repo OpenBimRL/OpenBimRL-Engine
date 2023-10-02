@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import org.apache.commons.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.geometry.euclidean.threed.line.Segment3D;
 import org.apache.commons.numbers.core.Precision;
-
-import com.apstex.gui.core.model.applicationmodel.IIFCModel;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
@@ -28,21 +27,10 @@ public class GroupGraphEdges extends AbstractFunction {
 	@Override
 	public void execute(IIFCModel ifcModel) {
 	
-		Object input0 = getInput(0);
-		
-		if(input0 == null)
-			return;
-				
-		Collection<?> edges = null;
-		if(input0 instanceof Collection<?>) {
-			edges = (Collection<?>) input0;
-		}else {
-			ArrayList<Object> newList = new ArrayList<>();
-			newList.add(input0);
-			edges = newList;
-		}
+		final var edges = getInputAsCollection(0);
+		if (edges.isEmpty()) return;
 
-		HashMap<Vector3D, ArrayList<Object>> edgeMap = groupEdges(edges);
+		final var edgeMap = groupEdges(edges);
 		
 		setResult(0, edgeMap);
 	}
@@ -51,20 +39,16 @@ public class GroupGraphEdges extends AbstractFunction {
 		HashMap<Vector3D, ArrayList<Object>> linearEdgeList = new HashMap<Vector3D, ArrayList<Object>>();
 		
 		for(Object edge : edges) {
-			if(edge instanceof Segment3D) {
+			if(edge instanceof Segment3D segment) {
+
+				double truncatedX = Precision.round(segment.getStartPoint().getX(), 6);
+				double truncatedY = Precision.round(segment.getStartPoint().getY(), 6);
+				double truncatedZ = Precision.round(segment.getStartPoint().getZ(), 6);
+				final var truncatedVector = Vector3D.of(truncatedX, truncatedY, truncatedZ);
+
+                linearEdgeList.computeIfAbsent(truncatedVector, k -> new ArrayList<>());
 				
-				Segment3D segement = (Segment3D)edge;
-				
-				double truncatedX = Precision.round(segement.getStartPoint().getX(), 6);
-				double truncatedY = Precision.round(segement.getStartPoint().getY(), 6);
-				double truncatedZ = Precision.round(segement.getStartPoint().getZ(), 6);
-				Vector3D truncatedVector = Vector3D.of(truncatedX, truncatedY, truncatedZ);
-				
-				if(linearEdgeList.get(truncatedVector) == null) {
-					linearEdgeList.put(truncatedVector, new ArrayList<Object>());
-				}
-				
-				linearEdgeList.get(truncatedVector).add(segement);
+				linearEdgeList.get(truncatedVector).add(segment);
 				
 				
 			}

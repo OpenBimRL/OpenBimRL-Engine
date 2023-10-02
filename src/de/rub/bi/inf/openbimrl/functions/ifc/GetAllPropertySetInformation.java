@@ -5,20 +5,8 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import com.apstex.gui.core.model.applicationmodel.IIFCModel;
-import com.apstex.ifctoolbox.ifc.IfcContext;
-import com.apstex.ifctoolbox.ifc.IfcObject;
-import com.apstex.ifctoolbox.ifc.IfcObjectDefinition;
-import com.apstex.ifctoolbox.ifc.IfcProperty;
-import com.apstex.ifctoolbox.ifc.IfcPropertyEnumeratedValue;
-import com.apstex.ifctoolbox.ifc.IfcPropertySet;
-import com.apstex.ifctoolbox.ifc.IfcPropertySingleValue;
-import com.apstex.ifctoolbox.ifc.IfcRelDefines;
-import com.apstex.ifctoolbox.ifc.IfcRelDefinesByProperties;
-import com.apstex.ifctoolbox.ifc.IfcSimpleProperty;
-import com.apstex.step.core.SET;
-
 import de.rub.bi.inf.openbimrl.NodeProxy;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 /**

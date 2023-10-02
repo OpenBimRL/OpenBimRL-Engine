@@ -3,13 +3,13 @@ package de.rub.bi.inf.openbimrl.functions.ifc;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.apstex.gui.core.model.applicationmodel.IIFCModel;
-import com.apstex.ifctoolbox.ifc.IfcCartesianPoint;
-import com.apstex.ifctoolbox.ifc.IfcPolyline;
-import com.apstex.javax.vecmath.Point3d;
-
 import de.rub.bi.inf.openbimrl.NodeProxy;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCCartesianPoint;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCPolyline;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
+
+import javax.vecmath.Point3d;
 
 /**
  * Calculates the length of a Curve (like an IfcPolyline).
@@ -43,13 +43,13 @@ public class GetCurveLength extends AbstractFunction {
 		ArrayList<Double> resultValues = new ArrayList<Double>();
 		
 		for(Object repItemObj : polylines) {
-			if(repItemObj instanceof IfcPolyline) {
+			if(repItemObj instanceof IIFCPolyline polyline) {
 				
 				double distanceMeasured = 0.0;
 				boolean first = true;
 				Point3d previouse = null;
 				
-				for(IfcCartesianPoint point : ((IfcPolyline)repItemObj).getPoints()) {
+				for(IIFCCartesianPoint point : polyline.getPoints()) {
 					Point3d currentP = new Point3d(
 							point.getCoordinates().get(0).getValue(),
 							point.getCoordinates().get(1).getValue(),

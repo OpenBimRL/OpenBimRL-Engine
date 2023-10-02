@@ -3,21 +3,9 @@ package de.rub.bi.inf.openbimrl.functions.ifc;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.apstex.gui.core.model.applicationmodel.IIFCModel;
-import com.apstex.ifctoolbox.ifc.IfcBoolean;
-import com.apstex.ifctoolbox.ifc.IfcIdentifier;
-import com.apstex.ifctoolbox.ifc.IfcLabel;
-import com.apstex.ifctoolbox.ifc.IfcObject;
-import com.apstex.ifctoolbox.ifc.IfcProperty;
-import com.apstex.ifctoolbox.ifc.IfcPropertyEnumeratedValue;
-import com.apstex.ifctoolbox.ifc.IfcPropertySet;
-import com.apstex.ifctoolbox.ifc.IfcPropertySingleValue;
-import com.apstex.ifctoolbox.ifc.IfcRelDefines;
-import com.apstex.ifctoolbox.ifc.IfcRelDefinesByProperties;
-import com.apstex.ifctoolbox.ifc.IfcSimpleProperty;
-import com.apstex.ifctoolbox.ifc.IfcText;
-import com.apstex.ifctoolbox.ifc.IfcValue;
 import de.rub.bi.inf.openbimrl.NodeProxy;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCLabel;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 /**
@@ -129,7 +117,7 @@ public class FilterByProperty extends AbstractFunction{
 													(IfcPropertyEnumeratedValue.Ifc4) simpleProperty;
 											IfcValue ifcValue = enumeratedValue.getEnumerationValues().get(0);
 											if (ifcValue instanceof IfcLabel.Ifc4) {
-												IfcLabel.Ifc4 label = (IfcLabel.Ifc4) ifcValue;
+												IIFCLabel.Ifc4 label = (IfcLabel.Ifc4) ifcValue;
 
 												for(Object value : values) {
 													if (label.getDecodedValue().equals(value)) {

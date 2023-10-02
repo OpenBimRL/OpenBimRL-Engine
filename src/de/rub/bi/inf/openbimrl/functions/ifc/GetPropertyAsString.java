@@ -3,13 +3,8 @@ package de.rub.bi.inf.openbimrl.functions.ifc;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.apstex.gui.core.model.applicationmodel.IIFCModel;
-import com.apstex.ifctoolbox.ifc.IfcObjectDefinition;
-import com.apstex.ifctoolbox.ifc.IfcPropertyEnumeratedValue;
-import com.apstex.ifctoolbox.ifc.IfcPropertySingleValue;
-import com.apstex.ifctoolbox.ifc.IfcSimpleProperty;
-
 import de.rub.bi.inf.openbimrl.NodeProxy;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.helper.IfcUtilities;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 

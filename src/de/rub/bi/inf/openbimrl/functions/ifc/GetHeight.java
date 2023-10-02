@@ -3,13 +3,11 @@ package de.rub.bi.inf.openbimrl.functions.ifc;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.apstex.gui.core.model.applicationmodel.IIFCModel;
-import com.apstex.gui.core.model.cadobjectmodel.CadObject;
-import com.apstex.javax.vecmath.Point3d;
-import com.apstex.step.core.ClassInterface;
-
 import de.rub.bi.inf.openbimrl.NodeProxy;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
+
+import javax.vecmath.Point3d;
 
 /**
  * Calculates the height given a list of entities.
@@ -53,8 +51,8 @@ public class GetHeight extends AbstractFunction {
 			Point3d upper = new Point3d();
 			cad.getBoundingBox().getUpper(upper);
 			
-			resultValues0.add(lower.getZ());
-			resultValues1.add(upper.getZ());
+			resultValues0.add(lower.z);
+			resultValues1.add(upper.z);
 		}
 		
 		if(resultValues0.size()==1 && resultValues1.size() == 1) {

@@ -3,14 +3,12 @@ package de.rub.bi.inf.openbimrl.functions.ifc;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.apstex.gui.core.model.applicationmodel.IIFCModel;
-import com.apstex.gui.core.model.cadobjectmodel.CadObject;
-import com.apstex.javax.media.j3d.Bounds;
-import com.apstex.javax.vecmath.Point3d;
-import com.apstex.step.core.ClassInterface;
-
 import de.rub.bi.inf.openbimrl.NodeProxy;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
+
+import javax.media.j3d.Bounds;
+import javax.vecmath.Point3d;
 
 /**
  * Retrieves the BoundingBox of an IFC element.

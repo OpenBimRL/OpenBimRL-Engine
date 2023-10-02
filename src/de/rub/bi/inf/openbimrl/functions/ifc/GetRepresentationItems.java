@@ -3,14 +3,11 @@ package de.rub.bi.inf.openbimrl.functions.ifc;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.apstex.gui.core.model.applicationmodel.IIFCModel;
-import com.apstex.ifctoolbox.ifc.IfcProduct;
-import com.apstex.ifctoolbox.ifc.IfcProductRepresentation;
-import com.apstex.ifctoolbox.ifc.IfcRepresentation;
-import com.apstex.ifctoolbox.ifc.IfcRepresentationItem;
-import com.apstex.step.core.ClassInterface;
-
 import de.rub.bi.inf.openbimrl.NodeProxy;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCClass;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCProduct;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCRepresentationItem;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 /**
@@ -28,29 +25,18 @@ public class GetRepresentationItems extends AbstractFunction {
 	@Override
 	public void execute(IIFCModel ifcModel) {
 	
-		Object input0 = getInput(0);
-		
-		if(input0 == null)
-			return;
-				
-		Collection<?> objects = null;
-		if(input0 instanceof Collection<?>) {
-			objects = (Collection<?>) input0;
-		}else {
-			ArrayList<Object> newList = new ArrayList<Object>();
-			newList.add(input0);
-			objects = newList;
-		}
+		final var objects = getInputAsCollection(0);
+		if (objects.isEmpty()) return;
 
-		ArrayList<IfcRepresentationItem> resultValues = new ArrayList<IfcRepresentationItem>();
+		final var resultValues = new ArrayList<IIFCRepresentationItem>();
 		
 		for(Object o : objects) {
-			ClassInterface classInterface = (ClassInterface) o;
+			final var classInterface = (IIFCClass) o;
 			
-			if(classInterface instanceof IfcProduct) {
-				IfcProductRepresentation prodRep = ((IfcProduct)classInterface).getRepresentation();
+			if(classInterface instanceof IIFCProduct prod) {
+				final var prodRep = prod.getRepresentation();
 				if(prodRep != null) {
-					for(IfcRepresentation rep : prodRep.getRepresentations()) {
+					for(var rep : prodRep.getRepresentations()) {
 						resultValues.addAll(rep.getItems());
 					}
 				}

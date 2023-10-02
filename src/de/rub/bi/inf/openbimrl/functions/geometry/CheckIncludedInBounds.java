@@ -8,6 +8,12 @@ import de.rub.bi.inf.openbimrl.NodeProxy;
 import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
+import javax.media.j3d.Shape3D;
+import javax.media.j3d.Transform3D;
+import javax.vecmath.Point3d;
+import javax.vecmath.Point3f;
+import javax.vecmath.Vector3d;
+
 /**
  * Checks if points of a geometry are included in the the bounds of a geometic objects.
  * 
@@ -91,7 +97,7 @@ public class CheckIncludedInBounds extends AbstractFunction {
 										geoB.recomputeIndices();
 										
 										for(Point3f coodinate : geoB.getCoordinates()) {
-											if(!geoBoundsA.intersect(new Point3d(coodinate))) {											
+											if(!geoBoundsA.intersect(new Point3d(coodinate))) {
 												inclusionCheck = false;
 											}
 										}

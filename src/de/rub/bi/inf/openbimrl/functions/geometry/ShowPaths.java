@@ -1,13 +1,20 @@
 package de.rub.bi.inf.openbimrl.functions.geometry;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Collection;
-
 import de.rub.bi.inf.openbimrl.NodeProxy;
 import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 import org.apache.commons.geometry.euclidean.threed.Vector3D;
+import org.apache.commons.geometry.euclidean.threed.shape.Sphere;
+
+import javax.media.j3d.*;
+
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3f;
+import javax.vecmath.Color3f;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Loads the paths information and displays it in the 3D viewer.
@@ -91,9 +98,9 @@ public class ShowPaths extends AbstractFunction {
 	
 	private void showPathEdge(ArrayList path, BranchGroup group, Appearance appearance){
 								
-		int vertexCounts[] = {path.size()};
+		int[] vertexCounts = {path.size()};
 		LineStripArray lineArr = new LineStripArray(path.size(), GeometryArray.COORDINATES, vertexCounts);
-		Point3d[] points = new Point3d[path.size()];
+		final var points = new Point3d[path.size()];
 		
 		int index = 0;
 		for(Object vecObj : path) {

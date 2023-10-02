@@ -8,6 +8,12 @@ import de.rub.bi.inf.openbimrl.NodeProxy;
 import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
+import javax.media.j3d.Bounds;
+import javax.media.j3d.Shape3D;
+import javax.media.j3d.Transform3D;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
+
 /**
  * Checks if the bounds of geometic objects are intersecting.
  * 

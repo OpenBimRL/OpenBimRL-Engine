@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 import org.apache.commons.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.geometry.euclidean.threed.line.Lines3D;
 import org.apache.commons.geometry.euclidean.threed.line.Segment3D;
 import org.apache.commons.numbers.core.Precision;
-
-import com.apstex.gui.core.model.applicationmodel.IIFCModel;
 
 /**
  * Connects nodes of an graph by inserting edges of a certain stepsize, provided the nodes are already known.

@@ -3,11 +3,10 @@ package de.rub.bi.inf.openbimrl.functions.geometry;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import org.apache.commons.geometry.euclidean.threed.RegionBSPTree3D;
 import org.apache.commons.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.numbers.core.Precision;
-
-import com.apstex.gui.core.model.applicationmodel.IIFCModel;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;

@@ -3,13 +3,8 @@ package de.rub.bi.inf.openbimrl.functions.ifc;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.apstex.gui.core.model.applicationmodel.IIFCModel;
-import com.apstex.gui.core.model.cadobjectmodel.CadObject;
-import com.apstex.ifctoolbox.ifc.IfcObject;
-import com.apstex.javax.vecmath.Point3d;
-import com.apstex.step.core.ClassInterface;
-
 import de.rub.bi.inf.openbimrl.NodeProxy;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 /**
@@ -26,22 +21,12 @@ public class GetGlobalID extends AbstractFunction {
 
 	@Override
 	public void execute(IIFCModel ifcModel) {
-	
-		Object input0 = getInput(0);
-		
-		if(input0 == null)
-			return;
-				
-		Collection<?> objects = null;
-		if(input0 instanceof Collection<?>) {
-			objects = (Collection<?>) input0;
-		}else {
-			ArrayList<Object> newList = new ArrayList<Object>();
-			newList.add(input0);
-			objects = newList;
-		}
-		
-		ArrayList<String> resultValues = new ArrayList<>();
+
+		final var objects = getInputAsCollection(0);
+		if (objects.isEmpty()) return;
+
+
+		final var resultValues = new ArrayList<String>();
 		
 		for(Object o : objects) {
 			if(o instanceof IfcObject) {

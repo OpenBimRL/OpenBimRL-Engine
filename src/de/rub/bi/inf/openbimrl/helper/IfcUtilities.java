@@ -4,24 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
-import com.apstex.gui.core.model.applicationmodel.IIFCModel;
-import com.apstex.ifctoolbox.ifc.IfcBoolean;
-import com.apstex.ifctoolbox.ifc.IfcContext;
-import com.apstex.ifctoolbox.ifc.IfcElementQuantity;
-import com.apstex.ifctoolbox.ifc.IfcLabel;
-import com.apstex.ifctoolbox.ifc.IfcObject;
-import com.apstex.ifctoolbox.ifc.IfcObjectDefinition;
-import com.apstex.ifctoolbox.ifc.IfcPhysicalQuantity;
-import com.apstex.ifctoolbox.ifc.IfcProperty;
-import com.apstex.ifctoolbox.ifc.IfcPropertyEnumeratedValue;
-import com.apstex.ifctoolbox.ifc.IfcPropertySet;
-import com.apstex.ifctoolbox.ifc.IfcPropertySingleValue;
-import com.apstex.ifctoolbox.ifc.IfcRelDefines;
-import com.apstex.ifctoolbox.ifc.IfcRelDefinesByProperties;
-import com.apstex.ifctoolbox.ifc.IfcSimpleProperty;
-import com.apstex.ifctoolbox.ifc.IfcValue;
-import com.apstex.step.core.SET;
-
 /**
  * A helper class for shortcuting several IFC model traversions often used.
  * 

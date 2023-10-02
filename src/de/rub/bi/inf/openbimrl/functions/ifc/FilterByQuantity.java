@@ -3,20 +3,8 @@ package de.rub.bi.inf.openbimrl.functions.ifc;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.apstex.gui.core.model.applicationmodel.IIFCModel;
-import com.apstex.ifctoolbox.ifc.IfcElementQuantity;
-import com.apstex.ifctoolbox.ifc.IfcObject;
-import com.apstex.ifctoolbox.ifc.IfcPhysicalQuantity;
-import com.apstex.ifctoolbox.ifc.IfcPhysicalSimpleQuantity;
-import com.apstex.ifctoolbox.ifc.IfcQuantityArea;
-import com.apstex.ifctoolbox.ifc.IfcQuantityCount;
-import com.apstex.ifctoolbox.ifc.IfcQuantityLength;
-import com.apstex.ifctoolbox.ifc.IfcQuantityVolume;
-import com.apstex.ifctoolbox.ifc.IfcQuantityWeight;
-import com.apstex.ifctoolbox.ifc.IfcRelDefines;
-import com.apstex.ifctoolbox.ifc.IfcRelDefinesByProperties;
-
 import de.rub.bi.inf.openbimrl.NodeProxy;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 /**
