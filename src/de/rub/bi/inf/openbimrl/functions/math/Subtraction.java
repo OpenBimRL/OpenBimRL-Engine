@@ -1,12 +1,12 @@
 package de.rub.bi.inf.openbimrl.functions.math;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import de.rub.bi.inf.openbimrl.NodeProxy;
 import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Performs a subtraction operator given two number values.

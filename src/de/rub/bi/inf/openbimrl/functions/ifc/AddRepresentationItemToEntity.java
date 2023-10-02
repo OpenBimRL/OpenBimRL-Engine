@@ -1,11 +1,11 @@
 package de.rub.bi.inf.openbimrl.functions.ifc;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import de.rub.bi.inf.openbimrl.NodeProxy;
 import de.rub.bi.inf.openbimrl.engine.ifc.*;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Adds a representation item to the model.
@@ -14,10 +14,9 @@ import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
  */
 public class AddRepresentationItemToEntity extends AbstractFunction {
 
+    private static final Adapter ifcAdapter = Adapter.getInstance();
     private ArrayList<IIFCProductRepresentation> reps = new ArrayList<>();
     private ArrayList<IIFCRepresentation> memory = new ArrayList<>();
-
-    private static final Adapter ifcAdapter = Adapter.getInstance();
 
     public AddRepresentationItemToEntity(NodeProxy nodeProxy) {
         super(nodeProxy);

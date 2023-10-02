@@ -13,161 +13,160 @@ import java.util.*;
 
 /**
  * Checks the intersection between lists of elements.
- * 
- * @author Marcel Stepien
  *
+ * @author Marcel Stepien
  */
 public class CheckElementIntersection extends AbstractFunction {
-	
-	public CheckElementIntersection(NodeProxy nodeProxy) {
-		super(nodeProxy);
-	}
 
-	@Override
-	public void execute(IIFCModel ifcModel) {
-	
-		Object input0 = getInput(0);
-		Object input1 = getInput(1);
-		String input2 = getInput(2);
-		
-		if(input0 == null || input1 == null)
-			return;
-		
-		double scaleFactor = 1.0;
-		if(input2 != null) {
-			scaleFactor = Double.parseDouble(input2);
-		}
-		
-		Collection<?> elements0 = null;
-		if(input0 instanceof Collection<?>) {
-			elements0 = (Collection<?>) input0;
-		}else {
-			ArrayList<Object> newList = new ArrayList<Object>();
-			newList.add(input0);
-			elements0 = newList;
-		}
-		
-		Collection<?> elements1 = null;
-		if(input1 instanceof Collection<?>) {
-			elements1 = (Collection<?>) input1;
-		}else {
-			ArrayList<Object> newList = new ArrayList<Object>();
-			newList.add(input1);
-			elements1 = newList;
-		}
-		
-		int [] stripCount = {3};
+    public CheckElementIntersection(NodeProxy nodeProxy) {
+        super(nodeProxy);
+    }
 
-		LinkedHashMap<Object, Set<ClassInterface>> resultValues = new LinkedHashMap<>();
-		double precision = 1e-6;
-		
-		for(Object ele0 : elements0) {
-			if(ele0 instanceof ClassInterface) {
-				
-				HashSet<ClassInterface> subList = new HashSet<ClassInterface>();
+    @Override
+    public void execute(IIFCModel ifcModel) {
 
-				ClassInterface classInterface0 = (ClassInterface) ele0;
+        Object input0 = getInput(0);
+        Object input1 = getInput(1);
+        String input2 = getInput(2);
 
-				ArrayList<SolidShape> geomShapesA = getSolidShapes(ifcModel, classInterface0);
-				ArrayList<RegionBSPTree3D> geomsA = null;
-				
-				try {
-					 geomsA = convertToSTM(geomShapesA, precision);
-				} catch (Exception e) {
-					System.out.println("Caused by: " + classInterface0.getStepLine());
-				}
-				
-				for(Object ele1 : elements1) {
-					if(ele1 instanceof ClassInterface) {
-						
-						ClassInterface classInterface1 = (ClassInterface) ele1;
+        if (input0 == null || input1 == null)
+            return;
 
-						//System.out.println(classInterface1.getStepLine());
-						ArrayList<SolidShape> geomShapesB = getSolidShapes(ifcModel, classInterface1);
-						ArrayList<RegionBSPTree3D> geomsB = null;
-						
-						try {
-							geomsB = convertToSTM(geomShapesB, precision);
-						} catch (Exception e) {
-							System.out.println("Caused by: " + classInterface1.getStepLine());
-						}
-						
-						for(RegionBSPTree3D m1 : geomsA) {
-							for(RegionBSPTree3D m2 : geomsB) {
-								try {
-									RegionBSPTree3D regionM1 = m1.copy();
-									RegionBSPTree3D regionM2 = m2.copy();
-									
-									regionM1.intersection(regionM2);
-									if(regionM1.getSize() > 0.0) {
-										//System.out.println(test + " | " +  regionM1.getSize());
-										subList.add(classInterface1);
-									}
+        double scaleFactor = 1.0;
+        if (input2 != null) {
+            scaleFactor = Double.parseDouble(input2);
+        }
+
+        Collection<?> elements0 = null;
+        if (input0 instanceof Collection<?>) {
+            elements0 = (Collection<?>) input0;
+        } else {
+            ArrayList<Object> newList = new ArrayList<Object>();
+            newList.add(input0);
+            elements0 = newList;
+        }
+
+        Collection<?> elements1 = null;
+        if (input1 instanceof Collection<?>) {
+            elements1 = (Collection<?>) input1;
+        } else {
+            ArrayList<Object> newList = new ArrayList<Object>();
+            newList.add(input1);
+            elements1 = newList;
+        }
+
+        int[] stripCount = {3};
+
+        LinkedHashMap<Object, Set<ClassInterface>> resultValues = new LinkedHashMap<>();
+        double precision = 1e-6;
+
+        for (Object ele0 : elements0) {
+            if (ele0 instanceof ClassInterface) {
+
+                HashSet<ClassInterface> subList = new HashSet<ClassInterface>();
+
+                ClassInterface classInterface0 = (ClassInterface) ele0;
+
+                ArrayList<SolidShape> geomShapesA = getSolidShapes(ifcModel, classInterface0);
+                ArrayList<RegionBSPTree3D> geomsA = null;
+
+                try {
+                    geomsA = convertToSTM(geomShapesA, precision);
+                } catch (Exception e) {
+                    System.out.println("Caused by: " + classInterface0.getStepLine());
+                }
+
+                for (Object ele1 : elements1) {
+                    if (ele1 instanceof ClassInterface) {
+
+                        ClassInterface classInterface1 = (ClassInterface) ele1;
+
+                        //System.out.println(classInterface1.getStepLine());
+                        ArrayList<SolidShape> geomShapesB = getSolidShapes(ifcModel, classInterface1);
+                        ArrayList<RegionBSPTree3D> geomsB = null;
+
+                        try {
+                            geomsB = convertToSTM(geomShapesB, precision);
+                        } catch (Exception e) {
+                            System.out.println("Caused by: " + classInterface1.getStepLine());
+                        }
+
+                        for (RegionBSPTree3D m1 : geomsA) {
+                            for (RegionBSPTree3D m2 : geomsB) {
+                                try {
+                                    RegionBSPTree3D regionM1 = m1.copy();
+                                    RegionBSPTree3D regionM2 = m2.copy();
+
+                                    regionM1.intersection(regionM2);
+                                    if (regionM1.getSize() > 0.0) {
+                                        //System.out.println(test + " | " +  regionM1.getSize());
+                                        subList.add(classInterface1);
+                                    }
 									
 									/*
 									if(m1.getBounds().intersects(m2.getBounds())) {
 										subList.add(classInterface1);									
 									}
 									*/
-									
-								} catch (Exception e) {
-									System.err.println("Some geometry could not be converted to BSPTree.");
-									//System.err.println(ele1.toString());
-									e.printStackTrace();
-									//System.out.println(m2.getVertexCount() + " - " + m2.getFaceCount());
-									//System.out.println(m2.getBounds().toString());
-								}
-								
-							}
-						}
-						
-						
-					}
-				}
-				resultValues.put(classInterface0, subList);
-				
-			}
-		}
-		
-		setResult(0, resultValues);
-		
-	}
-	
-	private ArrayList<SolidShape> getSolidShapes(ApplicationModelNode ifcModel, ClassInterface ci) {
-		ArrayList<SolidShape> geomShapes = new ArrayList<SolidShape>();
-		
-		CadObject cad = ifcModel.getCadObjectModel().getCadObject(ci);
-			
-		List l = ((CadObjectJ3D)cad).getSolidShapes();
-		
-		geomShapes.addAll(((CadObjectJ3D)cad).getSolidShapes());
-		
-		//Resolve decompositions
-		if(geomShapes.isEmpty()) {
-			if(ci instanceof IfcObjectDefinition.Ifc4) {
-				for(ClassInterface ifcObj : getDecomposedElements((IfcObjectDefinition.Ifc4)ci)) {
-					geomShapes.addAll(getSolidShapes(ifcModel, ifcObj));
-				}
-			}
-		}
-		
-		
-		return geomShapes;
-	}
 
-	private ArrayList<RegionBSPTree3D> convertToSTM(ArrayList<SolidShape> geomShapes, double precision){
-		ArrayList<RegionBSPTree3D> geoms = new ArrayList<RegionBSPTree3D>();
-		
-		for(SolidShape shape : geomShapes) {
-			MultiAppearanceShape3D sShape = ((MultiAppearanceShape3D)shape);
-			
-			if(sShape.getGeometry() instanceof GeometryArray) {
-				GeometryInfo geoInfo = new GeometryInfo((GeometryArray)sShape.getGeometry());
-				//geoInfo.setStripCounts(new int[]{3});
-			    
-				//System.out.println(Arrays.toString(geoInfo.getCoordinateIndices()));
-				//System.out.println("T: " + Arrays.toString(geoInfo.getContourCounts()));
-				//System.out.println("T: " + Arrays.toString(geoInfo.getStripCounts()));
+                                } catch (Exception e) {
+                                    System.err.println("Some geometry could not be converted to BSPTree.");
+                                    //System.err.println(ele1.toString());
+                                    e.printStackTrace();
+                                    //System.out.println(m2.getVertexCount() + " - " + m2.getFaceCount());
+                                    //System.out.println(m2.getBounds().toString());
+                                }
+
+                            }
+                        }
+
+
+                    }
+                }
+                resultValues.put(classInterface0, subList);
+
+            }
+        }
+
+        setResult(0, resultValues);
+
+    }
+
+    private ArrayList<SolidShape> getSolidShapes(ApplicationModelNode ifcModel, ClassInterface ci) {
+        ArrayList<SolidShape> geomShapes = new ArrayList<SolidShape>();
+
+        CadObject cad = ifcModel.getCadObjectModel().getCadObject(ci);
+
+        List l = ((CadObjectJ3D) cad).getSolidShapes();
+
+        geomShapes.addAll(((CadObjectJ3D) cad).getSolidShapes());
+
+        //Resolve decompositions
+        if (geomShapes.isEmpty()) {
+            if (ci instanceof IfcObjectDefinition.Ifc4) {
+                for (ClassInterface ifcObj : getDecomposedElements((IfcObjectDefinition.Ifc4) ci)) {
+                    geomShapes.addAll(getSolidShapes(ifcModel, ifcObj));
+                }
+            }
+        }
+
+
+        return geomShapes;
+    }
+
+    private ArrayList<RegionBSPTree3D> convertToSTM(ArrayList<SolidShape> geomShapes, double precision) {
+        ArrayList<RegionBSPTree3D> geoms = new ArrayList<RegionBSPTree3D>();
+
+        for (SolidShape shape : geomShapes) {
+            MultiAppearanceShape3D sShape = ((MultiAppearanceShape3D) shape);
+
+            if (sShape.getGeometry() instanceof GeometryArray) {
+                GeometryInfo geoInfo = new GeometryInfo((GeometryArray) sShape.getGeometry());
+                //geoInfo.setStripCounts(new int[]{3});
+
+                //System.out.println(Arrays.toString(geoInfo.getCoordinateIndices()));
+                //System.out.println("T: " + Arrays.toString(geoInfo.getContourCounts()));
+                //System.out.println("T: " + Arrays.toString(geoInfo.getStripCounts()));
 				
 				/*
 				int rest = geoInfo.getCoordinateIndices().length % 3;
@@ -178,8 +177,8 @@ public class CheckElementIntersection extends AbstractFunction {
 				}
 				*/
 
-				//ALTERNATIVE C
-				//===================================================================
+                //ALTERNATIVE C
+                //===================================================================
 			
 				/*
 				NormalGenerator ng = new NormalGenerator();
@@ -295,64 +294,63 @@ public class CheckElementIntersection extends AbstractFunction {
 				
 				geoms.add(mesh.toTree());
 				*/
-			
-				
-				//ALTERNATIVE A
-				//===================================================================
-				
-				
-				//System.out.println(Arrays.toString(geoInfo.getCoordinateIndices()));
 
-				
-				RegionBSPTree3D tree3d = RegionBSPTree3D.empty();
-				
-				for(int i = 2; i < geoInfo.getCoordinateIndices().length; i += 3) {
-					
-					int[] triangles = new int[3];
-					triangles[0] = geoInfo.getCoordinateIndices()[i-2];
-					triangles[1] = geoInfo.getCoordinateIndices()[i-1];
-					triangles[2] = geoInfo.getCoordinateIndices()[i];
-					
-					Vector3D v0 = Vector3D.of(
-							geoInfo.getCoordinates()[triangles[0]].getX(), 
-							geoInfo.getCoordinates()[triangles[0]].getY(), 
-							geoInfo.getCoordinates()[triangles[0]].getZ()
-					);
-					
-					Vector3D v1 = Vector3D.of(
-							geoInfo.getCoordinates()[triangles[1]].getX(), 
-							geoInfo.getCoordinates()[triangles[1]].getY(), 
-							geoInfo.getCoordinates()[triangles[1]].getZ()
-					);
-					
-					Vector3D v2 = Vector3D.of(
-							geoInfo.getCoordinates()[triangles[2]].getX(), 
-							geoInfo.getCoordinates()[triangles[2]].getY(), 
-							geoInfo.getCoordinates()[triangles[2]].getZ()
-					);
-					
-					Triangle3D triangle = Planes.triangleFromVertices(v0, v1, v2, Precision.doubleEquivalenceOfEpsilon(precision));
 
-					tree3d.insert(
-						triangle
-					);
-					
-					
-					//System.out.println("[" +v0.toString() + ", " + v1.toString() + ", " + v2.toString() + "]");
-					//System.out.println(v0.eq(v1, Precision.doubleEquivalenceOfEpsilon(precision)));
-					//System.out.println(v1.eq(v2, Precision.doubleEquivalenceOfEpsilon(precision)));
-					//System.out.println(v2.eq(v0, Precision.doubleEquivalenceOfEpsilon(precision)));
-					
-					//builder.addFaceAndVertices(v0, v1, v2);
-					
-				}
-				
-				geoms.add(tree3d);
-				
-				
+                //ALTERNATIVE A
+                //===================================================================
 
-				//ALTERNATIVE B
-				//===================================================================
+
+                //System.out.println(Arrays.toString(geoInfo.getCoordinateIndices()));
+
+
+                RegionBSPTree3D tree3d = RegionBSPTree3D.empty();
+
+                for (int i = 2; i < geoInfo.getCoordinateIndices().length; i += 3) {
+
+                    int[] triangles = new int[3];
+                    triangles[0] = geoInfo.getCoordinateIndices()[i - 2];
+                    triangles[1] = geoInfo.getCoordinateIndices()[i - 1];
+                    triangles[2] = geoInfo.getCoordinateIndices()[i];
+
+                    Vector3D v0 = Vector3D.of(
+                            geoInfo.getCoordinates()[triangles[0]].getX(),
+                            geoInfo.getCoordinates()[triangles[0]].getY(),
+                            geoInfo.getCoordinates()[triangles[0]].getZ()
+                    );
+
+                    Vector3D v1 = Vector3D.of(
+                            geoInfo.getCoordinates()[triangles[1]].getX(),
+                            geoInfo.getCoordinates()[triangles[1]].getY(),
+                            geoInfo.getCoordinates()[triangles[1]].getZ()
+                    );
+
+                    Vector3D v2 = Vector3D.of(
+                            geoInfo.getCoordinates()[triangles[2]].getX(),
+                            geoInfo.getCoordinates()[triangles[2]].getY(),
+                            geoInfo.getCoordinates()[triangles[2]].getZ()
+                    );
+
+                    Triangle3D triangle = Planes.triangleFromVertices(v0, v1, v2, Precision.doubleEquivalenceOfEpsilon(precision));
+
+                    tree3d.insert(
+                            triangle
+                    );
+
+
+                    //System.out.println("[" +v0.toString() + ", " + v1.toString() + ", " + v2.toString() + "]");
+                    //System.out.println(v0.eq(v1, Precision.doubleEquivalenceOfEpsilon(precision)));
+                    //System.out.println(v1.eq(v2, Precision.doubleEquivalenceOfEpsilon(precision)));
+                    //System.out.println(v2.eq(v0, Precision.doubleEquivalenceOfEpsilon(precision)));
+
+                    //builder.addFaceAndVertices(v0, v1, v2);
+
+                }
+
+                geoms.add(tree3d);
+
+
+                //ALTERNATIVE B
+                //===================================================================
 				
 				/*
 				ArrayList<Vector3D> vector3ds = new ArrayList<Vector3D>();
@@ -388,29 +386,29 @@ public class CheckElementIntersection extends AbstractFunction {
 				
 				geoms.add(mesh.toTree());
 				*/
-				
-			}
-		}
-		return geoms;
-	}
-	
-	private ArrayList<IfcObjectDefinition> getDecomposedElements(IfcObjectDefinition.Ifc4 product){
-		ArrayList<IfcObjectDefinition> decompositionSet = new ArrayList<IfcObjectDefinition>();
-		
-		SET<IfcRelAggregates.Ifc4> decompRelObjs = product.getIsDecomposedBy_Inverse();
-		
-		if(decompRelObjs != null) {
-			for(IfcRelAggregates.Ifc4 decompRelObj : decompRelObjs) {
-				IfcRelAggregates.Ifc4 decompRel = (IfcRelAggregates.Ifc4)decompRelObj;
-				decompositionSet.addAll(decompRel.getRelatedObjects());
-				
-				for(IfcObjectDefinition.Ifc4 decompObj : decompRel.getRelatedObjects()) {
-					decompositionSet.addAll(getDecomposedElements(decompObj));
-				}
-			}
-		}
-		
-		return decompositionSet;
-	}
-	
+
+            }
+        }
+        return geoms;
+    }
+
+    private ArrayList<IfcObjectDefinition> getDecomposedElements(IfcObjectDefinition.Ifc4 product) {
+        ArrayList<IfcObjectDefinition> decompositionSet = new ArrayList<IfcObjectDefinition>();
+
+        SET<IfcRelAggregates.Ifc4> decompRelObjs = product.getIsDecomposedBy_Inverse();
+
+        if (decompRelObjs != null) {
+            for (IfcRelAggregates.Ifc4 decompRelObj : decompRelObjs) {
+                IfcRelAggregates.Ifc4 decompRel = (IfcRelAggregates.Ifc4) decompRelObj;
+                decompositionSet.addAll(decompRel.getRelatedObjects());
+
+                for (IfcObjectDefinition.Ifc4 decompObj : decompRel.getRelatedObjects()) {
+                    decompositionSet.addAll(getDecomposedElements(decompObj));
+                }
+            }
+        }
+
+        return decompositionSet;
+    }
+
 }

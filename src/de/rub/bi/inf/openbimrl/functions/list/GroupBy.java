@@ -1,11 +1,11 @@
 package de.rub.bi.inf.openbimrl.functions.list;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import de.rub.bi.inf.openbimrl.NodeProxy;
 import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Groups a list of items by key and value pairs.

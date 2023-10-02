@@ -1,11 +1,11 @@
 package de.rub.bi.inf.openbimrl.functions.list;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import de.rub.bi.inf.openbimrl.NodeProxy;
 import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Joins two collections to one ArrayList.

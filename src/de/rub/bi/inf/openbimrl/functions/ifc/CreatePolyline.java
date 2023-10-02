@@ -1,12 +1,11 @@
 package de.rub.bi.inf.openbimrl.functions.ifc;
 
-import java.util.ArrayList;
-
 import de.rub.bi.inf.openbimrl.NodeProxy;
 import de.rub.bi.inf.openbimrl.engine.ifc.*;
+import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 import org.apache.commons.geometry.euclidean.threed.Vector3D;
 
-import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
+import java.util.ArrayList;
 
 /**
  * Creates a polyline based on a list of Vector3D.
@@ -15,13 +14,12 @@ import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
  */
 public class CreatePolyline extends AbstractFunction {
 
+    private static final Adapter adapter = Adapter.getInstance();
     private ArrayList<IIFCClass> memory = new ArrayList<>();
 
     public CreatePolyline(NodeProxy nodeProxy) {
         super(nodeProxy);
     }
-
-    private static final Adapter adapter = Adapter.getInstance();
 
     @Override
     public void execute(IIFCModel ifcModel) {

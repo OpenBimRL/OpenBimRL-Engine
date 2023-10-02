@@ -1,18 +1,13 @@
 package de.rub.bi.inf.openbimrl;
 
-import java.util.AbstractCollection;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCProduct;
-import de.rub.bi.inf.openbimrl.helper.FilterInterpreter;
 import de.rub.bi.inf.model.ResultObject;
 import de.rub.bi.inf.model.ResultObjectGroup;
 import de.rub.bi.inf.model.SimpleRule;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCProduct;
+import de.rub.bi.inf.openbimrl.helper.FilterInterpreter;
+
+import java.util.*;
 
 
 /**

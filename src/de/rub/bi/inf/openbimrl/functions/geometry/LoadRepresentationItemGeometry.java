@@ -1,14 +1,14 @@
 package de.rub.bi.inf.openbimrl.functions.geometry;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Collection;
-
 import de.rub.bi.inf.openbimrl.NodeProxy;
 import de.rub.bi.inf.openbimrl.engine.ifc.IIFCClass;
 import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.engine.ifc.IIFCShapeRepresentation;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Loads an representation item´newly created into the model context, and therfore into the viewer.
@@ -22,6 +22,13 @@ public class LoadRepresentationItemGeometry extends AbstractFunction {
 
     public LoadRepresentationItemGeometry(NodeProxy nodeProxy) {
         super(nodeProxy);
+    }
+
+    public static Material createMatrial(Color color) {
+        Material material = new Material();
+        material.setDiffuseColor(new Color3f(color));
+        material.setAmbientColor(new Color3f(color));
+        return material;
     }
 
     @Override
@@ -70,7 +77,6 @@ public class LoadRepresentationItemGeometry extends AbstractFunction {
         }
 
     }
-
 
     public ArrayList<CadObjectJ3D> generateAnnotationCurve3D(IIFCShapeRepresentation shape) {
         ArrayList<CadObjectJ3D> results = new ArrayList<CadObjectJ3D>();
@@ -133,7 +139,6 @@ public class LoadRepresentationItemGeometry extends AbstractFunction {
         return results;
     }
 
-
     public Appearance createAppearance(Color color) {
         Appearance appearance = new Appearance();
         appearance.setMaterial(createMatrial(color));
@@ -157,15 +162,6 @@ public class LoadRepresentationItemGeometry extends AbstractFunction {
 
         return appearance;
     }
-
-
-    public static Material createMatrial(Color color) {
-        Material material = new Material();
-        material.setDiffuseColor(new Color3f(color));
-        material.setAmbientColor(new Color3f(color));
-        return material;
-    }
-
 
     private void memReset(IIFCModel ifcModel) {
         if (branchgroup == null) {

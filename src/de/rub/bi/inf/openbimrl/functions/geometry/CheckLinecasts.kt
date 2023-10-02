@@ -1,7 +1,7 @@
 package engine.openbimrl.inf.bi.rub.de.de.rub.bi.inf.openbimrl.functions.geometry
 
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel
 import de.rub.bi.inf.openbimrl.NodeProxy
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction
 import org.apache.commons.geometry.euclidean.threed.RegionBSPTree3D
 import org.apache.commons.geometry.euclidean.threed.line.Segment3D

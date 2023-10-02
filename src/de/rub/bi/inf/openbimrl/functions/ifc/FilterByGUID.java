@@ -6,24 +6,23 @@ import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 /**
  * Filters an IFC model and retrieves the element of a certain GUID.
- * 
- * @author Marcel Stepien
  *
+ * @author Marcel Stepien
  */
 public class FilterByGUID extends AbstractFunction {
 
-	public FilterByGUID(NodeProxy nodeProxy) {
-		super(nodeProxy);
-	}
+    public FilterByGUID(NodeProxy nodeProxy) {
+        super(nodeProxy);
+    }
 
-	@Override
-	public void execute(IIFCModel ifcModel) {
+    @Override
+    public void execute(IIFCModel ifcModel) {
 
-		String guid = getInput(0);
-		
-		Object object = ifcModel.getObjectByID(guid);
-				
-		setResult(0, object);
-	}
+        String guid = getInput(0);
+
+        Object object = ifcModel.getObjectByID(guid);
+
+        setResult(0, object);
+    }
 
 }

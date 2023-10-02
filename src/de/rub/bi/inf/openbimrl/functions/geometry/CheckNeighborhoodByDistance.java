@@ -1,13 +1,12 @@
 package de.rub.bi.inf.openbimrl.functions.geometry;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.NodeProxy;
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 import javax.vecmath.Point3f;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Checks if geometic object are close to each other based on their geometric definitions.
