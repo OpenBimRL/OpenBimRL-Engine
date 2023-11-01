@@ -1,4 +1,4 @@
-package engine.openbimrl.inf.bi.rub.de
+package de.rub.bi.inf.openbimrl
 
 import de.rub.bi.inf.model.RuleBase
 import de.rub.bi.inf.openbimrl.helper.OpenBimRLReader

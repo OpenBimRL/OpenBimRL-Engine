@@ -8,12 +8,6 @@
 
     <packaging>jar</packaging>
 
-    <parent>
-        <groupId>inf.bi.rub.de</groupId>
-        <artifactId>OpenBimRL-APP</artifactId>
-        <version>1</version>
-    </parent>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.class>engine.openbimrl.inf.bi.rub.de.ConsoleApplicationKt</main.class>
@@ -135,16 +129,13 @@
         <dependency>
             <groupId>inf.bi.rub.de</groupId>
             <artifactId>OpenBIMRL-API</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>inf.bi.rub.de</groupId>
-            <artifactId>OpenBimRL-Engine-Adapter-IFC_JAVA</artifactId>
+            <version>2022.11.1</version>
         </dependency>
 
         <dependency>
             <groupId>inf.bi.rub.de</groupId>
             <artifactId>OpenBimRL-Engine-Adapter</artifactId>
+            <version>2022.11.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
@@ -157,10 +148,12 @@
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
+            <version>1.9.10</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-test-junit</artifactId>
+            <version>1.9.10</version>
         </dependency>
     </dependencies>
 
@@ -171,7 +164,7 @@
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
-                <version>${kotlin.version}</version>
+                <version>1.9.10</version>
                 <executions>
                     <execution>
                         <id>compile</id>
