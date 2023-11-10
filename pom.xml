@@ -10,7 +10,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <main.class>engine.openbimrl.inf.bi.rub.de.ConsoleApplicationKt</main.class>
+        <main.class>de.rub.bi.inf.openbimrl.ConsoleApplicationKt</main.class>
 
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
@@ -36,6 +36,20 @@
             <artifactId>j3d-core-utils</artifactId>
             <version>1.5.2</version>
         </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna-platform</artifactId>
+            <version>5.6.0</version>
+        </dependency>
+
 
         <!-- JAXB -->
         <!-- ================================================= -->
@@ -154,6 +168,12 @@
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-test-junit</artifactId>
             <version>1.9.10</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.classgraph</groupId>
+            <artifactId>classgraph</artifactId>
+            <version>4.8.164</version>
         </dependency>
     </dependencies>
 

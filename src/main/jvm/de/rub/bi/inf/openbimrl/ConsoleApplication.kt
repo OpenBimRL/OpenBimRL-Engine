@@ -5,17 +5,14 @@ import de.rub.bi.inf.openbimrl.helper.OpenBimRLReader
 import java.io.File
 import kotlin.io.path.Path
 
+import de.rub.bi.inf.nativelib.*
+
 
 fun main(args: Array<String>) {
 
-    try {
-		System.load("/usr/java/packages/lib/openbimrl-ifcopenshell.so")
-	} catch (e: Exception) {
-		e.printStackTrace();
-		System.exit(1);
-	}
+    val functions = FunctionsNative("test.so");
 
-    println(test12() + "lol")
+    println(functions.sum(10, 10))
 
     if (args.isEmpty()) {
         println(usage())
@@ -36,8 +33,6 @@ fun main(args: Array<String>) {
         println(ruleDef.getCheckingProtocol())
     }
 }
-
-external fun test12(): String
 
 private fun usage(): String {
     return "Usage: java -jar OpenBimRL-Engine-<Version>-jar-with-dependencies.jar 1.openbimrl [*.openbimrl] [model.ifc]"
