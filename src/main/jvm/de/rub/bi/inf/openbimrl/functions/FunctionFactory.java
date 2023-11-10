@@ -10,8 +10,8 @@ import de.rub.bi.inf.openbimrl.functions.list.*;
 import de.rub.bi.inf.openbimrl.functions.math.Addition;
 import de.rub.bi.inf.openbimrl.functions.math.Maximum;
 import de.rub.bi.inf.openbimrl.functions.math.Subtraction;
-import engine.openbimrl.inf.bi.rub.de.de.rub.bi.inf.openbimrl.functions.geometry.CheckIntersection;
-import engine.openbimrl.inf.bi.rub.de.de.rub.bi.inf.openbimrl.functions.geometry.CheckLinecasts;
+import de.rub.bi.inf.openbimrl.functions.geometry.CheckIntersection;
+import de.rub.bi.inf.openbimrl.functions.geometry.CheckLinecasts;
 
 /**
  * This class manages a collection of available functions for OpenBimRL execution,
