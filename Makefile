@@ -6,7 +6,7 @@ prequisites:
 	mkdir -p target/lib
 
 compile: prequisites
-	$(CC) -c -fPIC src/main/cpp/lib.c -o src/main/resources/test.o
+	$(CC) -std=c++11 -c -fPIC src/main/cpp/lib.cpp -o src/main/resources/test.o
 
 make_lib: compile
-	$(CC) -shared -o src/main/resources/test.so src/main/resources/test.o && rm src/main/resources/test.o
+	$(CC) -shared -std=c++11 -lstdc++ -o src/main/resources/test.so src/main/resources/test.o && rm src/main/resources/test.o
