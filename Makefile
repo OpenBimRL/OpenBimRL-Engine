@@ -1,12 +1,15 @@
-.PHONY: make_lib
+.DEFAULT_GOAL := lib.so
+.PHONY: housekeeping
 
 CC = "clang"
+C_FLAGS = -std=c++17
+LD_FLAGS = -shared -lstdc++
 
-prequisites:
-	mkdir -p target/lib
+housekeeping:
+	rm src/main/resources/lib.o 
 
-compile: prequisites
-	$(CC) -std=c++11 -c -fPIC src/main/cpp/lib.cpp -o src/main/resources/test.o
+lib.o:
+	$(CC) $(C_FLAGS) -c -fPIC src/main/cpp/lib.cpp -o src/main/resources/lib.o
 
-make_lib: compile
-	$(CC) -shared -std=c++11 -lstdc++ -o src/main/resources/test.so src/main/resources/test.o && rm src/main/resources/test.o
+lib.so: lib.o
+	$(CC) $(C_FLAGS) $(LD_FLAGS) -o src/main/resources/lib.so src/main/resources/lib.o && make housekeeping
