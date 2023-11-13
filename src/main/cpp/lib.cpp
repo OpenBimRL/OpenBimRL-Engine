@@ -1,6 +1,6 @@
 #include <iostream>
-#include "include/json.hpp"
-#include "lib.h"
+#include "include/nlohmann/json.hpp"
+#include "include/lib.h"
 
 int sum(int n1, int n2)
 {
