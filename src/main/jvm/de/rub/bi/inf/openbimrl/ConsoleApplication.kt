@@ -10,7 +10,7 @@ import de.rub.bi.inf.nativelib.*
 
 fun main(args: Array<String>) {
 
-    val functions = FunctionsNative("test.so");
+    val functions = FunctionsNative("lib.so");
 
     println(functions.sum(10, 10))
 

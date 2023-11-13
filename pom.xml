@@ -1,6 +1,6 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>inf.bi.rub.de</groupId>
     <artifactId>OpenBimRL-Engine</artifactId>
@@ -17,11 +17,11 @@
     </properties>
 
     <repositories>
-    <repository>
-        <id>ImageJ Public Repository</id>
-        <name>ImageJ Public Repository</name>
-        <url>https://maven.imagej.net/content/repositories/public/</url>
-    </repository>
+        <repository>
+            <id>ImageJ Public Repository</id>
+            <name>ImageJ Public Repository</name>
+            <url>https://maven.imagej.net/content/repositories/public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -178,71 +178,87 @@
     </dependencies>
 
     <build>
-    <sourceDirectory>${project.basedir}/src/main/jvm</sourceDirectory>
+        <sourceDirectory>${project.basedir}/src/main/jvm</sourceDirectory>
         <testSourceDirectory>${project.basedir}/src/test</testSourceDirectory>
         <plugins>
-        <plugin>
-        <groupId>org.jetbrains.kotlin</groupId>
-        <artifactId>kotlin-maven-plugin</artifactId>
-        <version>1.9.10</version>
-        <executions>
-        <execution>
-        <id>compile</id>
-        <phase>process-sources</phase>
-        <goals>
-        <goal>compile</goal>
-        </goals>
-        <configuration>
-        <sourceDirs>
-        <source>src/main/jvm</source>
-        </sourceDirs>
-        </configuration>
-        </execution>
-        <execution>
-        <id>test-compile</id>
-        <phase>test-compile</phase>
-        <goals>
-        <goal>test-compile</goal>
-        </goals>
-        <configuration>
-        <sourceDirs>
-        <source>src/test</source>
-        </sourceDirs>
-        </configuration>
-        </execution>
-        </executions>
-        </plugin>
-        <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <executions>
-        <execution>
-        <phase>package</phase>
-        <goals>
-        <goal>single</goal>
-        </goals>
-        <configuration>
-        <archive>
-        <manifest>
-        <mainClass>${main.class}</mainClass>
-        </manifest>
-        </archive>
-        <descriptorRefs>
-        <descriptorRef>jar-with-dependencies</descriptorRef>
-        </descriptorRefs>
-        </configuration>
-        </execution>
-        </executions>
-        </plugin>
-        <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>3.1.0</version>
-        <configuration>
-        <mainClass>${main.class}</mainClass>
-        </configuration>
-        </plugin>
+            <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <version>1.9.10</version>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <source>src/main/jvm</source>
+                            </sourceDirs>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <source>src/test</source>
+                            </sourceDirs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <executable>make</executable>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <mainClass>${main.class}</mainClass>
+                                </manifest>
+                            </archive>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>${main.class}</mainClass>
+                </configuration>
+            </plugin>
         </plugins>
-        </build>
+    </build>
 
 </project>
