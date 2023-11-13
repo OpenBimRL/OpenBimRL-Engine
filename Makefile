@@ -1,15 +1,26 @@
-.DEFAULT_GOAL := lib.so
-.PHONY: housekeeping
+.PHONY: housekeeping bin_dir
 
-CC = "clang"
-C_FLAGS = -std=c++17
+CC = clang++
+C_FLAGS = -std=c++17 -fPIC
 LD_FLAGS = -shared -lstdc++
+RESOURCES_DIR = src/main/resources
+BIN_DIR = target/native/bin
+SOURCE_DIR = src/main/cpp
 
-housekeeping:
-	rm src/main/resources/lib.o 
+SOURCES := $(wildcard $(SOURCE_DIR)/*.cpp)
+OBJECTS := $(patsubst $(SOURCE_DIR)/%.cpp, $(BIN_DIR)/%.o, $(SOURCES))
 
-lib.o:
-	$(CC) $(C_FLAGS) -c -fPIC src/main/cpp/lib.cpp -o src/main/resources/lib.o
+all: $(OBJECTS)
+	$(CC) $(C_FLAGS) $(LD_FLAGS) $^ -o $(RESOURCES_DIR)/lib.so
 
-lib.so: lib.o
-	$(CC) $(C_FLAGS) $(LD_FLAGS) -o src/main/resources/lib.so src/main/resources/lib.o && make housekeeping
+$(BIN_DIR)/%.o: $(SOURCE_DIR)/%.cpp bin_dir
+	$(CC) $(C_FLAGS) -c $< -o $@
+
+bin_dir:
+	mkdir -p $(BIN_DIR)
+
+# lib.o: bin_dir
+# 	$(CC) $(C_FLAGS) -c $(SOURCE_DIR)/lib.cpp -o $(BIN_DIR)/lib.o
+
+# lib.so: lib.o
+# 	$(CC) $(C_FLAGS) $(LD_FLAGS) -o $(RESOURCES_DIR)/lib.so $(BIN_DIR)/lib.o
