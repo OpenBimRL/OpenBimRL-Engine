@@ -2,6 +2,7 @@
 /build
 /target
 /.settings
+/test
 .classpath
 .project
 
