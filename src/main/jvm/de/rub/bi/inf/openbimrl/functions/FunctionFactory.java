@@ -10,8 +10,8 @@ import de.rub.bi.inf.openbimrl.functions.list.*;
 import de.rub.bi.inf.openbimrl.functions.math.Addition;
 import de.rub.bi.inf.openbimrl.functions.math.Maximum;
 import de.rub.bi.inf.openbimrl.functions.math.Subtraction;
-import de.rub.bi.inf.openbimrl.functions.geometry.CheckIntersection;
-import de.rub.bi.inf.openbimrl.functions.geometry.CheckLinecasts;
+// import de.rub.bi.inf.openbimrl.functions.geometry.CheckIntersection;
+// import de.rub.bi.inf.openbimrl.functions.geometry.CheckLinecasts;
 
 /**
  * This class manages a collection of available functions for OpenBimRL execution,
@@ -140,9 +140,9 @@ public class FunctionFactory {
             case "geometry.createCollisionSphere":
                 function = new CreateCollisionSphere(nodeProxy);
                 break;
-            case "geometry.checkIntersection":
-                function = new CheckIntersection(nodeProxy);
-                break;
+            // case "geometry.checkIntersection":
+            // function = new CheckIntersection(nodeProxy);
+            // break;
             case "geometry.convertToRegionBSPTree":
                 function = new ConvertToRegionBSPTree(nodeProxy);
                 break;
@@ -176,9 +176,9 @@ public class FunctionFactory {
             case "geometry.unifyRegionBSPTree":
                 function = new UnifyRegionBSPTree(nodeProxy);
                 break;
-            case "geometry.checkLinecasts":
-                function = new CheckLinecasts(nodeProxy);
-                break;
+            // case "geometry.checkLinecasts":
+            // function = new CheckLinecasts(nodeProxy);
+            // break;
             case "geometry.showGraph":
                 function = new ShowGraph(nodeProxy);
                 break;

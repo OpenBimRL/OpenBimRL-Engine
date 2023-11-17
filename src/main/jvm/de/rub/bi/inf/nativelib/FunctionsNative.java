@@ -3,9 +3,6 @@ package de.rub.bi.inf.nativelib;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLClassLoader;
-
-import io.github.classgraph.ClassGraph;
 
 import org.apache.commons.io.FileUtils;
 
@@ -16,7 +13,17 @@ public class FunctionsNative implements FunctionsLibrary {
   private final FunctionsLibrary functionsNative;
 
   public FunctionsNative(final String fileName) throws IOException {
-    functionsNative = Native.loadLibrary(extractFile(fileName), FunctionsLibrary.class);
+    functionsNative = Native.load(extractFile(fileName), FunctionsLibrary.class);
+  }
+
+  @Override
+  public boolean initIfc4(final String fileName) {
+    return functionsNative.initIfc4(fileName);
+  }
+
+  @Override
+  public boolean initIfc2x3(final String fileName) {
+    return functionsNative.initIfc2x3(fileName);
   }
 
   @Override
