@@ -169,12 +169,6 @@
             <artifactId>kotlin-test-junit</artifactId>
             <version>1.9.10</version>
         </dependency>
-
-        <dependency>
-            <groupId>io.github.classgraph</groupId>
-            <artifactId>classgraph</artifactId>
-            <version>4.8.164</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -218,6 +212,10 @@
                 <version>3.1.0</version>
                 <configuration>
                     <executable>make</executable>
+                    <arguments>
+                        <argument>-j</argument>
+                        <argument>8</argument>
+                    </arguments>
                 </configuration>
                 <executions>
                     <execution>
