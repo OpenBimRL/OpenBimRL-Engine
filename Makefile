@@ -1,8 +1,9 @@
 .PHONY: bin_dir
 
-CC = clang++
-C_FLAGS = -std=c++20 -fPIC -I/home/remote/IfcOpenshell/src
+CC = g++
+C_FLAGS = -std=c++20 -fPIC
 LD_FLAGS = -shared -lstdc++
+libs = /usr/lib/libIfcParse.a
 RESOURCES_DIR = src/main/resources
 BIN_DIR = target/native/bin
 SOURCE_DIR = src/main/cpp
@@ -11,7 +12,7 @@ SOURCES := $(wildcard $(SOURCE_DIR)/*.cpp)
 OBJECTS := $(patsubst $(SOURCE_DIR)/%.cpp, $(BIN_DIR)/%.o, $(SOURCES))
 
 all: $(OBJECTS)
-	$(CC) $(C_FLAGS) $(LD_FLAGS) $^ -o $(RESOURCES_DIR)/lib.so /home/remote/IfcOpenshell/build/libIfcParse.a
+	$(CC) $(C_FLAGS) $(LD_FLAGS) $^ -o $(RESOURCES_DIR)/lib.so $(libs)
 
 $(BIN_DIR)/%.o: $(SOURCE_DIR)/%.cpp bin_dir
 	$(CC) $(C_FLAGS) -c $< -o $@
