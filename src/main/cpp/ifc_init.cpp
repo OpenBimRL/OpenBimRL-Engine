@@ -3,6 +3,7 @@
 
 // local includes
 #include "include/ifc_init.hpp"
+#include "include/functions/filterByGUID.hpp"
 
 static IfcParse::IfcFile *currentFile;
 
@@ -37,6 +38,8 @@ bool OpenBIMRLEngine::initIfc(char *fileName)
     }
 
     setCurrentFile(file);
+
+    OpenBIMRLEngine::functions::exec((const char *)"IfcWall");
 
     return true;
 }

@@ -1,6 +1,6 @@
 .PHONY: bin_dir
 
-CC = g++
+CC = clang++
 C_FLAGS = -std=c++20 -fPIC
 LD_FLAGS = -shared -lstdc++
 libs = /usr/lib/libIfcParse.a
@@ -8,20 +8,22 @@ RESOURCES_DIR = src/main/resources
 BIN_DIR = target/native/bin
 SOURCE_DIR = src/main/cpp
 
+# Sources
 SOURCES := $(wildcard $(SOURCE_DIR)/*.cpp)
 OBJECTS := $(patsubst $(SOURCE_DIR)/%.cpp, $(BIN_DIR)/%.o, $(SOURCES))
+# Functions
+FUNCTION_SOURCES := $(wildcard $(SOURCE_DIR)/functions/*.cpp)
+FUNCTION_OBJECTS := $(patsubst $(SOURCE_DIR)/functions/%.cpp, $(BIN_DIR)/%.o, $(FUNCTION_SOURCES))
 
-all: $(OBJECTS)
+all: $(OBJECTS) $(FUNCTION_OBJECTS)
 	$(CC) $(C_FLAGS) $(LD_FLAGS) $^ -o $(RESOURCES_DIR)/lib.so $(libs)
 
 $(BIN_DIR)/%.o: $(SOURCE_DIR)/%.cpp bin_dir
-	$(CC) $(C_FLAGS) -c $< -o $@
+	$(CC) $(C_FLAGS) -c $< -o $@ -I src/main/cpp
+
+$(BIN_DIR)/%.o: $(SOURCE_DIR)/functions/%.cpp bin_dir
+	$(CC) $(C_FLAGS) -c $< -o $@ -I src/main/cpp
 
 bin_dir:
-	mkdir -p $(BIN_DIR)
-
-# lib.o: bin_dir
-# 	$(CC) $(C_FLAGS) -c $(SOURCE_DIR)/lib.cpp -o $(BIN_DIR)/lib.o
-
-# lib.so: lib.o
-# 	$(CC) $(C_FLAGS) $(LD_FLAGS) -o $(RESOURCES_DIR)/lib.so $(BIN_DIR)/lib.o
+	mkdir -p $(BIN_DIR) 
+	mkdir -p $(BIN_DIR)/functions

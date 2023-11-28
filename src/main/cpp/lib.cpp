@@ -4,13 +4,6 @@
 
 #include "ifcparse/IfcLogger.h"
 
-struct returnType
-{
-    char *type;
-    int size;
-    void *content[];
-};
-
 int sum(int n1, int n2)
 {
     std::cout << "calculating: " << n1 << " + " << n2 << std::endl;
