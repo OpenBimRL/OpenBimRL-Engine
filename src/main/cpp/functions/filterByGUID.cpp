@@ -1,13 +1,12 @@
-#include "include/functions/filterByGUID.hpp"
+#include <ifcparse/Ifc2x3.h>
 
-void OpenBIMRLEngine::functions::exec(const char *guid)
+#include "./include/functions/filterByGUID.h"
+
+void filterByGUID(void)
 {
     auto file = OpenBIMRLEngine::getCurrentFile();
 
-    aggregate_of_instance::ptr ptr = file->instances_by_type(std::string(guid));
+    auto ptr = file->instance_by_guid("guid");
 
-    for (auto it = ptr->begin(); it != ptr->end(); it++)
-    {
-        std::cout << *it << std::endl;
-    }
+    std::cout << ptr->as<Ifc2x3::IfcObject>()->GlobalId() << std::endl;
 }
