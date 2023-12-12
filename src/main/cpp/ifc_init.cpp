@@ -14,7 +14,7 @@ void setCurrentFile(IfcParse::IfcFile *newFile) {
     currentFile = newFile;
 }
 
-bool OpenBIMRLEngine::initIfc(char *fileName)
+bool OpenBIMRLEngine::initIfc(JNA::String fileName)
 {
     if (!init())
     {
@@ -39,6 +39,10 @@ bool OpenBIMRLEngine::initIfc(char *fileName)
     setCurrentFile(file);
 
     return true;
+}
+
+inline bool OpenBIMRLEngine::isIFC4() {
+    return getCurrentFile()->schema()->name() == "IFC4";
 }
 
 IfcParse::IfcFile *OpenBIMRLEngine::getCurrentFile() {

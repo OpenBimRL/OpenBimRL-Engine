@@ -4,9 +4,7 @@
 // local includes
 #include "include/ifc_init.hpp"
 
-#define IfcSchema Ifc4
-
-bool initIfc4(char *fileName)
+bool initIfc(JNA::String fileName)
 {
     return OpenBIMRLEngine::initIfc(fileName);
 }

@@ -1,9 +1,11 @@
 #ifndef LIB_H
 #define LIB_H
 
-#include <stdio.h>
+#include <cstdint>
+#include "JNA_typedefs.hpp"
 
-extern "C" int sum(int n1, int n2);
+extern "C" void ifc_object_to_string(JNA::Pointer, JNA::Pointer, std::size_t);
+
 
 bool init();
 

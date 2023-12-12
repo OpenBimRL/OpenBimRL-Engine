@@ -1,8 +1,8 @@
 .PHONY: bin_dir
 
 CC = clang++
-C_FLAGS = -std=c++20 -fPIC
-LD_FLAGS = -shared -lstdc++
+C_FLAGS = -std=c++20 -fPIC -Wall
+LD_FLAGS = -shared -lstdc++ 
 libs = /usr/lib/libIfcParse.a
 RESOURCES_DIR = src/main/resources
 BIN_DIR = target/native/bin

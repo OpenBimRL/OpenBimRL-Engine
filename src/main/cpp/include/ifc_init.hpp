@@ -6,17 +6,14 @@
 #include "ifcparse/IfcFile.h"
 
 
-extern "C"
-{
-    bool initIfc4(char *fileName);
-    bool initIfc2x3(char *fileName);
-}
-
+extern "C" bool initIfc(JNA::String fileName);
 
 namespace OpenBIMRLEngine
 {
     IfcParse::IfcFile *getCurrentFile();
-    bool initIfc(char *fileName);
+    bool initIfc(JNA::String fileName);
+    bool isIFC4();
+
 } // namespace OpenBIMRLEngine
 
 

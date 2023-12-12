@@ -1,12 +1,17 @@
-#include <ifcparse/Ifc2x3.h>
+#include <ifcparse/IfcSchema.h>
 
-#include "./include/functions/filterByGUID.h"
+#include "./include/functions/filterByGUID.hpp"
 
-void filterByGUID(void)
+void filterByGUID()
 {
-    auto file = OpenBIMRLEngine::getCurrentFile();
+    JNA::String input = getInputString(0);
+    if (input == nullptr)
+        return;
 
-    auto ptr = file->instance_by_guid("guid");
+    auto guid = std::string(input); // create c++ string from char*
+    IfcParse::IfcFile *file = OpenBIMRLEngine::getCurrentFile();
 
-    std::cout << ptr->as<Ifc2x3::IfcObject>()->GlobalId() << std::endl;
+    IfcUtil::IfcBaseClass *ptr = file->instance_by_guid(guid);
+
+    setOutputPointer(0, ptr);
 }

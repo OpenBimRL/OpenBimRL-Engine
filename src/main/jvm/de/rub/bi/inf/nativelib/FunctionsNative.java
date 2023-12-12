@@ -8,30 +8,21 @@ import org.apache.commons.io.FileUtils;
 
 import com.sun.jna.Native;
 
-public class FunctionsNative implements FunctionsLibrary {
+public class FunctionsNative {
 
-  private final FunctionsLibrary functionsNative;
+  private static FunctionsLibrary functionsNative;
 
-  public FunctionsNative(final String fileName) throws IOException {
+  public static FunctionsLibrary getInstance() {
+    if (functionsNative != null)
+      return functionsNative;
+    throw new UnsatisfiedLinkError("library not loaded. Try calling `new FunctionsNative(libName)`");
+  }
+
+  public static void create(String fileName) throws IOException {
     functionsNative = Native.load(extractFile(fileName), FunctionsLibrary.class);
   }
 
-  @Override
-  public boolean initIfc4(final String fileName) {
-    return functionsNative.initIfc4(fileName);
-  }
-
-  @Override
-  public boolean initIfc2x3(final String fileName) {
-    return functionsNative.initIfc2x3(fileName);
-  }
-
-  @Override
-  public int sum(final int n1, final int n2) {
-    return functionsNative.sum(n1, n2);
-  }
-
-  private String extractFile(final String fileName) throws IOException {
+  private static String extractFile(final String fileName) throws IOException {
     final InputStream source = ClassLoader.getSystemClassLoader().getResourceAsStream(fileName);
     final File file = File.createTempFile("lib", null);
     FileUtils.copyInputStreamToFile(source, file);

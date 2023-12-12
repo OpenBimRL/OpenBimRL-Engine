@@ -3,13 +3,15 @@ package de.rub.bi.inf.openbimrl
 import de.rub.bi.inf.model.RuleBase
 import de.rub.bi.inf.nativelib.*
 import de.rub.bi.inf.openbimrl.helper.OpenBimRLReader
+
+import com.sun.jna.StringArray;
+
 import java.io.File
 
 fun main(args: Array<String>) {
 
-    val functions = FunctionsNative("lib.so")
-
-    println(functions.sum(10, 10))
+    FunctionsNative.create("lib.so")
+    val functions = FunctionsNative.getInstance()
 
     if (args.isEmpty()) {
         println(usage())
@@ -19,10 +21,14 @@ fun main(args: Array<String>) {
     val openBimRlFiles = args.filter { arg -> arg.endsWith(".openbimrl") }.map { arg -> File(arg) }
     val ifcFile = args.find { arg -> arg.endsWith(".ifc") }
 
-    if (ifcFile != null && functions.initIfc4(ifcFile)) {
+    if (ifcFile != null && functions.initIfc(ifcFile)) {
         println("model loaded successfully")
     } else println("no model loaded")
 
+    if (openBimRlFiles.isEmpty()) {
+        println("no checking file loaded")
+        return
+    }
     val test = OpenBimRLReader(openBimRlFiles)
 
     for (ruleDef in RuleBase.getInstance().rules) {
