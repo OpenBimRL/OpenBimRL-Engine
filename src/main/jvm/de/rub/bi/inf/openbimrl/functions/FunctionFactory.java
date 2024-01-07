@@ -15,14 +15,14 @@ import de.rub.bi.inf.openbimrl.functions.math.Subtraction;
 
 /**
  * This class manages a collection of available functions for OpenBimRL execution,
- * effectivly mapping all available function containing classes to an idenifier namespace.
- * These templates are then called on demand, depending on wich funtion should be executed.
+ * effectively mapping all available function containing classes to an identifier namespace.
+ * These templates are then called on demand, depending on which function should be executed.
  *
  * @author Marcel Stepien, Andre Vonthron
  */
 public class FunctionFactory {
 
-    public static AbstractFunction getFuction(NodeProxy nodeProxy) {
+    public static AbstractFunction getFunction(NodeProxy nodeProxy) {
 
         String functionString = nodeProxy.getNode().getFunction();
 

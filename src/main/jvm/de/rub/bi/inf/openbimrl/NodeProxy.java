@@ -22,7 +22,7 @@ public class NodeProxy {
 
     public NodeProxy(NodeType node) {
         this.node = node;
-        this.function = FunctionFactory.getFuction(this);
+        this.function = FunctionFactory.getFunction(this);
 
         //initialize lists
         if (node.getInputs() != null && node.getInputs().getInput() != null)

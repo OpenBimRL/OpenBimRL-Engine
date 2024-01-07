@@ -31,7 +31,7 @@ public abstract class AbstractFunction {
     /**
      * Executes the function on a given model context.
      * Incoming inputs are provided by getInput-method.
-     * Calculated an valid results are then stored by
+     * Calculated a valid results are then stored by
      * setting them via the setResult-method.
      *
      * @param ifcModel
