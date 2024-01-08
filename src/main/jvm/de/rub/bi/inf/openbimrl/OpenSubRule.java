@@ -1,5 +1,6 @@
 package de.rub.bi.inf.openbimrl;
 
+import de.rub.bi.inf.logger.RuleLogger;
 import de.rub.bi.inf.model.ResultObject;
 import de.rub.bi.inf.model.ResultObjectGroup;
 import de.rub.bi.inf.model.SimpleRule;
@@ -32,7 +33,7 @@ public class OpenSubRule extends SimpleRule {
 
 
     @Override
-    public void check(IIFCModel ifcModel) {
+    public void check(IIFCModel ifcModel, RuleLogger logger) {
         //Reset the check
         this.checkedStatus = CheckedStatus.UNCHECKED;
         this.checkingProtocol = new ArrayList<String>();
@@ -127,7 +128,7 @@ public class OpenSubRule extends SimpleRule {
                 return results.stream().allMatch(e -> e);
             case "or":
                 return results.stream().anyMatch(e -> e);
-            case "xor":
+            case "xor": // Marcel: writes t'odo. Florian: well this doesn't look that bad. Also Florian: WAIT A SEC!
                 return results.stream().anyMatch(e -> e); //TODO: Must be implemented properly
             default:
                 break;

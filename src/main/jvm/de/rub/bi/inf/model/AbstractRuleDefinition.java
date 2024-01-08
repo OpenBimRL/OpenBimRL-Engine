@@ -1,5 +1,6 @@
 package de.rub.bi.inf.model;
 
+import de.rub.bi.inf.logger.RuleLogger;
 import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public abstract class AbstractRuleDefinition {
     /**
      * Template method for defining a function or rule for execution.
      */
-    public abstract void check(IIFCModel ifcModel);
+    public abstract void check(IIFCModel ifcModel, RuleLogger logger);
 
     public String getCheckingProtocol() {
         final var text = new StringBuilder();

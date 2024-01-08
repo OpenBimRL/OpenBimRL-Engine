@@ -3,8 +3,7 @@ package de.rub.bi.inf.openbimrl
 import de.rub.bi.inf.model.RuleBase
 import de.rub.bi.inf.nativelib.*
 import de.rub.bi.inf.openbimrl.helper.OpenBimRLReader
-
-import com.sun.jna.StringArray;
+import de.rub.bi.inf.logger.RuleLogger
 
 import java.io.File
 
@@ -32,7 +31,7 @@ fun main(args: Array<String>) {
     val test = OpenBimRLReader(openBimRlFiles)
 
     for (ruleDef in RuleBase.getInstance().rules) {
-        ruleDef.check(null)
+        ruleDef.check(null, RuleLogger())
         println(ruleDef.checkedStatus)
         println(ruleDef.resultObjects.size)
         println(ruleDef.getCheckingProtocol())

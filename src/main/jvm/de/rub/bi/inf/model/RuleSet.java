@@ -1,5 +1,6 @@
 package de.rub.bi.inf.model;
 
+import de.rub.bi.inf.logger.RuleLogger;
 import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 
 import java.util.ArrayList;
@@ -14,8 +15,8 @@ public class RuleSet extends AbstractRuleDefinition {
     protected ArrayList<AbstractRuleDefinition> children = new ArrayList<>();
 
     @Override
-    public void check(IIFCModel ifcModel) {
-        children.forEach(r -> r.check(ifcModel));
+    public void check(IIFCModel ifcModel, RuleLogger logger) {
+        children.forEach(r -> r.check(ifcModel, logger));
     }
 
     public void addChild(AbstractRuleDefinition ruleDefinition) {

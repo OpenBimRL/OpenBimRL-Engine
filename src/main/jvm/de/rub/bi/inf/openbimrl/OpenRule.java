@@ -1,5 +1,6 @@
 package de.rub.bi.inf.openbimrl;
 
+import de.rub.bi.inf.logger.RuleLogger;
 import de.rub.bi.inf.model.AbstractRuleDefinition;
 import de.rub.bi.inf.model.ResultObject;
 import de.rub.bi.inf.model.ResultObjectGroup;
@@ -94,21 +95,21 @@ public class OpenRule extends RuleSet {
     }
 
     @Override
-    public void check(IIFCModel ifcModel) {
+    public void check(IIFCModel ifcModel, RuleLogger logger) {
         //Reset the check
         this.resultObjects = new ArrayList<ResultObjectGroup>();
         this.checkedStatus = CheckedStatus.UNCHECKED;
         this.checkingProtocol = new ArrayList<String>();
 
         //Step 1: Build Precalculation
-        this.handlePrecalculations(ifcModel);
+        this.handlePrecalculations(ifcModel, logger);
 
         //Step 2: Transfer via RuleIdentifier
         boolean allParametersAvailable = handleRuleIdentifier();
 
         //Step 3: Execute Rules
         if (allParametersAvailable) {
-            handleRuleChecks(ifcModel);
+            handleRuleChecks(ifcModel, logger);
         } else {
             this.checkingProtocol.add("Some precalculations were not available");
             this.checkedStatus = CheckedStatus.FAILED;
@@ -121,7 +122,7 @@ public class OpenRule extends RuleSet {
     /**
      * @param ifcModel
      */
-    private void handlePrecalculations(IIFCModel ifcModel) {
+    private void handlePrecalculations(IIFCModel ifcModel, RuleLogger logger) {
         for (NodeType node : precalculationContext.getGraphSortedNodes()) { // precalculationContext.getGraphNodes()) {
 
             //System.out.println(node.getId()+" (FunctionName): " + node.getFunction());
@@ -133,6 +134,11 @@ public class OpenRule extends RuleSet {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            logger.logNode(node.getId(),
+                    nodeProxy.getInputEdges().stream().map(EdgeProxy::getCurrentData).toArray(),
+                    nodeProxy.getFunction().getResults().toArray()
+            );
 
             for (int i = 0; i < node.getOutputs().getOutput().size(); i++) {
                 Object outputValue = nodeProxy.getFunction().getResults().get(i);
@@ -178,12 +184,12 @@ public class OpenRule extends RuleSet {
     /**
      * @param ifcModel
      */
-    private void handleRuleChecks(IIFCModel ifcModel) {
+    private void handleRuleChecks(IIFCModel ifcModel, RuleLogger logger) {
         //Execute for all subrules
         CheckedStatus tempStatus = CheckedStatus.WARNING;
 
         for (AbstractRuleDefinition subRule : getChildren()) {
-            subRule.check(ifcModel);
+            subRule.check(ifcModel, logger);
 
             if (subRule.getCheckedStatus().equals(CheckedStatus.FAILED)) {
                 tempStatus = CheckedStatus.FAILED;
