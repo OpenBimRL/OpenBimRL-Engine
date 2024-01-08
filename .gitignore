@@ -5,6 +5,7 @@
 /test
 .classpath
 .project
+.idea
 
 /*.iml
 *.so
