@@ -4,7 +4,7 @@ import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 import de.rub.bi.inf.openbimrl.functions.FunctionFactory;
 
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * A proxy element for precalculation nodes. Performes the calculation of a single node function
@@ -14,10 +14,9 @@ import java.util.ArrayList;
  */
 public class NodeProxy {
 
-    private NodeType node;
-    private ArrayList<EdgeProxy>[] inputEdges;
-    private ArrayList<EdgeProxy>[] outputEdges;
-
+    private final Optional<List<ArrayList<EdgeProxy>>> inputEdges;
+    private final Optional<List<ArrayList<EdgeProxy>>> outputEdges;
+    private final NodeType node;
     private AbstractFunction function;
 
     public NodeProxy(NodeType node) {
@@ -26,20 +25,23 @@ public class NodeProxy {
 
         //initialize lists
         if (node.getInputs() != null && node.getInputs().getInput() != null)
-            inputEdges = new ArrayList[node.getInputs().getInput().size()];
+            inputEdges = Optional.of(List.of(new ArrayList<>(node.getInputs().getInput().size())));
+        else inputEdges = Optional.empty();
         if (node.getOutputs() != null && node.getOutputs().getOutput() != null)
-            outputEdges = new ArrayList[node.getOutputs().getOutput().size()];
+            outputEdges = Optional.of(List.of(new ArrayList<>(node.getOutputs().getOutput().size())));
+        else outputEdges = Optional.empty();
     }
 
     public void setInputEdge(EdgeProxy edge, int pos) {
 
         //TODO catch case if pos > array.length
 
-        ArrayList<EdgeProxy> inputsAtPos = inputEdges[pos];
+        // omit is present check cause Marcel didn't care either
+        ArrayList<EdgeProxy> inputsAtPos = inputEdges.get().get(pos);
 
         if (inputsAtPos == null) {
             inputsAtPos = new ArrayList<>();
-            inputEdges[pos] = inputsAtPos;
+            inputEdges.get().set(pos, inputsAtPos);
         }
 
         inputsAtPos.add(edge);
@@ -49,59 +51,64 @@ public class NodeProxy {
 
         //TODO catch case if pos > array.length
 
-        ArrayList<EdgeProxy> outputsAtPos = outputEdges[pos];
+        // omit is present check cause Marcel didn't care either
+        ArrayList<EdgeProxy> outputsAtPos = outputEdges.get().get(pos);
 
         if (outputsAtPos == null) {
             outputsAtPos = new ArrayList<>();
-            outputEdges[pos] = outputsAtPos;
+            outputEdges.get().set(pos, outputsAtPos);
         }
 
         outputsAtPos.add(edge);
     }
 
     public ArrayList<EdgeProxy> getInputEdges(int pos) {
-        if (pos < inputEdges.length)
-            return inputEdges[pos];
-        return null;
+        if (inputEdges.isEmpty()) return null;
+        if (pos >= inputEdges.get().size()) return null; // out of scope
+
+        return inputEdges.get().get(pos);
+
     }
 
     public EdgeProxy getInputEdge(int pos) {
         ArrayList<EdgeProxy> edges = getInputEdges(pos);
-        if (edges != null && edges.size() > 0) {
+        if (edges != null && !edges.isEmpty()) {
             return edges.get(0);
         }
         return null;
     }
 
     public ArrayList<EdgeProxy> getOutputEdges() {
-        ArrayList<EdgeProxy> edges = new ArrayList<EdgeProxy>();
-        for (ArrayList<EdgeProxy> oE : outputEdges) {
-            if (oE != null) {
-                edges.addAll(oE);
-            }
-        }
-        return edges;
+        return outputEdges.map(
+                arrayLists -> arrayLists.stream()
+                        .filter(Objects::nonNull) // filter null values
+                        .reduce(new ArrayList<>(arrayLists.size()), (acc, val) -> {
+                            acc.addAll(val);
+                            return acc;
+                        })
+        ).orElseGet(() -> new ArrayList<>(0)); // return empty list
     }
 
     public ArrayList<EdgeProxy> getInputEdges() {
-        ArrayList<EdgeProxy> edges = new ArrayList<EdgeProxy>();
-        for (ArrayList<EdgeProxy> oE : inputEdges) {
-            if (oE != null) {
-                edges.addAll(oE);
-            }
-        }
-        return edges;
+        return inputEdges.map(
+                arrayLists -> arrayLists.stream()
+                        .filter(Objects::nonNull) // filter null values
+                        .reduce(new ArrayList<>(arrayLists.size()), (acc, val) -> {
+                            acc.addAll(val);
+                            return acc;
+                        })
+        ).orElseGet(() -> new ArrayList<>(0)); // return empty list
     }
 
     public ArrayList<EdgeProxy> getOutputEdges(int pos) {
-        if (pos < outputEdges.length)
-            return outputEdges[pos];
+        if (pos < outputEdges.get().size())
+            return outputEdges.get().get(pos);
         return null;
     }
 
     public EdgeProxy getOutputEdge(int pos) {
         ArrayList<EdgeProxy> edges = getOutputEdges(pos);
-        if (edges != null && edges.size() > 0) {
+        if (edges != null && !edges.isEmpty()) {
             return edges.get(0);
         }
         return null;
@@ -121,7 +128,7 @@ public class NodeProxy {
     }
 
     public int getNumberOfOutputs() {
-        return outputEdges.length;
+        return outputEdges.get().size();
     }
 
     public void execute(IIFCModel ifcModel, NodeProxy nodeProxy) {
