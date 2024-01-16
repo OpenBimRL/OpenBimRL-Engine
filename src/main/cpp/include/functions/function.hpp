@@ -17,15 +17,20 @@ typedef void (*set_output_double)(uint32_t, double);
 typedef void (*set_output_integer)(uint32_t, uint32_t);
 typedef void (*set_output_string)(uint32_t, JNA::String);
 
-extern get_input_pointer getInputPointer;
-extern get_input_double getInputDouble;
-extern get_input_integer getInputInt;
-extern get_input_string getInputString;
+namespace OpenBIMRLEngine::Functions
+{
 
-extern set_output_pointer setOutputPointer;
-extern set_output_double setOutputDouble;
-extern set_output_integer setOutputInt;
-extern set_output_string setOutputString;
+    extern get_input_pointer getInputPointer;
+    extern get_input_double getInputDouble;
+    extern get_input_integer getInputInt;
+    extern get_input_string getInputString;
+
+    extern set_output_pointer setOutputPointer;
+    extern set_output_double setOutputDouble;
+    extern set_output_integer setOutputInt;
+    extern set_output_string setOutputString;
+
+}
 
 extern "C" void init_function(get_input_pointer,
                               get_input_double,

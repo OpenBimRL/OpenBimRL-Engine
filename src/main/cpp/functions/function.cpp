@@ -1,14 +1,19 @@
 #include "../include/functions/function.hpp"
 
-get_input_pointer getInputPointer;
-get_input_double getInputDouble;
-get_input_integer getInputInt;
-get_input_string getInputString;
+namespace OpenBIMRLEngine::Functions
+{
 
-set_output_pointer setOutputPointer;
-set_output_double setOutputDouble;
-set_output_integer setOutputInt;
-set_output_string setOutputString;
+    get_input_pointer getInputPointer;
+    get_input_double getInputDouble;
+    get_input_integer getInputInt;
+    get_input_string getInputString;
+
+    set_output_pointer setOutputPointer;
+    set_output_double setOutputDouble;
+    set_output_integer setOutputInt;
+    set_output_string setOutputString;
+
+}
 
 void init_function(get_input_pointer gip,
                    get_input_double gid,
@@ -20,13 +25,13 @@ void init_function(get_input_pointer gip,
                    set_output_string sos)
 {
 
-    getInputPointer = gip;
-    getInputDouble = gid;
-    getInputInt = gii;
-    getInputString = gis;
+    OpenBIMRLEngine::Functions::getInputPointer = gip;
+    OpenBIMRLEngine::Functions::getInputDouble = gid;
+    OpenBIMRLEngine::Functions::getInputInt = gii;
+    OpenBIMRLEngine::Functions::getInputString = gis;
 
-    setOutputPointer = sop;
-    setOutputDouble = sod;
-    setOutputInt = soi;
-    setOutputString = sos;
+    OpenBIMRLEngine::Functions::setOutputPointer = sop;
+    OpenBIMRLEngine::Functions::setOutputDouble = sod;
+    OpenBIMRLEngine::Functions::setOutputInt = soi;
+    OpenBIMRLEngine::Functions::setOutputString = sos;
 }
