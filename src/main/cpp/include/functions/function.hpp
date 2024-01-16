@@ -1,3 +1,6 @@
+#ifndef FUNCT_HPP
+#define FUNCT_HPP
+
 #include <stdint.h>
 #include <string>
 #include "../JNA_typedefs.hpp"
@@ -14,32 +17,23 @@ typedef void (*set_output_double)(uint32_t, double);
 typedef void (*set_output_integer)(uint32_t, uint32_t);
 typedef void (*set_output_string)(uint32_t, JNA::String);
 
-get_input_pointer getInputPointer;
-get_input_double getInputDouble;
-get_input_integer getInputInt;
-get_input_string getInputString;
+extern get_input_pointer getInputPointer;
+extern get_input_double getInputDouble;
+extern get_input_integer getInputInt;
+extern get_input_string getInputString;
 
-set_output_pointer setOutputPointer;
-set_output_double setOutputDouble;
-set_output_integer setOutputInt;
-set_output_string setOutputString;
+extern set_output_pointer setOutputPointer;
+extern set_output_double setOutputDouble;
+extern set_output_integer setOutputInt;
+extern set_output_string setOutputString;
 
-extern "C" void init_function(get_input_pointer gip,
-                              get_input_double gid,
-                              get_input_integer gii,
-                              get_input_string gis,
-                              set_output_pointer sop,
-                              set_output_double sod,
-                              set_output_integer soi,
-                              set_output_string sos)
-{
-    getInputPointer = gip;
-    getInputDouble = gid;
-    getInputInt = gii;
-    getInputString = gis;
+extern "C" void init_function(get_input_pointer,
+                              get_input_double,
+                              get_input_integer,
+                              get_input_string,
+                              set_output_pointer,
+                              set_output_double,
+                              set_output_integer,
+                              set_output_string);
 
-    setOutputPointer = sop;
-    setOutputDouble = sod;
-    setOutputInt = soi;
-    setOutputString = sos;
-}
+#endif
