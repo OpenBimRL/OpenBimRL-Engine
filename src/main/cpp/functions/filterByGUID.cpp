@@ -4,7 +4,7 @@
 
 void filterByGUID()
 {
-    IfcUtil::IfcBaseClass *ptr = nullptr; // return pointer
+    IfcUtil::IfcBaseClass *ptr = nullptr; // the return pointer variable
 
     JNA::String input = OpenBIMRLEngine::Functions::getInputString(0); // get input from graph
 
