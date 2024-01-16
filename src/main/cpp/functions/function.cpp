@@ -12,7 +12,7 @@ namespace OpenBIMRLEngine::Functions
     set_output_double setOutputDouble;
     set_output_integer setOutputInt;
     set_output_string setOutputString;
-
+    set_output_array setOutputArray;
 }
 
 void init_function(get_input_pointer gip,
@@ -22,7 +22,8 @@ void init_function(get_input_pointer gip,
                    set_output_pointer sop,
                    set_output_double sod,
                    set_output_integer soi,
-                   set_output_string sos)
+                   set_output_string sos,
+                   set_output_array soa)
 {
 
     OpenBIMRLEngine::Functions::getInputPointer = gip;
@@ -34,4 +35,5 @@ void init_function(get_input_pointer gip,
     OpenBIMRLEngine::Functions::setOutputDouble = sod;
     OpenBIMRLEngine::Functions::setOutputInt = soi;
     OpenBIMRLEngine::Functions::setOutputString = sos;
+    OpenBIMRLEngine::Functions::setOutputArray = soa;
 }

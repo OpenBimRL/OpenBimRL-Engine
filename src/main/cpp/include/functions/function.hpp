@@ -16,6 +16,7 @@ typedef void (*set_output_pointer)(uint32_t, JNA::Pointer);
 typedef void (*set_output_double)(uint32_t, double);
 typedef void (*set_output_integer)(uint32_t, uint32_t);
 typedef void (*set_output_string)(uint32_t, JNA::String);
+typedef JNA::Pointer (*set_output_array)(uint32_t, uint32_t);
 
 namespace OpenBIMRLEngine::Functions
 {
@@ -29,7 +30,7 @@ namespace OpenBIMRLEngine::Functions
     extern set_output_double setOutputDouble;
     extern set_output_integer setOutputInt;
     extern set_output_string setOutputString;
-
+    extern set_output_array setOutputArray;
 }
 
 extern "C" void init_function(get_input_pointer,
@@ -39,6 +40,7 @@ extern "C" void init_function(get_input_pointer,
                               set_output_pointer,
                               set_output_double,
                               set_output_integer,
-                              set_output_string);
+                              set_output_string,
+                              set_output_array);
 
 #endif

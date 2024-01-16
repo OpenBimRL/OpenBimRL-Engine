@@ -18,7 +18,7 @@ public class FilterByGUID extends NativeFunction {
 
     @Override
     public void executeNative() {
-        nativeLib.filterByGUID();
+        getNativeLib().filterByGUID();
     }
 
 }

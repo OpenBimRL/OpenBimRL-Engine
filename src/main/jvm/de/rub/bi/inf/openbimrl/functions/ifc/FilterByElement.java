@@ -3,37 +3,24 @@ package de.rub.bi.inf.openbimrl.functions.ifc;
 import de.rub.bi.inf.openbimrl.NodeProxy;
 import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
+import de.rub.bi.inf.openbimrl.functions.NativeFunction;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * Filters a IFC model and retrieves all elements of a certain type.
+ * Filters an IFC model and retrieves all elements of a certain type.
  *
  * @author Marcel Stepien
  */
-public class FilterByElement extends AbstractFunction {
+public class FilterByElement extends NativeFunction {
 
     public FilterByElement(NodeProxy nodeProxy) {
         super(nodeProxy);
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
-
-        String className = getInput(0);
-        Class<?> theClass;
-        try {
-            // TODO fix
-            theClass = Class.forName("de.rub.bi.inf.openbimrl.engine.ifc." + className);
-            //Collection<?> objects = ifcModel.getCollection(theClass);
-
-            //setResult(0, new ArrayList(objects));
-            setResult(0, new ArrayList<>());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
+    public void executeNative() {
+        getNativeLib().filterByElement();
     }
-
 }
