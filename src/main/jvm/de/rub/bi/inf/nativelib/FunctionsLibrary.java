@@ -6,8 +6,6 @@ import com.sun.jna.Callback;
 
 public interface FunctionsLibrary extends Library {
 
-  public int sum(int n1, int n2);
-
   public boolean initIfc(String fileName);
 
   public void ifc_object_to_string(Pointer ifcPointer, Pointer outputStringPointer, long len);
