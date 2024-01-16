@@ -4,7 +4,7 @@
 #include <cstdint>
 #include "JNA_typedefs.hpp"
 
-extern "C" void ifc_object_to_string(JNA::Pointer, JNA::Pointer, std::size_t);
+extern "C" bool ifc_object_to_string(JNA::Pointer, JNA::Pointer, std::size_t);
 
 
 bool init();

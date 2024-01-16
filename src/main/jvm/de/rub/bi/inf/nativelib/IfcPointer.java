@@ -11,12 +11,16 @@ public class IfcPointer extends Pointer {
         super(peer);
     }
 
+    public boolean isNull() {
+        return peer == 0;
+    }
+
     @Override
     public String toString() {
         final var len = 255;
         final var outString = new Memory(len);
         outString.clear();
-        FunctionsNative.getInstance().ifc_object_to_string(this, outString, len);
-        return outString.getString(0, StandardCharsets.US_ASCII.name());
+        final var valid = FunctionsNative.getInstance().ifc_object_to_string(this, outString, len);
+        return valid ? outString.getString(0, StandardCharsets.US_ASCII.name()) : "null";
     }    
 }
