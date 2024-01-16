@@ -12,13 +12,12 @@ import java.util.*
 
 abstract class NativeFunction(nodeProxy: NodeProxy?) : AbstractFunction(nodeProxy) {
     protected val nativeLib: FunctionsLibrary = FunctionsNative.getInstance()
-    private val memoryQueue: Queue<MemoryStructure> = LinkedList()
 
-    private data class MemoryStructure(val at: Int, val size: Int, val memory: Memory)
+    protected data class MemoryStructure(val at: Int, val size: Int, val memory: Memory)
 
     abstract fun executeNative()
 
-    protected fun <T> getInputAs(at: Int, clazz: Class<T>?): T? {
+    final protected fun <T> getInputAs(at: Int, clazz: Class<T>?): T? {
         val output = getInput<Any>(at)
         return try {
             if (clazz!!.isInstance(output)) clazz.cast(output) else null
@@ -27,7 +26,8 @@ abstract class NativeFunction(nodeProxy: NodeProxy?) : AbstractFunction(nodeProx
         }
     }
 
-    override fun execute(ifcModel: IIFCModel?) {
+    final override fun execute(ifcModel: IIFCModel?) {
+        val memoryQueue: Queue<MemoryStructure> = LinkedList()
         nativeLib.init_function(
             { at: Int -> getInputAs(at, Pointer::class.java) },
             { at: Int -> getInputAs(at, Double::class.javaPrimitiveType)!! },
@@ -45,12 +45,11 @@ abstract class NativeFunction(nodeProxy: NodeProxy?) : AbstractFunction(nodeProx
 
         executeNative()
 
-        memoryQueue.forEach { memoryStructure ->
-            setResult(
-                memoryStructure.at,
-                memoryStructure.memory.getLongArray(0, memoryStructure.size).map { IfcPointer(it) })
-        }
+        handleMemory(memoryQueue)
 
+    }
+
+    protected open fun handleMemory(memoryQueue: Queue<MemoryStructure>) {
         memoryQueue.clear() // technically not necessary
     }
 }
