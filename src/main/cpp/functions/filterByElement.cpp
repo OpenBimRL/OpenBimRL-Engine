@@ -12,7 +12,7 @@ void filterByElement(void)
     // check for null
     if (input == nullptr)
     {
-        OpenBIMRLEngine::Functions::setOutputPointer(0, new IfcObjectPointer[0]); // return empty collection
+        OpenBIMRLEngine::Functions::setOutputPointer(0, nullptr);
         return;
     }
 
