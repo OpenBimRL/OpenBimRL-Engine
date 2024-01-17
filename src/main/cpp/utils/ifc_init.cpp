@@ -1,4 +1,4 @@
-//libstdc++
+// libstdc++
 #include <iostream>
 
 // local includes
@@ -9,11 +9,20 @@
 
 static IfcParse::IfcFile *currentFile;
 
+static bool init()
+{
+    // Redirect the output (both progress and log) to stdout
+    Logger::SetOutput(&std::cout, &std::cout);
+
+    return true;
+}
+
 // hopefully this doesn't leak memory... ¯\_(ツ)_/¯
-static void setCurrentFile(IfcParse::IfcFile *newFile) {
-    if (currentFile) {
+static void setCurrentFile(IfcParse::IfcFile *newFile)
+{
+    if (currentFile)
         delete currentFile;
-    }
+
     currentFile = newFile;
 }
 
@@ -44,7 +53,8 @@ bool OpenBIMRLEngine::initIfc(JNA::String fileName)
     return true;
 }
 
-inline bool OpenBIMRLEngine::isIFC4() {
+inline bool OpenBIMRLEngine::isIFC4()
+{
     return getCurrentFile()->schema()->name() == "IFC4";
 }
 
@@ -53,6 +63,7 @@ inline bool OpenBIMRLEngine::isIFC2x3()
     return getCurrentFile()->schema()->name() == "IFC2x3";
 }
 
-IfcParse::IfcFile *OpenBIMRLEngine::getCurrentFile() {
+IfcParse::IfcFile *OpenBIMRLEngine::getCurrentFile()
+{
     return currentFile;
 }

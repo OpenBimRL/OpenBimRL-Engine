@@ -1,11 +1,7 @@
 #ifndef IFC_INIT_H
 #define IFC_INIT_H
 
-// system includes
-#include <ifcparse/IfcFile.h>
-
 // local includes
-#include "lib.h"
 #include "types.hpp"
 
 /// @brief initialize library and load file into memory
