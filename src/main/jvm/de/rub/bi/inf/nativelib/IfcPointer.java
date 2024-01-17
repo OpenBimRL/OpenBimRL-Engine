@@ -11,6 +11,10 @@ public class IfcPointer extends Pointer {
         super(peer);
     }
 
+    public IfcPointer(Pointer pointer) {
+        super(Pointer.nativeValue(pointer));
+    }
+
     public boolean isNull() {
         return peer == 0;
     }
