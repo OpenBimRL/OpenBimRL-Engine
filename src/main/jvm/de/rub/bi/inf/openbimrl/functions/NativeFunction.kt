@@ -5,7 +5,6 @@ import com.sun.jna.NativeLong
 import com.sun.jna.Pointer
 import de.rub.bi.inf.nativelib.FunctionsLibrary
 import de.rub.bi.inf.nativelib.FunctionsNative
-import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel
 import java.util.*
@@ -17,7 +16,7 @@ abstract class NativeFunction(nodeProxy: NodeProxy?) : AbstractFunction(nodeProx
 
     abstract fun executeNative()
 
-    final protected fun <T> getInputAs(at: Int, clazz: Class<T>?): T? {
+    private fun <T> getInputAs(at: Int, clazz: Class<T>?): T? {
         val output = getInput<Any>(at)
         return try {
             if (clazz!!.isInstance(output)) clazz.cast(output) else null
@@ -33,7 +32,7 @@ abstract class NativeFunction(nodeProxy: NodeProxy?) : AbstractFunction(nodeProx
             { at: Int -> getInputAs(at, Double::class.javaPrimitiveType)!! },
             { at: Int -> getInputAs(at, Int::class.javaPrimitiveType)!! },
             { at: Int -> getInputAs(at, String::class.java) },
-            { at: Int, pointer: Pointer? -> setResult(at, IfcPointer(Pointer.nativeValue(pointer))) },
+            this::handlePointerOutput,
             { pos: Int, result: Double -> this.setResult(pos, result) },
             { pos: Int, result: Int -> this.setResult(pos, result) },
             { pos: Int, result: String? -> this.setResult(pos, result) },
@@ -51,5 +50,12 @@ abstract class NativeFunction(nodeProxy: NodeProxy?) : AbstractFunction(nodeProx
 
     protected open fun handleMemory(memoryQueue: Queue<MemoryStructure>) {
         memoryQueue.clear() // technically not necessary
+    }
+
+    protected open fun handlePointerOutput(at: Int, pointer: Pointer) {
+        if (pointer == Pointer.NULL)
+            setResult(at, null)
+        else
+            setResult(at, pointer)
     }
 }

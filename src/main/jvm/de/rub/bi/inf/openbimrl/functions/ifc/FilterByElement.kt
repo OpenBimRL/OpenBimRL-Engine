@@ -18,9 +18,14 @@ class FilterByElement(nodeProxy: NodeProxy?) : NativeFunction(nodeProxy) {
         for (memoryStructure in memoryQueue) {
             if (memoryStructure.memory == Pointer.NULL)
                 setResult(memoryStructure.at, emptyList<IfcPointer>())
-
-            setResult(memoryStructure.at, memoryStructure.memory.getLongArray(0, memoryStructure.size).map { IfcPointer(it) })
+            else setResult(
+                memoryStructure.at,
+                memoryStructure.memory.getLongArray(0, memoryStructure.size).map { IfcPointer(it) })
         }
         memoryQueue.clear() // technically this should automatically happen.
+    }
+
+    override fun handlePointerOutput(at: Int, pointer: Pointer) {
+        setResult(at, emptyList<IfcPointer>())
     }
 }
