@@ -2,12 +2,15 @@
 #include <iostream>
 
 // local includes
-#include "include/ifc_init.hpp"
+#include "utils/ifc_init.hpp"
+
+#include "utils/OpenBIMRL/file.hpp"
+#include "utils/OpenBIMRL/ifcStandards.hpp"
 
 static IfcParse::IfcFile *currentFile;
 
 // hopefully this doesn't leak memory... ¯\_(ツ)_/¯
-void setCurrentFile(IfcParse::IfcFile *newFile) {
+static void setCurrentFile(IfcParse::IfcFile *newFile) {
     if (currentFile) {
         delete currentFile;
     }
@@ -43,6 +46,11 @@ bool OpenBIMRLEngine::initIfc(JNA::String fileName)
 
 inline bool OpenBIMRLEngine::isIFC4() {
     return getCurrentFile()->schema()->name() == "IFC4";
+}
+
+inline bool OpenBIMRLEngine::isIFC2x3()
+{
+    return getCurrentFile()->schema()->name() == "IFC2x3";
 }
 
 IfcParse::IfcFile *OpenBIMRLEngine::getCurrentFile() {

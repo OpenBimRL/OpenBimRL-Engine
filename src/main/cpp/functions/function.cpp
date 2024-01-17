@@ -1,4 +1,4 @@
-#include "../include/functions/function.hpp"
+#include "functions/function.hpp"
 
 namespace OpenBIMRLEngine::Functions
 {

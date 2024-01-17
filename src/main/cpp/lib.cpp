@@ -1,10 +1,13 @@
+// system includes
 #include <iostream>
-#include <string.h>
 
-#include "include/lib.h"
-#include "include/ifc_init.hpp"
+#include <ifcparse/IfcLogger.h>
+#include <ifcparse/IfcFile.h>
 
-#include "ifcparse/IfcLogger.h"
+// local includes
+#include "lib.h"
+#include "types.hpp"
+
 
 /// @brief writes IfcType#GUID to stringPointer
 /// @param ifcObject only works if GUID is at 0th position

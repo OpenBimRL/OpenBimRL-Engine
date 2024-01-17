@@ -1,7 +1,7 @@
 .PHONY: bin_dir
 
 CC = clang++
-C_FLAGS = -std=c++20 -fPIC -Wall
+C_FLAGS = -std=c++20 -fPIC -Wall -I./src/main/cpp/include
 LD_FLAGS = -shared -lstdc++ 
 libs = /usr/local/lib/libIfcParse.a
 RESOURCES_DIR = src/main/resources
@@ -14,14 +14,20 @@ OBJECTS := $(patsubst $(SOURCE_DIR)/%.cpp, $(BIN_DIR)/%.o, $(SOURCES))
 # Functions
 FUNCTION_SOURCES := $(wildcard $(SOURCE_DIR)/functions/*.cpp)
 FUNCTION_OBJECTS := $(patsubst $(SOURCE_DIR)/functions/%.cpp, $(BIN_DIR)/%.o, $(FUNCTION_SOURCES))
+# Utils
+UTILS_SOURCES := $(wildcard $(SOURCE_DIR)/utils/*.cpp)
+UTILS_OBJECTS := $(patsubst $(SOURCE_DIR)/utils/%.cpp, $(BIN_DIR)/%.o, $(UTILS_SOURCES))
 
-all: $(OBJECTS) $(FUNCTION_OBJECTS)
+all: $(OBJECTS) $(FUNCTION_OBJECTS) $(UTILS_OBJECTS)
 	$(CC) $(C_FLAGS) $(LD_FLAGS) $^ -o $(RESOURCES_DIR)/lib.so $(libs)
 
 $(BIN_DIR)/%.o: $(SOURCE_DIR)/%.cpp bin_dir
 	$(CC) $(C_FLAGS) -c $< -o $@ -I src/main/cpp
 
 $(BIN_DIR)/%.o: $(SOURCE_DIR)/functions/%.cpp bin_dir
+	$(CC) $(C_FLAGS) -c $< -o $@ -I src/main/cpp
+
+$(BIN_DIR)/%.o: $(SOURCE_DIR)/utils/%.cpp bin_dir
 	$(CC) $(C_FLAGS) -c $< -o $@ -I src/main/cpp
 
 bin_dir:

@@ -1,8 +1,8 @@
 // IfcOpenShell
-#include "ifcparse/Ifc4.h"
+#include <ifcparse/Ifc4.h>
 
 // local includes
-#include "include/ifc_init.hpp"
+#include "utils/OpenBIMRL/file.hpp"
 
 bool initIfc(JNA::String fileName)
 {

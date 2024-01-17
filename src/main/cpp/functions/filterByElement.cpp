@@ -1,8 +1,11 @@
+// system includes
 #include <ifcparse/IfcSchema.h>
+#include <ifcparse/IfcFile.h>
 
-#include "../include/functions/filterByElement.hpp"
-
-typedef IfcUtil::IfcBaseClass *IfcObjectPointer;
+// local includes
+#include "functions/filterByElement.hpp"
+#include "utils/OpenBIMRL/file.hpp"
+#include "types.hpp"
 
 void filterByElement(void)
 {

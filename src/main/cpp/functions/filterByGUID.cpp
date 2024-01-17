@@ -1,6 +1,8 @@
 #include <ifcparse/IfcSchema.h>
+#include <ifcparse/IfcFile.h>
 
-#include "../include/functions/filterByGUID.hpp"
+#include "functions/filterByGUID.hpp"
+#include "utils/OpenBIMRL/file.hpp"
 
 void filterByGUID()
 {

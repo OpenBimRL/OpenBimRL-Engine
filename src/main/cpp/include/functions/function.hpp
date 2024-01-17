@@ -1,9 +1,8 @@
 #ifndef FUNCT_HPP
 #define FUNCT_HPP
 
-#include <stdint.h>
 #include <string>
-#include "../JNA_typedefs.hpp"
+#include "types.hpp"
 
 // input function
 typedef JNA::Pointer (*get_input_pointer)(uint32_t);
