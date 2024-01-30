@@ -53,12 +53,12 @@ bool OpenBIMRLEngine::initIfc(JNA::String fileName)
     return true;
 }
 
-inline bool OpenBIMRLEngine::isIFC4()
+bool OpenBIMRLEngine::isIFC4()
 {
     return getCurrentFile()->schema()->name() == "IFC4";
 }
 
-inline bool OpenBIMRLEngine::isIFC2x3()
+bool OpenBIMRLEngine::isIFC2x3()
 {
     return getCurrentFile()->schema()->name() == "IFC2x3";
 }
