@@ -3,6 +3,7 @@
 
 // local includes
 #include "utils/OpenBIMRL/file.hpp"
+#include "utils/ifc_init.hpp"
 
 bool initIfc(JNA::String fileName)
 {
