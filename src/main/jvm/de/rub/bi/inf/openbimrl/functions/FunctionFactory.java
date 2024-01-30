@@ -9,9 +9,8 @@ import de.rub.bi.inf.openbimrl.functions.input.TextInput;
 import de.rub.bi.inf.openbimrl.functions.list.*;
 import de.rub.bi.inf.openbimrl.functions.math.Addition;
 import de.rub.bi.inf.openbimrl.functions.math.Maximum;
+import de.rub.bi.inf.openbimrl.functions.math.Multiplication;
 import de.rub.bi.inf.openbimrl.functions.math.Subtraction;
-// import de.rub.bi.inf.openbimrl.functions.geometry.CheckIntersection;
-// import de.rub.bi.inf.openbimrl.functions.geometry.CheckLinecasts;
 
 /**
  * This class manages a collection of available functions for OpenBimRL execution,
@@ -113,6 +112,9 @@ public class FunctionFactory {
                 break;
             case "math.maximum":
                 function = new Maximum(nodeProxy);
+                break;
+            case "math.multiply":
+                function = new Multiplication(nodeProxy);
                 break;
 
             case "geometry.loadRepresentationItemGeometry":
