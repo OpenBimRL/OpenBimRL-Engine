@@ -1,9 +1,6 @@
 package de.rub.bi.inf.nativelib;
 
-import com.sun.jna.Callback;
-import com.sun.jna.Library;
-import com.sun.jna.Memory;
-import com.sun.jna.Pointer;
+import com.sun.jna.*;
 
 public interface FunctionsLibrary extends Library {
 
@@ -27,6 +24,15 @@ public interface FunctionsLibrary extends Library {
     void filterByElement();
 
     void test();
+
+    NativeLong initPropertyIterator(IfcPointer pointer);
+    NativeLong getBufferSizePropertySetName(NativeLong index);
+    NativeLong getBufferSizePropertyName(NativeLong setIndex, NativeLong index);
+    NativeLong getNoOfPropertiesInSet(NativeLong index);
+
+    boolean getPropertySetName(NativeLong index, Pointer memory);
+    boolean getPropertyName(NativeLong setIndex, NativeLong index, Pointer memory);
+    boolean getPropertyValue(NativeLong setIndex, NativeLong index, Pointer memory);
 
     interface set_output_collection extends Callback {
         Pointer invoke(int at, int size);
