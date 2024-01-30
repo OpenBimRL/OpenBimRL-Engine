@@ -1,7 +1,7 @@
 .PHONY: bin_dir
 
 CC = clang++
-C_FLAGS = -std=c++20 -fPIC -Wall -I./src/main/cpp/include
+C_FLAGS = -std=c++20 -fPIC -Wall -Werror -I./src/main/cpp/include
 LD_FLAGS = -shared -lstdc++ 
 libs = /usr/local/lib/libIfcParse.a
 RESOURCES_DIR = src/main/resources
