@@ -25,6 +25,9 @@ class FilterByElement(nodeProxy: NodeProxy?) : NativeFunction(nodeProxy) {
         memoryQueue.clear() // technically this should automatically happen.
     }
 
+    /**
+     * can happen if the returned pointer is null
+     */
     override fun handlePointerOutput(at: Int, pointer: Pointer) {
         setResult(at, emptyList<IfcPointer>())
     }
