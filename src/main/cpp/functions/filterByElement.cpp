@@ -19,13 +19,19 @@ void filterByElement(void)
         return;
     }
 
-    auto ifcClass = std::string(input); // create c++ string from char*
+    const auto ifcClass = std::string(input); // create c++ string from char*
 
     IfcParse::IfcFile *file = OpenBIMRLEngine::getCurrentFile(); // get active file
 
-    auto instances = file->instances_by_type_excl_subtypes(ifcClass); // get instances by ifc class excluding subtypes
+    const auto instances = file->instances_by_type(ifcClass); // get instances by ifc class excluding subtypes
+    const auto size = instances->size();
+    if (!size)
+    {
+        OpenBIMRLEngine::Functions::setOutputPointer(0, nullptr);
+        return;
+    }
 
-    auto buffer = (IfcObjectPointer *)OpenBIMRLEngine::Functions::setOutputArray(0, instances->size());
+    const auto buffer = (IfcObjectPointer *)OpenBIMRLEngine::Functions::setOutputArray(0, size);
 
     std::copy(instances->begin(), instances->end(), buffer);
 }
