@@ -9,9 +9,9 @@ import java.util.*
 /**
  * Filters an IFC model and retrieves all elements of a certain type.
  *
- * @author Marcel Stepien
+ * @author Marcel Stepien (reworked by Florian Becker)
  */
-class FilterByElement(nodeProxy: NodeProxy?) : NativeFunction(nodeProxy) {
+class FilterByElement(nodeProxy: NodeProxy) : NativeFunction(nodeProxy) {
     override fun executeNative() = nativeLib.filterByElement()
 
     override fun handleMemory(memoryQueue: Queue<MemoryStructure>) {
