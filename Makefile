@@ -1,8 +1,9 @@
 .PHONY: bin_dir
 
 CC = clang++
-C_FLAGS = -std=c++20 -fPIC -Wall -Werror -I./src/main/cpp/include
-LD_FLAGS = -shared -lstdc++ 
+LIB_ONLY_FLAGS = -static -Wall -Werror -I./src/main/cpp/include -I src/main/cpp
+C_FLAGS = -std=c++20 -fPIC -O3
+LD_FLAGS = -shared -lstdc++
 libs = /usr/local/lib/libIfcParse.a
 RESOURCES_DIR = src/main/resources
 BIN_DIR = target/native/bin
@@ -22,13 +23,13 @@ all: $(OBJECTS) $(FUNCTION_OBJECTS) $(UTILS_OBJECTS)
 	$(CC) $(C_FLAGS) $(LD_FLAGS) $^ -o $(RESOURCES_DIR)/lib.so $(libs)
 
 $(BIN_DIR)/%.o: $(SOURCE_DIR)/%.cpp bin_dir
-	$(CC) $(C_FLAGS) -c $< -o $@ -I src/main/cpp
+	$(CC) $(LIB_ONLY_FLAGS) $(C_FLAGS) -c $< -o $@ 
 
 $(BIN_DIR)/%.o: $(SOURCE_DIR)/functions/%.cpp bin_dir
-	$(CC) $(C_FLAGS) -c $< -o $@ -I src/main/cpp
+	$(CC) $(LIB_ONLY_FLAGS) $(C_FLAGS) -c $< -o $@
 
 $(BIN_DIR)/%.o: $(SOURCE_DIR)/utils/%.cpp bin_dir
-	$(CC) $(C_FLAGS) -c $< -o $@ -I src/main/cpp
+	$(CC) $(LIB_ONLY_FLAGS) $(C_FLAGS) -c $< -o $@
 
 bin_dir:
 	mkdir -p $(BIN_DIR) 
