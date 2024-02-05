@@ -34,6 +34,15 @@ public interface FunctionsLibrary extends Library {
     boolean getPropertyName(NativeLong setIndex, NativeLong index, Pointer memory);
     boolean getPropertyValue(NativeLong setIndex, NativeLong index, Pointer memory);
 
+    NativeLong initQuantityIterator(IfcPointer pointer);
+    NativeLong getBufferSizeQuantitySetName(NativeLong index);
+    NativeLong getBufferSizeQuantityName(NativeLong setIndex, NativeLong index);
+    NativeLong getNoOfQuantitiesInSet(NativeLong index);
+
+    boolean getQuantitySetName(NativeLong index, Pointer memory);
+    boolean getQuantityName(NativeLong setIndex, NativeLong index, Pointer memory);
+    double getQuantityValue(NativeLong setIndex, NativeLong index);
+
     interface set_output_collection extends Callback {
         Pointer invoke(int at, int size);
     }
