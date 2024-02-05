@@ -2,24 +2,22 @@ package de.rub.bi.inf.openbimrl.functions.ifc
 
 import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.NodeProxy
-import de.rub.bi.inf.openbimrl.functions.NativeFunction
+import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel
+import de.rub.bi.inf.openbimrl.functions.AbstractFunction
 
 /**
  * Filters a list of IFC entities by their property definition. Returns all entities that contain the property information.
  *
- * @author Marcel Stepien
+ * @author Marcel Stepien (reworked by Florian Becker)
  */
-class FilterByProperty(nodeProxy: NodeProxy?) : NativeFunction(nodeProxy) {
-    override fun executeNative() {
+class FilterByProperty(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
+    override fun execute(ifcModel: IIFCModel?) {
         val ifcPointer = getInputAsCollection(0)
         val propertySetName = getInput<String>(1)
         val propertyName = getInput<String>(2)
         val propertyValue = getInput<String?>(3)
 
-        println("check for $propertyName=$propertyValue in $propertySetName")
-
-        val result = ifcPointer.filter {
-            if (it !is IfcPointer) return@filter false
+        val result = ifcPointer.filterIsInstance<IfcPointer>().filter {
             if (propertyValue == null) return@filter true
 
             if (!it.properties.containsKey(propertySetName)) return@filter false
@@ -27,8 +25,7 @@ class FilterByProperty(nodeProxy: NodeProxy?) : NativeFunction(nodeProxy) {
             // !! is ok due to prev check
             if (!it.properties[propertySetName]!!.containsKey(propertyName)) return@filter false
 
-            val itPropertyValue = it.properties[propertySetName]?.get(propertyName)
-            if (itPropertyValue == null) return@filter false
+            val itPropertyValue = it.properties[propertySetName]!![propertyName]!!
 
             return@filter compareValues(propertyValue, itPropertyValue)
         }
