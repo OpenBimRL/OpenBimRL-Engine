@@ -135,7 +135,7 @@ public class OpenRule extends RuleSet {
                 e.printStackTrace();
             }
 
-            logger.logNode(node.getId(),
+            logger.logNode(node.function + node.getId(),
                     nodeProxy.getInputEdges().stream().map(EdgeProxy::getCurrentData).toArray(),
                     nodeProxy.getFunction().getResults().toArray()
             );
