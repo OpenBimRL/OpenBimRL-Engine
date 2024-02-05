@@ -7,6 +7,12 @@
 #include "utils/ifc_properties.hpp"
 #include "utils/OpenBIMRL/ifcStandards.hpp"
 
+// TODO: rework this shit. 
+// rework possibilities:
+// 1. return a pointer to a stringified JSON with the scheme: Map<String, Map<String, Int | String | boolean>>
+// 2. collect properties in a C++ Map with index of pointer address and return the requested values as cached...
+// 3. Leave as is and cry about slowness (actually it is only slow if you were to fetch all properties of all sets at once...)
+
 typedef union
 {
     Ifc4::IfcPropertySet *ifc4PropertySet;
@@ -102,7 +108,7 @@ std::size_t getNoOfPropertiesInSet(std::size_t index)
     return 0;
 }
 
-bool getPropertySetName(std::size_t index, JNA::Pointer buffer)
+bool getPropertySetName(std::size_t index, JNA::String buffer)
 {
     if (index >= properties.size())
         return false;
@@ -118,7 +124,7 @@ bool getPropertySetName(std::size_t index, JNA::Pointer buffer)
     }
     return false;
 }
-bool getPropertyName(std::size_t propertySetIndex, std::size_t propertyIndex, JNA::Pointer buffer)
+bool getPropertyName(std::size_t propertySetIndex, std::size_t propertyIndex, JNA::String buffer)
 {
     // failsafe index check
     if (propertySetIndex >= properties.size())
@@ -144,7 +150,7 @@ bool getPropertyName(std::size_t propertySetIndex, std::size_t propertyIndex, JN
 
 static Ifc4::IfcValue *findValue(const Ifc4::IfcProperty *property);
 
-bool getPropertyValue(std::size_t propertySetIndex, std::size_t propertyIndex, JNA::Pointer buffer)
+bool getPropertyValue(std::size_t propertySetIndex, std::size_t propertyIndex, JNA::String buffer)
 {
     // failsafe index check
     if (propertySetIndex >= properties.size())
@@ -209,7 +215,7 @@ bool getPropertyValue(std::size_t propertySetIndex, std::size_t propertyIndex, J
 
         if (str.empty()) return false;
 
-        memcpy(buffer, str.c_str(), str.length());
+        memcpy(buffer, str.c_str(), str.length() + 1);
 
         return true;
     }
