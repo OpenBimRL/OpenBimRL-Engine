@@ -1,16 +1,11 @@
 package de.rub.bi.inf.openbimrl.functions.geometry;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCClass;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCShapeRepresentation;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 import javax.media.j3d.Material;
 import javax.vecmath.Color3f;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Loads an representation item´newly created into the model context, and therfore into the viewer.
@@ -34,7 +29,7 @@ public class LoadRepresentationItemGeometry extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
 
 /*
         Object input0 = getInput(0);

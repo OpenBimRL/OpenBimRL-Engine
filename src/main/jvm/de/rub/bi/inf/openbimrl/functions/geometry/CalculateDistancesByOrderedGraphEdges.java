@@ -1,7 +1,6 @@
 package de.rub.bi.inf.openbimrl.functions.geometry;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 import org.apache.commons.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.geometry.euclidean.threed.line.Segment3D;
@@ -24,7 +23,7 @@ public class CalculateDistancesByOrderedGraphEdges extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
 
         Object input0 = getInput(0);
 
@@ -94,8 +93,7 @@ public class CalculateDistancesByOrderedGraphEdges extends AbstractFunction {
                     double distToStart = results.get(startNode);
 
                     for (Object seg : (ArrayList) segList) {
-                        if (seg instanceof Segment3D) {
-                            Segment3D seg3D = (Segment3D) seg;
+                        if (seg instanceof Segment3D seg3D) {
 
                             Vector3D start = seg3D.getStartPoint();
                             Vector3D end = seg3D.getEndPoint();

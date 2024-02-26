@@ -1,7 +1,6 @@
 package de.rub.bi.inf.openbimrl.functions.list;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ public class OrderBy extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
 
         Collection<?> list = getInput(0);
 
@@ -43,7 +42,7 @@ public class OrderBy extends AbstractFunction {
         }
 
         String order = getInput(2);
-        if (order != null && order.toLowerCase().equals("desc")) {
+        if (order != null && order.equalsIgnoreCase("desc")) {
             resultValues1 = resultValues1.stream().sorted(Collections.reverseOrder()).collect(Collectors.toCollection(ArrayList::new));
         } else {
             resultValues1 = resultValues1.stream().sorted().collect(Collectors.toCollection(ArrayList::new));

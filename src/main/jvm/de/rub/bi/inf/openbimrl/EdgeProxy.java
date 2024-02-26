@@ -8,9 +8,9 @@ package de.rub.bi.inf.openbimrl;
  */
 public class EdgeProxy {
 
-    private EdgeType edge;
+    private final EdgeType edge;
     private NodeProxy sourceNode;
-    private int sourceHandle;
+    private final int sourceHandle;
     private NodeProxy targetNode;
 
     public EdgeProxy(EdgeType edge) {

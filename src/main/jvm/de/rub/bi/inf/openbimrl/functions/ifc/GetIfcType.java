@@ -2,7 +2,6 @@ package de.rub.bi.inf.openbimrl.functions.ifc;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
 import de.rub.bi.inf.openbimrl.engine.ifc.IIFCClass;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ public class GetIfcType extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
 
         Collection<Object> objects = new ArrayList();
         Object input0 = getInput(0);

@@ -1,7 +1,6 @@
 package de.rub.bi.inf.openbimrl.functions.list;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 import java.util.ArrayList;
@@ -21,14 +20,12 @@ public class CreateMapByPairs extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
-        ArrayList<?> keys = new ArrayList();
-        keys.addAll((Collection) getInput(0));
+    public void execute() {
+        final var keys = new ArrayList<>(getInputAsCollection(0));
 
-        ArrayList<?> values = new ArrayList();
-        values.addAll((Collection) getInput(1));
+        final var values = new ArrayList<>(getInputAsCollection(1));
 
-        LinkedHashMap<Object, List<Object>> map = new LinkedHashMap<Object, List<Object>>();
+        final var map = new LinkedHashMap<Object, List<Object>>();
 
         if (keys.size() != values.size())
             return;
@@ -41,12 +38,10 @@ public class CreateMapByPairs extends AbstractFunction {
                 key = "undefined";
             }
 
-            if (map.get(key) == null) {
-                map.put(key, new ArrayList<Object>());
-            }
+            map.computeIfAbsent(key, k -> new ArrayList<>());
 
-            if (value instanceof Collection) {
-                map.get(key).addAll((Collection) value);
+            if (value instanceof Collection<?> temp) {
+                map.get(key).addAll(temp);
             } else {
                 map.get(key).add(value);
             }

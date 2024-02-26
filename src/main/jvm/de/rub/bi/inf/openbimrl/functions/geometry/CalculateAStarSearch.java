@@ -4,7 +4,6 @@ import com.google.common.graph.MutableValueGraph;
 import com.google.common.graph.ValueGraph;
 import com.google.common.graph.ValueGraphBuilder;
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 import de.rub.bi.inf.utils.pathfinding.astar.AStarWithTreeSet;
 import de.rub.bi.inf.utils.pathfinding.astar.HeuristicForNodesWithXYCoordinates;
@@ -28,7 +27,7 @@ public class CalculateAStarSearch extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
         Object input0 = getInput(0);
         HashMap nodeEdges = null;
         if (input0 instanceof HashMap) {

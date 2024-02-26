@@ -1,13 +1,10 @@
 package de.rub.bi.inf.openbimrl.functions.ifc;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCSpatialStructureElement;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Set;
 
 /**
  * Find the elements that are included in a spatial structure element.
@@ -21,7 +18,7 @@ public class GetElementsInSpatialStructure extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
 
         Collection<Object> objects = new ArrayList();
         Object input0 = getInput(0);

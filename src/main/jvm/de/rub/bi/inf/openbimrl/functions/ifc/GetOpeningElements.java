@@ -1,11 +1,7 @@
 package de.rub.bi.inf.openbimrl.functions.ifc;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Retrieves the opening elements as features of an IFC element.
@@ -19,7 +15,7 @@ public class GetOpeningElements extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
 
      /*   Object input0 = getInput(0);
 

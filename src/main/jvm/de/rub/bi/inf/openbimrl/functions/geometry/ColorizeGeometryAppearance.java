@@ -1,11 +1,7 @@
 package de.rub.bi.inf.openbimrl.functions.geometry;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
-
-import javax.media.j3d.Appearance;
-import javax.media.j3d.ColoringAttributes;
 
 /**
  * Colorizes the Appearance of a MultiAppearanceShape3D to a specific color.
@@ -19,7 +15,7 @@ public class ColorizeGeometryAppearance extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
 
         final var objects = getInputAsCollection(0);
         if (objects.isEmpty()) return;

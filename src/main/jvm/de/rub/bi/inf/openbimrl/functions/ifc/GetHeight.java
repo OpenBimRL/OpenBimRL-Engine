@@ -1,10 +1,8 @@
 package de.rub.bi.inf.openbimrl.functions.ifc;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
-import javax.vecmath.Point3d;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -20,7 +18,7 @@ public class GetHeight extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
 
         Object input0 = getInput(0);
 

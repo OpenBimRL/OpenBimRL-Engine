@@ -1,18 +1,7 @@
 package de.rub.bi.inf.openbimrl.functions.ifc;
 
-import com.sun.j3d.utils.geometry.GeometryInfo;
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCClass;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
-import org.apache.commons.geometry.euclidean.threed.Planes;
-import org.apache.commons.geometry.euclidean.threed.RegionBSPTree3D;
-import org.apache.commons.geometry.euclidean.threed.Triangle3D;
-import org.apache.commons.geometry.euclidean.threed.Vector3D;
-import org.apache.commons.numbers.core.Precision;
-
-import javax.media.j3d.GeometryArray;
-import java.util.*;
 
 /*
  * Checks the intersection between lists of elements.
@@ -27,7 +16,7 @@ public class CheckElementIntersection extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
 /*
         Object input0 = getInput(0);
         Object input1 = getInput(1);

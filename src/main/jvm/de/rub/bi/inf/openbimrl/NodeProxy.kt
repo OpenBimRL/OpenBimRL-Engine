@@ -1,6 +1,5 @@
 package de.rub.bi.inf.openbimrl
 
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel
 import de.rub.bi.inf.openbimrl.functions.FunctionFactory
 
 class NodeProxy(val node: NodeType) {
@@ -64,9 +63,9 @@ class NodeProxy(val node: NodeType) {
 
     fun getNumberOfOutputs() = outputEdges?.size ?: 0
 
-    fun execute(ifcModel: IIFCModel?, nodeProxy: NodeProxy) {
+    fun execute() {
         try {
-            function.execute(ifcModel)
+            function.execute()
         } catch (e: Exception) {
             e.printStackTrace()
         }

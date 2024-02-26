@@ -1,12 +1,7 @@
 package de.rub.bi.inf.openbimrl.functions.ifc;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
-import de.rub.bi.inf.openbimrl.helper.IfcUtilities;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Retrieves the property value of a specific entity as String value.
@@ -20,7 +15,7 @@ public class GetPropertyAsString extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
 
    /*     Collection<Object> objects = new ArrayList();
         Object input0 = getInput(0);

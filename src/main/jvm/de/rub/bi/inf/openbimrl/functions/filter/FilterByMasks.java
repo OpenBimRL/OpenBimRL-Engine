@@ -1,7 +1,6 @@
 package de.rub.bi.inf.openbimrl.functions.filter;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ public class FilterByMasks extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
 
         Object input0 = getInput(0);
         Object input1 = getInput(1);
@@ -37,7 +36,7 @@ public class FilterByMasks extends AbstractFunction {
 
         if (input1 instanceof ArrayList) {
             ArrayList<Boolean> mask = (ArrayList<Boolean>) input1;
-            filterMap.put("0", (ArrayList<Boolean>) mask);
+            filterMap.put("0", mask);
         }
 
         if (input1 instanceof LinkedHashMap) {
@@ -55,7 +54,7 @@ public class FilterByMasks extends AbstractFunction {
 
             ArrayList filteredList = new ArrayList();
             for (int i = 0; i < mask.size(); i++) {
-                boolean flag = mask.get(i) != null ? Boolean.parseBoolean(mask.get(i).toString()) : false;
+                boolean flag = mask.get(i) != null && Boolean.parseBoolean(mask.get(i).toString());
                 if (flag) {
                     filteredList.add(elements.get(i));
                 }

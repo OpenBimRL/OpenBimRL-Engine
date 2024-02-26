@@ -1,7 +1,6 @@
 package de.rub.bi.inf.openbimrl.functions.list;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ public class RepeatAsList extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
 
         Object object0 = getInput(0);
         Object object1 = getInput(1);

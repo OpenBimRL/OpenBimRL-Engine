@@ -2,10 +2,12 @@ package de.rub.bi.inf.openbimrl.functions.geometry;
 
 import com.sun.j3d.utils.geometry.GeometryInfo;
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
-import javax.media.j3d.*;
+import javax.media.j3d.BoundingSphere;
+import javax.media.j3d.GeometryArray;
+import javax.media.j3d.Shape3D;
+import javax.media.j3d.Transform3D;
 import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3d;
@@ -25,7 +27,7 @@ public class CheckIncludedInBounds extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
 
         Object input0 = getInput(0);
         Object input1 = getInput(1);

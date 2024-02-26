@@ -12,8 +12,8 @@ import java.util.*;
 public class PrecalculationContext {
 
     private PrecalculationsType precalculations = null;
-    private HashMap<String, NodeProxy> nodeProxies = new HashMap<>(); //node.id, nodeProxy
-    private HashMap<String, EdgeProxy> edgeProxies = new HashMap<>(); //edge.id, edgeProxy
+    private final HashMap<String, NodeProxy> nodeProxies = new HashMap<>(); //node.id, nodeProxy
+    private final HashMap<String, EdgeProxy> edgeProxies = new HashMap<>(); //edge.id, edgeProxy
 
     private ArrayList<NodeType> nodes = null;
     private ArrayList<EdgeType> edges = null;

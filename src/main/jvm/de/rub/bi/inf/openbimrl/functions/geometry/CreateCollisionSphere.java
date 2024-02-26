@@ -1,17 +1,7 @@
 package de.rub.bi.inf.openbimrl.functions.geometry;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
-import org.apache.commons.geometry.euclidean.threed.RegionBSPTree3D;
-import org.apache.commons.geometry.euclidean.threed.Vector3D;
-import org.apache.commons.geometry.euclidean.threed.shape.Sphere;
-import org.apache.commons.numbers.core.Precision;
-
-import javax.media.j3d.GeometryArray;
-import javax.vecmath.Point3d;
-import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Creates a spherical geometrie as RegionalBSPTree3D in provided precision for collision detection purposes.
@@ -25,7 +15,7 @@ public class CreateCollisionSphere extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
 
 /*
         Object input0 = getInput(0);

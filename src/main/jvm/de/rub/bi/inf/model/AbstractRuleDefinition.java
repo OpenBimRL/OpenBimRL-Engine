@@ -53,7 +53,7 @@ public abstract class AbstractRuleDefinition {
     /**
      * Template method for defining a function or rule for execution.
      */
-    public abstract void check(IIFCModel ifcModel, RuleLogger logger);
+    public abstract void check(RuleLogger logger);
 
     public String getCheckingProtocol() {
         final var text = new StringBuilder();

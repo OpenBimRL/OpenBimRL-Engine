@@ -7,6 +7,6 @@ package de.rub.bi.inf.model;
  */
 public interface RuleBaseChangedListener {
 
-    public void onRulesAdded(AbstractRuleDefinition addedRule);
+    void onRulesAdded(AbstractRuleDefinition addedRule);
 
 }

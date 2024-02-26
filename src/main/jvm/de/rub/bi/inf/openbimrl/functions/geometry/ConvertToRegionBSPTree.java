@@ -2,17 +2,11 @@ package de.rub.bi.inf.openbimrl.functions.geometry;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
 import de.rub.bi.inf.openbimrl.engine.ifc.IIFCClass;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
-import org.apache.commons.geometry.euclidean.threed.Planes;
 import org.apache.commons.geometry.euclidean.threed.RegionBSPTree3D;
-import org.apache.commons.geometry.euclidean.threed.Triangle3D;
-import org.apache.commons.geometry.euclidean.threed.Vector3D;
-import org.apache.commons.numbers.core.Precision;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Converts IFC elements into RegionalBSPTree3D objects.
@@ -26,7 +20,7 @@ public class ConvertToRegionBSPTree extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
 
         Object input0 = getInput(0);
 

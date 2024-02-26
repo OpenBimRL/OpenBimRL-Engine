@@ -1,7 +1,6 @@
 package de.rub.bi.inf.openbimrl.functions.geometry;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 import org.apache.commons.geometry.euclidean.threed.RegionBSPTree3D;
 import org.apache.commons.geometry.euclidean.threed.Vector3D;
@@ -25,21 +24,11 @@ public class CreatePointGraph extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
-
-        Object input0 = getInput(0);
-
-        if (input0 == null)
+    public void execute() {
+        if (getInput(0) == null)
             return;
 
-        Collection<?> bspTrees = null;
-        if (input0 instanceof Collection<?>) {
-            bspTrees = (Collection<?>) input0;
-        } else {
-            ArrayList<Object> newList = new ArrayList<>();
-            newList.add(input0);
-            bspTrees = newList;
-        }
+        Collection<?> bspTrees = getInputAsCollection(0);
 
         String input1 = getInput(1);
         if (input1 == null)
@@ -47,15 +36,15 @@ public class CreatePointGraph extends AbstractFunction {
 
         double stepSize = Double.parseDouble(input1);
 
-        ArrayList<List<Segment3D>> listOfEdges = new ArrayList<List<Segment3D>>();
+        ArrayList<List<Segment3D>> listOfEdges = new ArrayList<>();
 
-        ArrayList<List<Vector3D>> listOfNodes = new ArrayList<List<Vector3D>>();
+        ArrayList<List<Vector3D>> listOfNodes = new ArrayList<>();
 
         for (Object o : bspTrees) {
 
-            if (o instanceof RegionBSPTree3D) {
+            if (o instanceof RegionBSPTree3D bspTree3D) {
 
-                ArrayList<Vector3D> nodes = createGraphNodes((RegionBSPTree3D) o, stepSize);
+                ArrayList<Vector3D> nodes = createGraphNodes(bspTree3D, stepSize);
                 listOfNodes.add(nodes);
 
                 ArrayList<Segment3D> edges = createGraphEdge(nodes, stepSize);
@@ -86,7 +75,7 @@ public class CreatePointGraph extends AbstractFunction {
         double offsetY = ((cB.getY() - cA.getY() - stepSize) % stepSize) / 2;
         double height = center.getZ();
 
-        ArrayList<Vector3D> linearPointList = new ArrayList<Vector3D>();
+        ArrayList<Vector3D> linearPointList = new ArrayList<>();
 
         for (double x = cA.getX() + stepSize / 2 + offsetX; x < cB.getX() - stepSize / 2; x += stepSize) {
             for (double y = cA.getY() + stepSize / 2 + offsetY; y < cB.getY() - stepSize / 2; y += stepSize) {
@@ -104,7 +93,7 @@ public class CreatePointGraph extends AbstractFunction {
     }
 
     private ArrayList<Segment3D> createGraphEdge(ArrayList<Vector3D> nodes, double stepSize) {
-        ArrayList<Segment3D> linearEdgeList = new ArrayList<Segment3D>();
+        ArrayList<Segment3D> linearEdgeList = new ArrayList<>();
 
         double increasedStepSize = stepSize * 1.5;
 

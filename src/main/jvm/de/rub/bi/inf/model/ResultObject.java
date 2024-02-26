@@ -2,8 +2,6 @@ package de.rub.bi.inf.model;
 
 import de.rub.bi.inf.openbimrl.engine.ifc.IIFCProduct;
 
-import java.util.ArrayList;
-
 /**
  * A concrete singular result produced by the OpenBimRL engine.
  *

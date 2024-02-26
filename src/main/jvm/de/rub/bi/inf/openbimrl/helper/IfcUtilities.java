@@ -1,9 +1,5 @@
 package de.rub.bi.inf.openbimrl.helper;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Set;
-
 /**
  * A helper class for shortcuting several IFC model traversions often used.
  *

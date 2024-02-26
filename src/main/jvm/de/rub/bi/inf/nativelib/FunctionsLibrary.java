@@ -1,6 +1,9 @@
 package de.rub.bi.inf.nativelib;
 
-import com.sun.jna.*;
+import com.sun.jna.Callback;
+import com.sun.jna.Library;
+import com.sun.jna.NativeLong;
+import com.sun.jna.Pointer;
 
 public interface FunctionsLibrary extends Library {
 
@@ -26,21 +29,31 @@ public interface FunctionsLibrary extends Library {
     void test();
 
     NativeLong initPropertyIterator(IfcPointer pointer);
+
     NativeLong getBufferSizePropertySetName(NativeLong index);
+
     NativeLong getBufferSizePropertyName(NativeLong setIndex, NativeLong index);
+
     NativeLong getNoOfPropertiesInSet(NativeLong index);
 
     boolean getPropertySetName(NativeLong index, Pointer memory);
+
     boolean getPropertyName(NativeLong setIndex, NativeLong index, Pointer memory);
+
     boolean getPropertyValue(NativeLong setIndex, NativeLong index, Pointer memory);
 
     NativeLong initQuantityIterator(IfcPointer pointer);
+
     NativeLong getBufferSizeQuantitySetName(NativeLong index);
+
     NativeLong getBufferSizeQuantityName(NativeLong setIndex, NativeLong index);
+
     NativeLong getNoOfQuantitiesInSet(NativeLong index);
 
     boolean getQuantitySetName(NativeLong index, Pointer memory);
+
     boolean getQuantityName(NativeLong setIndex, NativeLong index, Pointer memory);
+
     double getQuantityValue(NativeLong setIndex, NativeLong index);
 
     interface set_output_collection extends Callback {

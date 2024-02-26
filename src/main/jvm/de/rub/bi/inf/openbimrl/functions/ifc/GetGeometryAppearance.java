@@ -1,10 +1,7 @@
 package de.rub.bi.inf.openbimrl.functions.ifc;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
-
-import java.util.ArrayList;
 
 /**
  * Retrieves the geometry appearance of an IFC element.
@@ -18,10 +15,11 @@ public class GetGeometryAppearance extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
 
         final var objects = getInputAsCollection(0);
-        if (objects.isEmpty()) return;
+        if (objects.isEmpty()) {
+        }
 
 /*        final var resultValues = new ArrayList<MultiAppearanceShape3D>();
 

@@ -11,7 +11,7 @@ import de.rub.bi.inf.openbimrl.functions.AbstractFunction
  * @author Marcel Stepien (reworked by Florian Becker)
  */
 class FilterByQuantity(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
-    override fun execute(ifcModel: IIFCModel?) {
+    override fun execute() {
         val ifcPointer = getInputAsCollection(0)
         val quantitySetName = getInput<String>(1)
         val quantityName = getInput<String>(2)

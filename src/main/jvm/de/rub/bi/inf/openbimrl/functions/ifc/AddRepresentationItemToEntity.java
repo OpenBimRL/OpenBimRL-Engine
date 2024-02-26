@@ -15,15 +15,15 @@ import java.util.Collection;
 public class AddRepresentationItemToEntity extends AbstractFunction {
 
     private static final Adapter ifcAdapter = Adapter.getInstance();
-    private ArrayList<IIFCProductRepresentation> reps = new ArrayList<>();
-    private ArrayList<IIFCRepresentation> memory = new ArrayList<>();
+    private final ArrayList<IIFCProductRepresentation> reps = new ArrayList<>();
+    private final ArrayList<IIFCRepresentation> memory = new ArrayList<>();
 
     public AddRepresentationItemToEntity(NodeProxy nodeProxy) {
         super(nodeProxy);
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
 
         Object input0 = getInput(0);
         Object input1 = getInput(1);
@@ -67,7 +67,7 @@ public class AddRepresentationItemToEntity extends AbstractFunction {
         }
 
         //reset Memory
-        this.memReset(ifcModel);
+        // this.memReset(ifcModel);
 
         ArrayList<IIFCRepresentation> resultValues = new ArrayList<>();
 
@@ -85,7 +85,7 @@ public class AddRepresentationItemToEntity extends AbstractFunction {
                             rep.addItems((IIFCRepresentationItem) repItemObj);
                             rep.setRepresentationIdentifier(ifcAdapter.getIFC4().create(IIFCLabel.class, identifier));
                             rep.setRepresentationType(ifcAdapter.getIFC4().create(IIFCLabel.class, type));
-                            ifcModel.addObject(rep);
+                            // ifcModel.addObject(rep);
                             memory.add(rep);
 
 
@@ -109,13 +109,13 @@ public class AddRepresentationItemToEntity extends AbstractFunction {
 
     }
 
-    private void memReset(IIFCModel ifcModel) {
+    private void memReset() {
         for (IIFCProductRepresentation rep : reps) {
             rep.removeAllRepresentations(memory);
         }
 
         for (var obj : memory) {
-            ifcModel.removeObject(obj);
+            //ifcModel.removeObject(obj);
         }
 
         memory.clear();

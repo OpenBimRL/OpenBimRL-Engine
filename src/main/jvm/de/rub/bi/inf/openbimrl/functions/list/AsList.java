@@ -1,7 +1,6 @@
 package de.rub.bi.inf.openbimrl.functions.list;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ public class AsList extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
         String delimiterDim1 = ",";
         String delimiterDim2 = ";";
 

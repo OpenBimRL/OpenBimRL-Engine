@@ -5,7 +5,6 @@
 // local includes
 #include "functions/filterByElement.hpp"
 #include "utils/OpenBIMRL/file.hpp"
-#include "types.hpp"
 
 void filterByElement(void)
 {

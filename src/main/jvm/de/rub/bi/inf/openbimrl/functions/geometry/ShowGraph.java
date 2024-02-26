@@ -2,15 +2,14 @@ package de.rub.bi.inf.openbimrl.functions.geometry;
 
 import com.sun.j3d.utils.geometry.Sphere;
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 import org.apache.commons.geometry.euclidean.threed.line.Segment3D;
 
 import javax.media.j3d.*;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
-import javax.vecmath.Vector3f;
 import javax.vecmath.Vector3d;
+import javax.vecmath.Vector3f;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,7 +26,7 @@ public class ShowGraph extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
 
         Object input0 = getInput(0);
 

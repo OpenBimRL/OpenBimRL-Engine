@@ -1,7 +1,6 @@
 package de.rub.bi.inf.openbimrl.functions.list;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 import java.util.Collection;
@@ -20,7 +19,7 @@ public class MapValueCount extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
 
         Map<?, ?> map = getInput(0);
         if (map == null)

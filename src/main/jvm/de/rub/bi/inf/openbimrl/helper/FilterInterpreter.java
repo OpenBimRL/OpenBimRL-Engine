@@ -94,12 +94,10 @@ public class FilterInterpreter {
                     String filterStrip = filterAndInst.replace("!", "").replace(" ", "");
 
                     if (filterMap.get(filterStrip).get(o) != null) {
-                        checkAnd = checkAnd && (checkNegation ?
-                                !Boolean.valueOf(filterMap.get(filterStrip).get(o).toString()) :
-                                Boolean.valueOf(filterMap.get(filterStrip).get(o).toString())
+                        checkAnd = checkAnd && (checkNegation != Boolean.valueOf(filterMap.get(filterStrip).get(o).toString())
                         );
                     } else {
-                        checkAnd = checkAnd && false;
+                        checkAnd = false;
                     }
 
 

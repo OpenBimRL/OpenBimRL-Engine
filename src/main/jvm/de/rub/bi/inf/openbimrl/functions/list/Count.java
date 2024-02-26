@@ -1,7 +1,6 @@
 package de.rub.bi.inf.openbimrl.functions.list;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 import java.util.Collection;
@@ -18,8 +17,8 @@ public class Count extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
-        Collection<?> list = (Collection<?>) getInput(0);
+    public void execute() {
+        final Collection<?> list = getInput(0);
         setResult(0, list.size());
     }
 

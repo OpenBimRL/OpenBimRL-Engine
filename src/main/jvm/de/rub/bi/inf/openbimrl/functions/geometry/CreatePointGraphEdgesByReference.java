@@ -1,7 +1,6 @@
 package de.rub.bi.inf.openbimrl.functions.geometry;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 import org.apache.commons.geometry.euclidean.threed.Vector3D;
 import org.apache.commons.geometry.euclidean.threed.line.Lines3D;
@@ -23,78 +22,62 @@ public class CreatePointGraphEdgesByReference extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
 
-        Object input0 = getInput(0);
-
-        if (input0 == null)
+        if (getInput(0) == null)
             return;
 
-        Collection<?> nodes = null;
-        if (input0 instanceof Collection<?>) {
-            nodes = (Collection<?>) input0;
-        } else {
-            ArrayList<Object> newList = new ArrayList<>();
-            newList.add(input0);
-            nodes = newList;
-        }
+        Collection<?> nodes = getInputAsCollection(0);
 
-        Object input1 = getInput(1);
-
-        if (input1 == null)
+        if (getInput(1) == null)
             return;
 
-        Collection<?> nodesReference = null;
-        if (input1 instanceof Collection<?>) {
-            nodesReference = (Collection<?>) input1;
-        } else {
-            ArrayList<Object> newList = new ArrayList<>();
-            newList.add(input1);
-            nodesReference = newList;
-        }
+        Collection<?> nodesReference = getInputAsCollection(1);
 
         String input2 = getInput(2);
         if (input2 == null)
             return;
 
-        double stepSize = Double.parseDouble(input2);
+        final var stepSize = Double.parseDouble(input2);
 
-        ArrayList<Object> edges = createGraphEdge(nodes, nodesReference, stepSize);
+        final var edges = createGraphEdge(nodes, nodesReference, stepSize);
 
         setResult(0, edges);
     }
 
     private ArrayList<Object> createGraphEdge(Collection<?> nodes, Collection<?> nodesReference, double stepSize) {
-        ArrayList<Object> linearEdgeList = new ArrayList<Object>();
+        final var linearEdgeList = new ArrayList<>();
 
         double increasedStepSize = stepSize; //* Math.sqrt(2) + 0.001;
 
         for (Object sNode : nodes) {
 
-            if (sNode instanceof Collection) {
+            if (sNode instanceof Collection<?> sNodeCollection) {
                 linearEdgeList.add(
-                        createGraphEdge((Collection) sNode, nodesReference, stepSize)
+                        createGraphEdge(sNodeCollection, nodesReference, stepSize)
                 );
             }
 
-            if (sNode instanceof Vector3D) {
+            // no clue what that actually does ~ Florian
+
+            if (sNode instanceof Vector3D sVector3D) {
 
                 for (Object eNode : nodesReference) {
-                    if (eNode instanceof Vector3D) {
+                    if (eNode instanceof Vector3D eVector3D) {
 
                         if (!sNode.equals(eNode)) {
-                            double distance = ((Vector3D) sNode).distance((Vector3D) eNode);
+                            double distance = sVector3D.distance(eVector3D);
                             if (distance <= increasedStepSize && distance > 0.0) {
 
                                 Segment3D edge = Lines3D.segmentFromPoints(
-                                        (Vector3D) sNode,
-                                        (Vector3D) eNode,
+                                        sVector3D,
+                                        eVector3D,
                                         Precision.doubleEquivalenceOfEpsilon(1e-6)
                                 );
 
                                 Segment3D edgeInverse = Lines3D.segmentFromPoints(
-                                        (Vector3D) eNode,
-                                        (Vector3D) sNode,
+                                        eVector3D,
+                                        sVector3D,
                                         Precision.doubleEquivalenceOfEpsilon(1e-6)
                                 );
 
@@ -109,6 +92,8 @@ public class CreatePointGraphEdgesByReference extends AbstractFunction {
 
             }
         }
+
+        // ^ this is cursed TODO FIXME
 
         return linearEdgeList;
     }

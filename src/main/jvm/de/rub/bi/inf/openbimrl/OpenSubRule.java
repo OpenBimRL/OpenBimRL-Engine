@@ -4,7 +4,6 @@ import de.rub.bi.inf.logger.RuleLogger;
 import de.rub.bi.inf.model.ResultObject;
 import de.rub.bi.inf.model.ResultObjectGroup;
 import de.rub.bi.inf.model.SimpleRule;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.engine.ifc.IIFCProduct;
 import de.rub.bi.inf.openbimrl.helper.FilterInterpreter;
 
@@ -33,16 +32,10 @@ public class OpenSubRule extends SimpleRule {
 
 
     @Override
-    public void check(IIFCModel ifcModel, RuleLogger logger) {
+    public void check(RuleLogger logger) {
         //Reset the check
         this.checkedStatus = CheckedStatus.UNCHECKED;
         this.checkingProtocol = new ArrayList<String>();
-
-        this.modelNode = ifcModel;
-
-        if (ifcModel == null) {
-            return;
-        }
 
         successes = new ResultObjectGroup("ResultSet: Successfully Checked");
         failures = new ResultObjectGroup("ResultSet: Failed Checked");

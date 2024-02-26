@@ -2,7 +2,6 @@ package de.rub.bi.inf.openbimrl.functions.geometry;
 
 import com.sun.j3d.utils.geometry.Sphere;
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 import javax.media.j3d.*;
@@ -26,7 +25,7 @@ public class ShowPaths extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
 
         Object input0 = getInput(0);
 
@@ -47,8 +46,7 @@ public class ShowPaths extends AbstractFunction {
         BranchGroup group = new BranchGroup();
 
         for (Object path : paths) {
-            if (path instanceof ArrayList) {
-                ArrayList pathList = (ArrayList) path;
+            if (path instanceof ArrayList pathList) {
                 //handleNodes(pathList, group, nodeAppearance);
                 showPathEdge(pathList, group, edgeAppearance);
             }
@@ -101,8 +99,7 @@ public class ShowPaths extends AbstractFunction {
 
         int index = 0;
         for (Object vecObj : path) {
-            if (vecObj instanceof Vector3d) {
-                final var pointOnLine = (Vector3d) vecObj;
+            if (vecObj instanceof Vector3d pointOnLine) {
 
                 points[index] = new Point3d(
                         pointOnLine.getX(),

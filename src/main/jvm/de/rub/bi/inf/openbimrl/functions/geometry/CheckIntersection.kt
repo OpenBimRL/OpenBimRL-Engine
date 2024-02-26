@@ -11,7 +11,7 @@ import org.apache.commons.geometry.euclidean.threed.RegionBSPTree3D
  * @author Marcel Stepien
  */
 class CheckIntersection(nodeProxy: NodeProxy?) : AbstractFunction(nodeProxy) {
-    override fun execute(ifcModel: IIFCModel) {
+    override fun execute() {
         val elements0 = getInputAsCollection(0)
         val elements1 = getInputAsCollection(1)
         if (elements0.isEmpty() || elements1.isEmpty()) return

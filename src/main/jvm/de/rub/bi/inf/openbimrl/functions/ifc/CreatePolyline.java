@@ -15,19 +15,19 @@ import java.util.ArrayList;
 public class CreatePolyline extends AbstractFunction {
 
     private static final Adapter adapter = Adapter.getInstance();
-    private ArrayList<IIFCClass> memory = new ArrayList<>();
+    private final ArrayList<IIFCClass> memory = new ArrayList<>();
 
     public CreatePolyline(NodeProxy nodeProxy) {
         super(nodeProxy);
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
 
         var objects = getInputAsCollection(0);
 
         //reset Memory
-        this.memReset(ifcModel);
+        this.memReset();
 
         final var points = new ArrayList<IIFCCartesianPoint>();
 
@@ -47,23 +47,23 @@ public class CreatePolyline extends AbstractFunction {
             measures.add(adapter.getIFC4().create(IIFCLengthMeasure.class, point.getZ()));
 
             IIFCCartesianPoint cPoint = adapter.getIFC4().create(IIFCCartesianPoint.class, measures);
-            ifcModel.addObject(cPoint);
+            //ifcModel.addObject(cPoint);
             memory.add(cPoint);
 
             points.add(cPoint);
         }
 
         IIFCPolyline polyline = Adapter.getInstance().getIFC4().create(IIFCPolyline.class, points);
-        ifcModel.addObject(polyline);
+        //ifcModel.addObject(polyline);
         memory.add(polyline);
 
         setResult(0, polyline);
 
     }
 
-    private void memReset(IIFCModel ifcModel) {
+    private void memReset() {
         for (var obj : memory) {
-            ifcModel.removeObject(obj);
+            //ifcModel.removeObject(obj);
         }
         memory.clear();
     }

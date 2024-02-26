@@ -13,7 +13,7 @@ import org.apache.commons.geometry.euclidean.threed.line.Segment3D
  */
 class CheckLinecasts(nodeProxy: NodeProxy?) : AbstractFunction(nodeProxy) {
 
-    override fun execute(ifcModel: IIFCModel) {
+    override fun execute() {
         val elements0 = getInputAsCollection(0)
         val elements1 = getInputAsCollection(1)
         if (elements0.isEmpty() || elements1.isEmpty()) return

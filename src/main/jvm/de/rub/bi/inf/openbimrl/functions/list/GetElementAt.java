@@ -1,7 +1,6 @@
 package de.rub.bi.inf.openbimrl.functions.list;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 import java.util.ArrayList;
@@ -20,13 +19,13 @@ public class GetElementAt extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
 
         ArrayList<?> list = getInput(0);
 
         ArrayList positions = new ArrayList();
         if (getInput(1) instanceof Collection) {
-            positions.addAll((Collection) getInput(1));
+            positions.addAll(getInput(1));
         } else {
             positions.add(getInput(1));
         }

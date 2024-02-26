@@ -6,7 +6,6 @@ import com.sun.jna.Pointer
 import de.rub.bi.inf.nativelib.FunctionsLibrary
 import de.rub.bi.inf.nativelib.FunctionsNative
 import de.rub.bi.inf.openbimrl.NodeProxy
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel
 import java.util.*
 
 abstract class NativeFunction(nodeProxy: NodeProxy?) : AbstractFunction(nodeProxy) {
@@ -25,7 +24,7 @@ abstract class NativeFunction(nodeProxy: NodeProxy?) : AbstractFunction(nodeProx
         }
     }
 
-    final override fun execute(ifcModel: IIFCModel?) {
+    final override fun execute() {
         val memoryQueue: Queue<MemoryStructure> = LinkedList()
         nativeLib.init_function(
             { at: Int -> getInputAs(at, Pointer::class.java) },

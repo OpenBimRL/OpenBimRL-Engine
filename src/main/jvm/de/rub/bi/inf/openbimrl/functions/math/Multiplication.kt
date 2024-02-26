@@ -10,7 +10,7 @@ import de.rub.bi.inf.openbimrl.functions.AbstractFunction
  * @author Florian Becker
  */
 class Multiplication(nodeProxy: NodeProxy?) : AbstractFunction(nodeProxy) {
-    override fun execute(ifcModel: IIFCModel?) {
+    override fun execute() {
         val object0 = getInput<Any>(0)
         val object1 = getInput<Any>(1)
 

@@ -1,113 +1,82 @@
-package de.rub.bi.inf.openbimrl.functions.geometry;
+package de.rub.bi.inf.openbimrl.functions.geometry
 
-import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
-import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
-import org.apache.commons.geometry.euclidean.threed.RegionBSPTree3D;
-import org.apache.commons.geometry.euclidean.threed.Vector3D;
-
-import java.util.ArrayList;
-import java.util.Collection;
+import de.rub.bi.inf.openbimrl.NodeProxy
+import de.rub.bi.inf.openbimrl.functions.AbstractFunction
+import org.apache.commons.geometry.euclidean.threed.RegionBSPTree3D
+import org.apache.commons.geometry.euclidean.threed.Vector3D
 
 /**
  * Computes nodes for a graph containing with certain parametric behavior, such a for creating triangles or quad patches.
  *
  * @author Marcel Stepien
  */
-public class CreatePointGraphNodes extends AbstractFunction {
+class CreatePointGraphNodes(nodeProxy: NodeProxy?) : AbstractFunction(nodeProxy) {
+    override fun execute() {
+        if (getInput<Any?>(0) == null) return
 
-    public CreatePointGraphNodes(NodeProxy nodeProxy) {
-        super(nodeProxy);
-    }
+        val bspTrees = getInputAsCollection(0)
 
-    @Override
-    public void execute(IIFCModel ifcModel) {
+        val stepSize = (getInput<String>(1) ?: return).toDouble()
 
-        Object input0 = getInput(0);
+        val height = (getInput<String>(2) ?: return).toDouble()
 
-        if (input0 == null)
-            return;
+        val jitter = (getInput<String>(3) ?: "0.0").toDouble()
 
-        Collection<?> bspTrees = null;
-        if (input0 instanceof Collection<?>) {
-            bspTrees = (Collection<?>) input0;
-        } else {
-            ArrayList<Object> newList = new ArrayList<>();
-            newList.add(input0);
-            bspTrees = newList;
+
+        val listOfNodes = ArrayList<ArrayList<Vector3D>>()
+
+        bspTrees.filterIsInstance<RegionBSPTree3D>().forEach { e ->
+            val nodes = createGraphNodes(e, stepSize, height, jitter)
+            listOfNodes.add(nodes)
         }
 
-        String input1 = getInput(1);
-        if (input1 == null)
-            return;
-
-        double stepSize = Double.parseDouble(input1);
-
-        String input2 = getInput(2);
-        if (input2 == null)
-            return;
-
-        double height = Double.parseDouble(input2);
-
-        String input3 = getInput(3);
-        if (input3 == null)
-            input3 = "0.0";
-
-        double jitter = Double.parseDouble(input3);
-
-
-        ArrayList<ArrayList<Vector3D>> listOfNodes = new ArrayList<ArrayList<Vector3D>>();
-
-        for (Object o : bspTrees) {
-
-            if (o instanceof RegionBSPTree3D) {
-                ArrayList<Vector3D> nodes = createGraphNodes((RegionBSPTree3D) o, stepSize, height, jitter);
-                listOfNodes.add(nodes);
-            }
-
-        }
-
-        setResult(0, listOfNodes);
+        setResult(0, listOfNodes)
     }
 
-    private ArrayList<Vector3D> createGraphNodes(RegionBSPTree3D bspTree, double stepSize, double height, double jitter) {
-        Vector3D cA = bspTree.getBounds().getMin();
-        Vector3D cB = bspTree.getBounds().getMax();
+    private fun createGraphNodes(
+        bspTree: RegionBSPTree3D,
+        stepSize: Double,
+        height: Double,
+        jitter: Double
+    ): ArrayList<Vector3D> {
+        val cA = bspTree.bounds.min
+        val cB = bspTree.bounds.max
 
-        double margin = 0.2;
+        val margin = 0.2
 
-        double offsetX = (cB.getX() - cA.getX() - margin * 2) % stepSize;
-        double offsetXPerPoint = (int) ((cB.getX() - cA.getX() - margin * 2) / stepSize);
-        offsetX = offsetX / offsetXPerPoint;
+        var offsetX = (cB.x - cA.x - margin * 2) % stepSize
+        val offsetXPerPoint = ((cB.x - cA.x - margin * 2) / stepSize).toInt().toDouble()
+        offsetX /= offsetXPerPoint
 
-        double offsetY = (cB.getY() - cA.getY() - margin * 2) % stepSize;
-        double offsetYPerPoint = (int) ((cB.getY() - cA.getY() - margin * 2) / stepSize);
-        offsetY = offsetY / offsetYPerPoint;
+        var offsetY = (cB.y - cA.y - margin * 2) % stepSize
+        val offsetYPerPoint = ((cB.y - cA.y - margin * 2) / stepSize).toInt().toDouble()
+        offsetY /= offsetYPerPoint
 
-        ArrayList<Vector3D> linearPointList = new ArrayList<Vector3D>();
+        val linearPointList = ArrayList<Vector3D>()
 
-        int xStep = 0;
-        for (double x = cA.getX() + margin; x <= cB.getX(); x += (stepSize + offsetX)) {
-
-            double jitterOffset = 0.0;
+        var xStep = 0
+        var x = cA.x + margin
+        while (x <= cB.x) {
+            var jitterOffset = 0.0
             if ((xStep % 2) != 0) {
-                jitterOffset = jitter;
+                jitterOffset = jitter
             }
 
-            for (double y = cA.getY() + jitterOffset + margin; y <= cB.getY(); y += (stepSize + offsetY)) {
-
-                Vector3D gridPoint = Vector3D.of(x, y, height);
+            var y = cA.y + jitterOffset + margin
+            while (y <= cB.y) {
+                val gridPoint = Vector3D.of(x, y, height)
 
                 if (bspTree.contains(gridPoint)) {
-                    linearPointList.add(gridPoint);
+                    linearPointList.add(gridPoint)
                 }
 
+                y += (stepSize + offsetY)
             }
 
-            xStep++;
+            xStep++
+            x += (stepSize + offsetX)
         }
 
-        return linearPointList;
+        return linearPointList
     }
-
 }

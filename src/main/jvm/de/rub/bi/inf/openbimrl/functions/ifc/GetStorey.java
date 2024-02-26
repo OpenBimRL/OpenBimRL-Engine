@@ -1,11 +1,9 @@
 package de.rub.bi.inf.openbimrl.functions.ifc;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Find the IfcStorey that is related to a specific entity.
@@ -19,7 +17,7 @@ public class GetStorey extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
 
         final var objects = getInputAsCollection(0);
 

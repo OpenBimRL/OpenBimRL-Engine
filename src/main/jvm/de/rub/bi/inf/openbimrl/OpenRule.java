@@ -2,10 +2,8 @@ package de.rub.bi.inf.openbimrl;
 
 import de.rub.bi.inf.logger.RuleLogger;
 import de.rub.bi.inf.model.AbstractRuleDefinition;
-import de.rub.bi.inf.model.ResultObject;
 import de.rub.bi.inf.model.ResultObjectGroup;
 import de.rub.bi.inf.model.RuleSet;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.engine.ifc.IIFCProduct;
 import de.rub.bi.inf.openbimrl.helper.FilterInterpreter;
 
@@ -22,7 +20,7 @@ import java.util.*;
 public class OpenRule extends RuleSet {
     private ModelCheckType modelCheck = null;
     private PrecalculationContext precalculationContext = null;
-    private Map<String, Object> ruleIDtoValueMap = new HashMap<>();
+    private final Map<String, Object> ruleIDtoValueMap = new HashMap<>();
 
     public OpenRule(ModelCheckType modelCheck, PrecalculationsType precalculations) {
         this.name = modelCheck.getName();
@@ -95,21 +93,21 @@ public class OpenRule extends RuleSet {
     }
 
     @Override
-    public void check(IIFCModel ifcModel, RuleLogger logger) {
+    public void check(RuleLogger logger) {
         //Reset the check
         this.resultObjects = new ArrayList<ResultObjectGroup>();
         this.checkedStatus = CheckedStatus.UNCHECKED;
         this.checkingProtocol = new ArrayList<String>();
 
         //Step 1: Build Precalculation
-        this.handlePrecalculations(ifcModel, logger);
+        this.handlePrecalculations(logger);
 
         //Step 2: Transfer via RuleIdentifier
         boolean allParametersAvailable = handleRuleIdentifier();
 
         //Step 3: Execute Rules
         if (allParametersAvailable) {
-            handleRuleChecks(ifcModel, logger);
+            handleRuleChecks(logger);
         } else {
             this.checkingProtocol.add("Some precalculations were not available");
             this.checkedStatus = CheckedStatus.FAILED;
@@ -119,10 +117,7 @@ public class OpenRule extends RuleSet {
         this.handleResultSets();
     }
 
-    /**
-     * @param ifcModel
-     */
-    private void handlePrecalculations(IIFCModel ifcModel, RuleLogger logger) {
+    private void handlePrecalculations(RuleLogger logger) {
         for (NodeType node : precalculationContext.getGraphSortedNodes()) { // precalculationContext.getGraphNodes()) {
 
             //System.out.println(node.getId()+" (FunctionName): " + node.getFunction());
@@ -130,7 +125,7 @@ public class OpenRule extends RuleSet {
             NodeProxy nodeProxy = precalculationContext.getNodeProxy(node);
 
             try {
-                nodeProxy.execute(ifcModel, nodeProxy);
+                nodeProxy.execute();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -184,12 +179,12 @@ public class OpenRule extends RuleSet {
     /**
      * @param ifcModel
      */
-    private void handleRuleChecks(IIFCModel ifcModel, RuleLogger logger) {
+    private void handleRuleChecks(RuleLogger logger) {
         //Execute for all subrules
         CheckedStatus tempStatus = CheckedStatus.WARNING;
 
         for (AbstractRuleDefinition subRule : getChildren()) {
-            subRule.check(ifcModel, logger);
+            subRule.check(logger);
 
             if (subRule.getCheckedStatus().equals(CheckedStatus.FAILED)) {
                 tempStatus = CheckedStatus.FAILED;
@@ -224,7 +219,7 @@ public class OpenRule extends RuleSet {
                     elementsList = tempList;
                 }
 
-                if (filterList != null ? filterList.size() != elementsList.size() : false) {
+                if (filterList != null && filterList.size() != elementsList.size()) {
                     String msg = "Size of elements and filter do not match for ResultSet: " +
                             rs.getName() + "(" + elementsList.size() + "!=" + filterList.size() + ")";
                     this.checkingProtocol.add(msg);

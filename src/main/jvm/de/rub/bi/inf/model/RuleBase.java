@@ -11,7 +11,7 @@ public class RuleBase {
 
     private static RuleBase instance = new RuleBase();
     private ArrayList<AbstractRuleDefinition> rules = new ArrayList<>();
-    private ArrayList<RuleBaseChangedListener> changedListeners = new ArrayList<>();
+    private final ArrayList<RuleBaseChangedListener> changedListeners = new ArrayList<>();
 
     private RuleBase() {
     }

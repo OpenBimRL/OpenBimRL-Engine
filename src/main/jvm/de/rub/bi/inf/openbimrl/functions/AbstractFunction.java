@@ -1,7 +1,6 @@
 package de.rub.bi.inf.openbimrl.functions;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,15 +27,7 @@ public abstract class AbstractFunction {
         }
     }
 
-    /**
-     * Executes the function on a given model context.
-     * Incoming inputs are provided by getInput-method.
-     * Calculated a valid results are then stored by
-     * setting them via the setResult-method.
-     *
-     * @param ifcModel
-     */
-    public abstract void execute(IIFCModel ifcModel);
+    public abstract void execute();
 
     @SuppressWarnings("unchecked")
     protected <T> T getInput(int pos) {

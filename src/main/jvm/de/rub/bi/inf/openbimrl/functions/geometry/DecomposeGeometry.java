@@ -2,7 +2,6 @@ package de.rub.bi.inf.openbimrl.functions.geometry;
 
 import com.sun.j3d.utils.geometry.GeometryInfo;
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 import javax.media.j3d.GeometryArray;
@@ -22,7 +21,7 @@ public class DecomposeGeometry extends AbstractFunction {
     }
 
     @Override
-    public void execute(IIFCModel ifcModel) {
+    public void execute() {
 
         Object input0 = getInput(0);
 
