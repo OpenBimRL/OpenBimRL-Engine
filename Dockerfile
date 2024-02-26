@@ -23,7 +23,7 @@ COPY . /build/engine
 WORKDIR /app
 
 RUN cd /build/api     && mvn install
-RUN cd /build/engine  && mvn package -Dmaven.test.skip  # build (and test package [in the future...])
+RUN cd /build/engine  && mvn package -Dmaven.test.skip -X  # build (and test package [in the future...])
 
 RUN bash -c "cp /build/engine/target/*-jar-with-dependencies.jar app.jar"
 RUN cp /build/engine/src/main/resources/lib.so .
