@@ -1,7 +1,6 @@
 package de.rub.bi.inf.model;
 
 import de.rub.bi.inf.logger.RuleLogger;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel;
 
 import java.util.ArrayList;
 
@@ -18,16 +17,11 @@ public abstract class AbstractRuleDefinition {
     protected CheckedStatus checkedStatus = CheckedStatus.UNCHECKED;
     protected ArrayList<ResultObjectGroup> resultObjects = new ArrayList<>();
     protected ArrayList<String> checkingProtocol = new ArrayList<>();
-    protected IIFCModel modelNode;
 
     public AbstractRuleDefinition() {
         this.name = "Unknown Rule";
         this.value = "";
         this.comment = "";
-    }
-
-    public IIFCModel getModelNode() {
-        return modelNode;
     }
 
     public String getValue() {

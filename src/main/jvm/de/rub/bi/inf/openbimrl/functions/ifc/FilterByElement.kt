@@ -28,7 +28,7 @@ class FilterByElement(nodeProxy: NodeProxy) : NativeFunction(nodeProxy) {
     /**
      * can happen if the returned pointer is null
      */
-    override fun handlePointerOutput(at: Int, pointer: Pointer) {
+    override fun handlePointerOutput(at: Int, pointer: Pointer?) {
         setResult(at, emptyList<IfcPointer>())
     }
 }

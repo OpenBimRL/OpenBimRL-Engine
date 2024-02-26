@@ -2,7 +2,6 @@ package de.rub.bi.inf.openbimrl.functions.ifc
 
 import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.NodeProxy
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCModel
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction
 
 /**

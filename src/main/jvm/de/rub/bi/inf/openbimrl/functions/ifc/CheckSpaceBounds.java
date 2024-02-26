@@ -1,7 +1,6 @@
 package de.rub.bi.inf.openbimrl.functions.ifc;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCElement;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ public class CheckSpaceBounds extends AbstractFunction {
         if (elements0.isEmpty()) return;
 
 
-        final var resultValues = new ArrayList<IIFCElement>();
+        final var resultValues = new ArrayList<>();
 
 /*        elements0.stream().filter(element -> element instanceof IIFCSpace).forEach(space -> {
 

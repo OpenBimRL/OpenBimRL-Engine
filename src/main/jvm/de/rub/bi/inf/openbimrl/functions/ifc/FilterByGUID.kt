@@ -15,7 +15,8 @@ class FilterByGUID(nodeProxy: NodeProxy?) : NativeFunction(nodeProxy) {
         nativeLib.filterByGUID()
     }
 
-    override fun handlePointerOutput(at: Int, pointer: Pointer) {
+    override fun handlePointerOutput(at: Int, pointer: Pointer?) {
+        if (pointer == null) return
         super.handlePointerOutput(at, IfcPointer(pointer))
     }
 }

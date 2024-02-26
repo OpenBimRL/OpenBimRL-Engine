@@ -1,7 +1,6 @@
 package de.rub.bi.inf.openbimrl.functions.ifc;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCObject;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ public class GetGlobalID extends AbstractFunction {
 
         final var resultValues = new ArrayList<String>();
 
-        for (Object o : objects) {
+        /*for (Object o : objects) {
             if (o instanceof IIFCObject ifcObj) {
 
                 resultValues.add(
@@ -35,7 +34,7 @@ public class GetGlobalID extends AbstractFunction {
 
             }
         }
-
+*/
         if (resultValues.size() == 1) {
             setResult(0, resultValues.get(0));
         } else {

@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>inf.bi.rub.de</groupId>
     <artifactId>OpenBimRL-Engine</artifactId>
-    <version>2022.11.1</version>
+    <version>2022.11.1-SNAPSHOT-0.1</version>
 
     <packaging>jar</packaging>
 
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.4</version>
+            <version>2.9.0</version>
         </dependency>
 
 
@@ -147,17 +147,11 @@
             <version>2022.11.1</version>
         </dependency>
 
-        <dependency>
-            <groupId>inf.bi.rub.de</groupId>
-            <artifactId>OpenBimRL-Engine-Adapter</artifactId>
-            <version>2022.11.1</version>
-        </dependency>
-
         <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>31.1-jre</version>
+            <version>33.0.0-jre</version>
         </dependency>
 
         <dependency>

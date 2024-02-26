@@ -1,7 +1,6 @@
 package de.rub.bi.inf.openbimrl.functions.geometry;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCClass;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 import org.apache.commons.geometry.euclidean.threed.RegionBSPTree3D;
 
@@ -42,7 +41,7 @@ public class ConvertToRegionBSPTree extends AbstractFunction {
 
 
         for (Object ele0 : elements0) {
-            if (ele0 instanceof IIFCClass classInterface0) {
+            if (ele0 instanceof Object) { // originally IFCClass
 
                 // final var geomShapesA = getSolidShapes(ifcModel, classInterface0);
 

@@ -1,10 +1,8 @@
 package de.rub.bi.inf.openbimrl;
 
 import de.rub.bi.inf.logger.RuleLogger;
-import de.rub.bi.inf.model.ResultObject;
 import de.rub.bi.inf.model.ResultObjectGroup;
 import de.rub.bi.inf.model.SimpleRule;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCProduct;
 import de.rub.bi.inf.openbimrl.helper.FilterInterpreter;
 
 import java.util.*;
@@ -12,7 +10,7 @@ import java.util.*;
 
 /**
  * Defines a terminal single rule that Produces the {@link ResultObjectGroup}. This class
- * is being used internaly by {@link OpenRuleR}.
+ * is being used internaly by {@link OpenRule}.
  *
  * @author Marcel Stepien, Andre Vonthron
  */
@@ -243,13 +241,13 @@ public class OpenSubRule extends SimpleRule {
 
                         comp = comp || compare(n1, operator2Value, rule.getOperator());
 
-                        if (comp && (n1 instanceof IIFCProduct)) {
+/*                        if (comp && (n1 instanceof IIFCProduct)) {
                             successes.getChildren().add(new ResultObject((IIFCProduct) n0));
                         }
 
                         if (!comp && (n1 instanceof IIFCProduct)) {
                             failures.getChildren().add(new ResultObject((IIFCProduct) n0));
-                        }
+                        }*/
 
                     }
                 }
@@ -300,13 +298,13 @@ public class OpenSubRule extends SimpleRule {
 
                 boolean comp = compare(nO, operator2Value, rule.getOperator());
 
-                if (comp && (nO instanceof IIFCProduct product)) {
+/*                if (comp && (nO instanceof IIFCProduct product)) {
                     successes.getChildren().add(new ResultObject(product));
                 }
 
                 if (!comp && (nO instanceof IIFCProduct product)) {
                     failures.getChildren().add(new ResultObject(product));
-                }
+                }*/
 
                 //Add to new Mask for ruleID save
                 newMask.add(comp);
@@ -370,13 +368,13 @@ public class OpenSubRule extends SimpleRule {
 
                         //System.out.println(nO + " | " + rule.getOperand2() + " | " + rule.getOperator());
 
-                        if (comp && (n1 instanceof IIFCProduct)) {
+/*                        if (comp && (n1 instanceof IIFCProduct)) {
                             successes.getChildren().add(new ResultObject((IIFCProduct) n0));
                         }
 
                         if (!comp && (n1 instanceof IIFCProduct)) {
                             failures.getChildren().add(new ResultObject((IIFCProduct) n0));
-                        }
+                        }*/
 
                     }
                 }
@@ -422,13 +420,13 @@ public class OpenSubRule extends SimpleRule {
 
                 boolean comp = compare(nO, operator2Value, rule.getOperator());
 
-                if (comp && (nO instanceof IIFCProduct product)) {
+/*                if (comp && (nO instanceof IIFCProduct product)) {
                     successes.getChildren().add(new ResultObject(product));
                 }
 
                 if (!comp && (nO instanceof IIFCProduct product)) {
                     failures.getChildren().add(new ResultObject(product));
-                }
+                }*/
 
                 //Add to new Mask for ruleID save
                 newMask.add(comp);

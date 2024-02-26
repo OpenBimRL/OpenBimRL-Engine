@@ -51,7 +51,7 @@ abstract class NativeFunction(nodeProxy: NodeProxy?) : AbstractFunction(nodeProx
         memoryQueue.clear() // technically not necessary
     }
 
-    protected open fun handlePointerOutput(at: Int, pointer: Pointer) {
+    protected open fun handlePointerOutput(at: Int, pointer: Pointer?) {
         if (pointer == Pointer.NULL)
             setResult(at, null)
         else

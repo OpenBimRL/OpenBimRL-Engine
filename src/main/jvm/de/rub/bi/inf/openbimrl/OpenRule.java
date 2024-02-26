@@ -4,7 +4,6 @@ import de.rub.bi.inf.logger.RuleLogger;
 import de.rub.bi.inf.model.AbstractRuleDefinition;
 import de.rub.bi.inf.model.ResultObjectGroup;
 import de.rub.bi.inf.model.RuleSet;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCProduct;
 import de.rub.bi.inf.openbimrl.helper.FilterInterpreter;
 
 import java.util.*;
@@ -176,9 +175,6 @@ public class OpenRule extends RuleSet {
         return allParametersAvailable;
     }
 
-    /**
-     * @param ifcModel
-     */
     private void handleRuleChecks(RuleLogger logger) {
         //Execute for all subrules
         CheckedStatus tempStatus = CheckedStatus.WARNING;
@@ -205,7 +201,7 @@ public class OpenRule extends RuleSet {
         if (modelCheck.getResultSets() != null) {
             for (ResultSetType rs : modelCheck.getResultSets().getResultSet()) {
 
-                final var markedIfcElement = new ArrayList<IIFCProduct>();
+                // final var markedIfcElement = new ArrayList<IIFCProduct>();
 
                 List<?> filterList = FilterInterpreter.interpret(rs.getFilter(), ruleIDtoValueMap);
                 Collection<?> elementsList = null;
@@ -240,15 +236,15 @@ public class OpenRule extends RuleSet {
 
                     }
 
-                    if (nO instanceof IIFCProduct product) {
+/*                    if (nO instanceof IIFCProduct product) {
                         markedIfcElement.add(product);
-                    }
+                    }*/
                 }
 
                 //Register results of the pre-calculation to the result
                 ResultObjectGroup group = this.computeResultsElements(
                         "ResultSet: " + rs.getName(),
-                        markedIfcElement
+                        null // prev markedIfcElement
                 );
 
                 if (!group.getChildren().isEmpty()) {
@@ -265,7 +261,7 @@ public class OpenRule extends RuleSet {
      */
     public void generateRules(ModelCheckType modelCheck) {
 
-        ArrayList<AbstractRuleDefinition> root = new ArrayList<AbstractRuleDefinition>();
+        final var root = new ArrayList<AbstractRuleDefinition>();
 
         ModelSubChecksType subchecks = modelCheck.getModelSubChecks();
         if (subchecks != null) {

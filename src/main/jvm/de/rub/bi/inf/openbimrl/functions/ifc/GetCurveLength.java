@@ -1,12 +1,7 @@
 package de.rub.bi.inf.openbimrl.functions.ifc;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCCartesianPoint;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCPolyline;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
-
-import javax.vecmath.Point3d;
-import java.util.ArrayList;
 
 /**
  * Calculates the length of a Curve (like an IfcPolyline).
@@ -21,7 +16,7 @@ public class GetCurveLength extends AbstractFunction {
 
     @Override
     public void execute() {
-
+/*
         final var polylines = getInputAsCollection(0);
         if (polylines.isEmpty()) return;
 
@@ -61,7 +56,7 @@ public class GetCurveLength extends AbstractFunction {
             setResult(0, resultValues.get(0));
         } else {
             setResult(0, resultValues);
-        }
+        }*/
 
     }
 

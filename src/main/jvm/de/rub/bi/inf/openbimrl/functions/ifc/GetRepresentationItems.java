@@ -1,12 +1,7 @@
 package de.rub.bi.inf.openbimrl.functions.ifc;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCClass;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCProduct;
-import de.rub.bi.inf.openbimrl.engine.ifc.IIFCRepresentationItem;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
-
-import java.util.ArrayList;
 
 /**
  * Retrieves the representation items based on the IFC element.
@@ -20,7 +15,7 @@ public class GetRepresentationItems extends AbstractFunction {
     }
 
     @Override
-    public void execute() {
+    public void execute() {/*
 
         final var objects = getInputAsCollection(0);
         if (objects.isEmpty()) return;
@@ -45,7 +40,7 @@ public class GetRepresentationItems extends AbstractFunction {
             setResult(0, resultValues.get(0));
         } else {
             setResult(0, resultValues);
-        }
+        }*/
     }
 
 }
