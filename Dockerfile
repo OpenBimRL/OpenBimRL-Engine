@@ -19,17 +19,14 @@ COPY --from=git-fetcher /app /build/api
 
 RUN apt update && apt install -y libboost-dev clang make
 
-ADD https://github.com/OpenBimRL/OpenBimRL-Engine-Adapter.git /build/adapter
-
 COPY . /build/engine
 WORKDIR /app
 
 RUN cd /build/api     && mvn install
-RUN cd /build/adapter && mvn install
 RUN cd /build/engine  && mvn package -Dmaven.test.skip  # build (and test package [in the future...])
 
-RUN bash -c "cp /build/engine/target/*-jar-with-dependencies.jar /app/app.jar"
-RUN cp /build/engine/src/main/resources/lib.so ./app
+RUN bash -c "cp /build/engine/target/*-jar-with-dependencies.jar app.jar"
+RUN cp /build/engine/src/main/resources/lib.so .
 
 RUN rm -rf /build
 
