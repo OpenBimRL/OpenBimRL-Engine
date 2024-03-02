@@ -19,6 +19,7 @@ OpenBimRL documents for defining precalculations and in extension perform rule c
 
 **Dependencies:**
 - [OpenBimRL-API](https://github.com/RUB-Informatik-im-Bauwesen/OpenBimRL)
+-[IFCOpenShell](https://github.com/IfcOpenShell/IfcOpenShell) (has to be installed on a system level. Binaries can be found in the official docker container which this container build also relies on)
 
 More dependencies are provided in the _pom.xml_ and automatically included via maven.
 
