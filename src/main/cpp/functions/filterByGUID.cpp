@@ -17,7 +17,7 @@ void filterByGUID()
         return;
     }
 
-    auto guid = std::string(input); // create c++ string from char*
+    const auto guid = std::string(input); // create c++ string from char*
     IfcParse::IfcFile *file = OpenBIMRLEngine::getCurrentFile(); // get active file
 
     try
