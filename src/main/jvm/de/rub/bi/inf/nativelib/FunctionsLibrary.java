@@ -5,6 +5,9 @@ import com.sun.jna.Library;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
 
+/**
+ * @author Florian Becker
+ */
 public interface FunctionsLibrary extends Library {
 
     boolean initIfc(String fileName);
