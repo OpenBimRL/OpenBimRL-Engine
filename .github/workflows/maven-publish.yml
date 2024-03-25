@@ -36,6 +36,20 @@ jobs:
     - name: install API dependency
       run: cd deps && mvn install && cd .. && rm -rf deps
 
+    - name: extract ifc lib headers from docker image
+      uses: shrink/actions-docker-extract@v3.0.0
+      with:
+        image: aecgeeks/ifcopenshell:latest
+        path: /usr/include/ifcparse
+        destination: /usr/include/ifcparse
+
+    - name: extract ifc lib binary from docker image
+      uses: shrink/actions-docker-extract@v3.0.0
+      with:
+        image: aecgeeks/ifcopenshell:latest
+        path: /usr/lib/libIfcParse.a
+        destination: /usr/local/lib/libIfcParse.a
+
     - name: Build with Maven
       run: mvn -B package --file pom.xml -Dmaven.test.skip
 
