@@ -56,9 +56,6 @@ jobs:
         path: /usr/lib/libIfcParse.a
         destination: /usr/local/lib/
 
-    - name: debugging
-      run: ls -al /usr/local/lib
-
     - name: Build with Maven
       run: mvn -B package --file pom.xml -Dmaven.test.skip
 

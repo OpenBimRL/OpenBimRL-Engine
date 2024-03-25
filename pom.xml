@@ -29,7 +29,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/OpenBimRL/OpenBimRL-Engine-REST</url>
+            <url>https://maven.pkg.github.com/OpenBimRL/OpenBimRL-Engine</url>
         </repository>
     </distributionManagement>
 
