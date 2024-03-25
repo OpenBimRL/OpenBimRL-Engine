@@ -54,7 +54,7 @@ jobs:
       with:
         image: aecgeeks/ifcopenshell:latest
         path: /usr/lib/libIfcParse.a
-        destination: /usr/local/lib/libIfcParse.a
+        destination: /usr/local/lib/
 
     - name: debugging
       run: ls -al /usr/local/lib
