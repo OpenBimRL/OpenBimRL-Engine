@@ -44,7 +44,7 @@ jobs:
       with:
         image: aecgeeks/ifcopenshell:latest
         path: /usr/include/ifcparse
-        destination: /usr/include/ifcparse
+        destination: /usr/include
 
     - name: extract ifc lib binary from docker image
       uses: shrink/actions-docker-extract@v3.0.0
@@ -52,12 +52,6 @@ jobs:
         image: aecgeeks/ifcopenshell:latest
         path: /usr/lib/libIfcParse.a
         destination: /usr/local/lib/libIfcParse.a
-
-    - name: testing lib copy
-      run: ls -al /usr/include/ifcparse
-
-    - name: testing clang++
-      run: clang++ -xc++ /dev/null -E -Wp,-v 2>&1 | sed -n 's,^ ,,p'
 
     - name: Build with Maven
       run: mvn -B package --file pom.xml -Dmaven.test.skip
