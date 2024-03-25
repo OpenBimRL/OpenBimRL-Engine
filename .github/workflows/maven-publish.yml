@@ -30,7 +30,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: 'RUB-Informatik-im-Bauwesen/OpenBimRL'
-        ref: '9699b39'
+        ref: '9699b39bce25546b8dc8c235c90c3f7525570d6c'
         path: deps
 
     - name: install API dependency
