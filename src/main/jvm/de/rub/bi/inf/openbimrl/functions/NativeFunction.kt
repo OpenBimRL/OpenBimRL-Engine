@@ -27,7 +27,7 @@ abstract class NativeFunction(nodeProxy: NodeProxy?) : AbstractFunction(nodeProx
     final override fun execute() {
         val memoryQueue: Queue<MemoryStructure> = LinkedList()
         nativeLib.init_function(
-            { at: Int -> getInputAs(at, Pointer::class.java) },
+            this::handlePointerInput,
             { at: Int -> getInputAs(at, Double::class.javaPrimitiveType)!! },
             { at: Int -> getInputAs(at, Int::class.javaPrimitiveType)!! },
             { at: Int -> getInputAs(at, String::class.java) },
@@ -56,5 +56,9 @@ abstract class NativeFunction(nodeProxy: NodeProxy?) : AbstractFunction(nodeProx
             setResult(at, null)
         else
             setResult(at, pointer)
+    }
+
+    protected open fun handlePointerInput(at: Int): Pointer? {
+        return getInputAs(at, Pointer::class.java);
     }
 }
