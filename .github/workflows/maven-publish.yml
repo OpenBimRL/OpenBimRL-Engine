@@ -26,6 +26,16 @@ jobs:
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }}
 
+    - name: fetch API dependency
+      uses: actions/checkout@v4
+      with:
+        repository: 'RUB-Informatik-im-Bauwesen/OpenBimRL'
+        ref: '9699b39'
+        path: deps
+
+    - name: install API dependency
+      run: cd deps && mvn install && cd .. && rm -rf deps
+
     - name: Build with Maven
       run: mvn -B package --file pom.xml -Dmaven.test.skip
 
