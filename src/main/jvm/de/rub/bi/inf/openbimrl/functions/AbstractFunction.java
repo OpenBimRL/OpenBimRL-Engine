@@ -40,6 +40,7 @@ public abstract class AbstractFunction {
         if (in instanceof Collection<?> out)
             return out;
 
+        if (in == null) return new ArrayList<>();
         return List.of(in);
     }
 
