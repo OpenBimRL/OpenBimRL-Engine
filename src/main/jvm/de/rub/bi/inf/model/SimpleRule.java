@@ -1,7 +1,7 @@
 package de.rub.bi.inf.model;
 
 /**
- * Defines an super-type for a singular rule of type {@link AbstractRuleDefinition}.
+ * Defines a super-type for a singular rule of type {@link AbstractRuleDefinition}.
  *
  * @author Marcel Stepien, Andre Vonthron
  */
