@@ -17,6 +17,9 @@ jobs:
       packages: write
 
     steps:
+    - name: Install libboost
+      run: sudo apt update && sudo apt install libboost-all-dev
+
     - uses: actions/checkout@v4
     - name: Set up JDK 21
       uses: actions/setup-java@v4
