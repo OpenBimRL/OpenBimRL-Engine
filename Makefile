@@ -3,8 +3,8 @@
 CC = clang++
 LIB_ONLY_FLAGS = -static -Wall -Werror -I./src/main/cpp/include -I src/main/cpp
 C_FLAGS = -std=c++20 -fPIC -O3
-LD_FLAGS = -shared -lstdc++ -static-libstdc++
-libs = /usr/local/lib/libIfcParse.a
+LD_FLAGS = -shared -lstdc++ -static-libstdc++ -static-libgcc
+libs = /usr/local/lib/libIfcParse.a 
 RESOURCES_DIR = src/main/resources
 BIN_DIR = target/native/bin
 SOURCE_DIR = src/main/cpp
