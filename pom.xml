@@ -221,10 +221,6 @@
                 <version>3.1.0</version>
                 <configuration>
                     <executable>make</executable>
-                    <arguments>
-                        <argument>-j</argument>
-                        <argument>8</argument>
-                    </arguments>
                 </configuration>
                 <executions>
                     <execution>

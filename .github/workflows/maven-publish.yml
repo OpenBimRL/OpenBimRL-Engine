@@ -20,6 +20,10 @@ jobs:
     - name: Install libboost
       run: sudo apt update && sudo apt install libboost-all-dev
 
+    - name: Install libocct
+      run: sudo apt update && sudo apt install -y xfonts-scalable libocct-data-exchange-dev libocct-draw-dev libocct-foundation-dev libocct-modeling-algorithms-dev libocct-modeling-data-dev libocct-ocaf-dev libocct-visualization-dev
+
+
     - uses: actions/checkout@v4
       with:
         submodules: 'true'
