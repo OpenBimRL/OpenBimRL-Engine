@@ -7,8 +7,6 @@ USER root
 COPY --from=binaries /usr/include/ifcparse /usr/include/ifcparse
 COPY --from=binaries /usr/lib/libIfcParse.a /usr/local/lib/libIfcParse.a
 
-COPY --from=git-fetcher /app /build/api
-
 RUN apt update && apt install -y libboost-dev clang make
 
 WORKDIR /app
