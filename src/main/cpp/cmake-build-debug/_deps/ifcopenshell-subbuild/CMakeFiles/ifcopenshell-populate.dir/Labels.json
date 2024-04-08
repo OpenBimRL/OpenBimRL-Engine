@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/remote/OpenBIMRL-Engine_workspace/OpenBimRL-Engine/src/main/cpp/cmake-build-debug/_deps/ifcopenshell-subbuild/CMakeFiles/ifcopenshell-populate"
+		},
+		{
+			"file" : "/home/remote/OpenBIMRL-Engine_workspace/OpenBimRL-Engine/src/main/cpp/cmake-build-debug/_deps/ifcopenshell-subbuild/CMakeFiles/ifcopenshell-populate.rule"
+		},
+		{
+			"file" : "/home/remote/OpenBIMRL-Engine_workspace/OpenBimRL-Engine/src/main/cpp/cmake-build-debug/_deps/ifcopenshell-subbuild/CMakeFiles/ifcopenshell-populate-complete.rule"
+		},
+		{
+			"file" : "/home/remote/OpenBIMRL-Engine_workspace/OpenBimRL-Engine/src/main/cpp/cmake-build-debug/_deps/ifcopenshell-subbuild/ifcopenshell-populate-prefix/src/ifcopenshell-populate-stamp/ifcopenshell-populate-build.rule"
+		},
+		{
+			"file" : "/home/remote/OpenBIMRL-Engine_workspace/OpenBimRL-Engine/src/main/cpp/cmake-build-debug/_deps/ifcopenshell-subbuild/ifcopenshell-populate-prefix/src/ifcopenshell-populate-stamp/ifcopenshell-populate-configure.rule"
+		},
+		{
+			"file" : "/home/remote/OpenBIMRL-Engine_workspace/OpenBimRL-Engine/src/main/cpp/cmake-build-debug/_deps/ifcopenshell-subbuild/ifcopenshell-populate-prefix/src/ifcopenshell-populate-stamp/ifcopenshell-populate-download.rule"
+		},
+		{
+			"file" : "/home/remote/OpenBIMRL-Engine_workspace/OpenBimRL-Engine/src/main/cpp/cmake-build-debug/_deps/ifcopenshell-subbuild/ifcopenshell-populate-prefix/src/ifcopenshell-populate-stamp/ifcopenshell-populate-install.rule"
+		},
+		{
+			"file" : "/home/remote/OpenBIMRL-Engine_workspace/OpenBimRL-Engine/src/main/cpp/cmake-build-debug/_deps/ifcopenshell-subbuild/ifcopenshell-populate-prefix/src/ifcopenshell-populate-stamp/ifcopenshell-populate-mkdir.rule"
+		},
+		{
+			"file" : "/home/remote/OpenBIMRL-Engine_workspace/OpenBimRL-Engine/src/main/cpp/cmake-build-debug/_deps/ifcopenshell-subbuild/ifcopenshell-populate-prefix/src/ifcopenshell-populate-stamp/ifcopenshell-populate-patch.rule"
+		},
+		{
+			"file" : "/home/remote/OpenBIMRL-Engine_workspace/OpenBimRL-Engine/src/main/cpp/cmake-build-debug/_deps/ifcopenshell-subbuild/ifcopenshell-populate-prefix/src/ifcopenshell-populate-stamp/ifcopenshell-populate-test.rule"
+		},
+		{
+			"file" : "/home/remote/OpenBIMRL-Engine_workspace/OpenBimRL-Engine/src/main/cpp/cmake-build-debug/_deps/ifcopenshell-subbuild/ifcopenshell-populate-prefix/src/ifcopenshell-populate-stamp/ifcopenshell-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"ifcopenshell-populate"
+		],
+		"name" : "ifcopenshell-populate"
+	}
+}

@@ -1,0 +1,570 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"cmake-build-debug/_deps/ifcopenshell-src/cmake/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 1009,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 1095,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 1099,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 1106,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 1110,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 1114,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 1122,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 1128,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 1132,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/IfcConvert"
+			],
+			"targetId" : "IfcConvert::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 1,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "include/ifcparse",
+			"paths" : 
+			[
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/Argument.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/ArgumentType.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/IfcBaseClass.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/IfcCharacterDecoder.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/IfcEntityInstanceData.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/IfcException.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/IfcFile.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/IfcGlobalId.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/IfcHierarchyHelper.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/IfcLogger.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/IfcParse.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/IfcSIPrefix.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/IfcSchema.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/IfcSpfHeader.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/IfcSpfStream.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/IfcWrite.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/aggregate_of_instance.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/ifc_parse_api.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/macros.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/utils.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/Ifc2x3.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/Ifc2x3-definitions.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/Ifc4.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/Ifc4-definitions.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/Ifc4x1.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/Ifc4x1-definitions.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/Ifc4x2.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/Ifc4x2-definitions.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/Ifc4x3_rc1.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/Ifc4x3_rc1-definitions.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/Ifc4x3_rc2.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/Ifc4x3_rc2-definitions.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/Ifc4x3_rc3.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/Ifc4x3_rc3-definitions.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/Ifc4x3_rc4.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/Ifc4x3_rc4-definitions.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/Ifc4x3.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/Ifc4x3-definitions.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/Ifc4x3_tc1.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/Ifc4x3_tc1-definitions.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/Ifc4x3_add1.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/Ifc4x3_add1-definitions.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/Ifc4x3_add2.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcparse/Ifc4x3_add2-definitions.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libIfcParse.a"
+			],
+			"targetId" : "IfcParse::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 16,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Unspecified",
+			"destination" : "include/ifcgeom",
+			"paths" : 
+			[
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom/IfcGeom.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom/IfcGeomIteratorImplementation.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom/mapping.i",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom/mapping_cache.i",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom/mapping_curve.i",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom/mapping_define_missing.i",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom/mapping_face.i",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom/mapping_kernel_header.i",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom/mapping_purge_cache.i",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom/mapping_shape.i",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom/mapping_shape_type.i",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom/mapping_shapes.i",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom/mapping_undefine.i",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom/mapping_wire.i"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 5,
+			"component" : "Unspecified",
+			"destination" : "include/ifcgeom_schema_agnostic",
+			"paths" : 
+			[
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/GeometrySerializer.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/IfcGeomElement.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/IfcGeomFilter.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/IfcGeomIterator.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/IfcGeomIteratorSettings.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/IfcGeomMaterial.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/IfcGeomRenderStyles.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/IfcGeomRepresentation.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/IfcGeomShapeType.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/IfcGeomTree.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/IfcRepresentationShapeItem.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/IteratorCache.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/IteratorImplementation.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/Kernel.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/Serialization.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/Serializer.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/base_utils.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/boolean_utils.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/clash_utils.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/empty.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/face_definition.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/ifc_geom_api.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/layerset.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/profile_helper.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/sweep_utils.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/wire_builder.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/ifcgeom_schema_agnostic/wire_utils.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libIfcGeom_ifc2x3.a"
+			],
+			"targetId" : "IfcGeom_ifc2x3::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 3,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libIfcGeom_ifc4.a"
+			],
+			"targetId" : "IfcGeom_ifc4::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 4,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libIfcGeom_ifc4x1.a"
+			],
+			"targetId" : "IfcGeom_ifc4x1::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 5,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libIfcGeom_ifc4x2.a"
+			],
+			"targetId" : "IfcGeom_ifc4x2::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 6,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libIfcGeom_ifc4x3_rc1.a"
+			],
+			"targetId" : "IfcGeom_ifc4x3_rc1::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 10,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libIfcGeom_ifc4x3_rc2.a"
+			],
+			"targetId" : "IfcGeom_ifc4x3_rc2::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 11,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libIfcGeom_ifc4x3_rc3.a"
+			],
+			"targetId" : "IfcGeom_ifc4x3_rc3::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 12,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libIfcGeom_ifc4x3_rc4.a"
+			],
+			"targetId" : "IfcGeom_ifc4x3_rc4::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 13,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libIfcGeom_ifc4x3.a"
+			],
+			"targetId" : "IfcGeom_ifc4x3::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 7,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libIfcGeom_ifc4x3_tc1.a"
+			],
+			"targetId" : "IfcGeom_ifc4x3_tc1::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 14,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libIfcGeom_ifc4x3_add1.a"
+			],
+			"targetId" : "IfcGeom_ifc4x3_add1::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 8,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libIfcGeom_ifc4x3_add2.a"
+			],
+			"targetId" : "IfcGeom_ifc4x3_add2::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 9,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libIfcGeom.a"
+			],
+			"targetId" : "IfcGeom::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 2,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 7,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libSerializers.a"
+			],
+			"targetId" : "Serializers::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 20,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 7,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libSerializers_ifc2x3.a"
+			],
+			"targetId" : "Serializers_ifc2x3::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 21,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 7,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libSerializers_ifc4.a"
+			],
+			"targetId" : "Serializers_ifc4::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 22,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 7,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libSerializers_ifc4x1.a"
+			],
+			"targetId" : "Serializers_ifc4x1::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 23,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 7,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libSerializers_ifc4x2.a"
+			],
+			"targetId" : "Serializers_ifc4x2::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 24,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 7,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libSerializers_ifc4x3_rc1.a"
+			],
+			"targetId" : "Serializers_ifc4x3_rc1::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 28,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 7,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libSerializers_ifc4x3_rc2.a"
+			],
+			"targetId" : "Serializers_ifc4x3_rc2::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 29,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 7,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libSerializers_ifc4x3_rc3.a"
+			],
+			"targetId" : "Serializers_ifc4x3_rc3::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 30,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 7,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libSerializers_ifc4x3_rc4.a"
+			],
+			"targetId" : "Serializers_ifc4x3_rc4::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 31,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 7,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libSerializers_ifc4x3.a"
+			],
+			"targetId" : "Serializers_ifc4x3::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 25,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 7,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libSerializers_ifc4x3_tc1.a"
+			],
+			"targetId" : "Serializers_ifc4x3_tc1::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 32,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 7,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libSerializers_ifc4x3_add1.a"
+			],
+			"targetId" : "Serializers_ifc4x3_add1::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 26,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 7,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"_deps/ifcopenshell-build/libSerializers_ifc4x3_add2.a"
+			],
+			"targetId" : "Serializers_ifc4x3_add2::@6fbeeeafda5f4ae34570",
+			"targetIndex" : 27,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 8,
+			"component" : "Unspecified",
+			"destination" : "include/serializers",
+			"paths" : 
+			[
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/serializers/ColladaSerializer.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/serializers/GltfSerializer.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/serializers/HdfSerializer.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/serializers/IgesSerializer.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/serializers/OpenCascadeBasedSerializer.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/serializers/StepSerializer.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/serializers/SvgSerializer.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/serializers/USDSerializer.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/serializers/WavefrontObjSerializer.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/serializers/XmlSerializer.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/serializers/serializers_api.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/serializers/util.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/serializers/ColladaSerializer.cpp",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/serializers/GltfSerializer.cpp",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/serializers/HdfSerializer.cpp",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/serializers/OpenCascadeBasedSerializer.cpp",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/serializers/SvgSerializer.cpp",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/serializers/USDSerializer.cpp",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/serializers/WavefrontObjSerializer.cpp",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/serializers/XmlSerializer.cpp",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/serializers/util.cpp"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 9,
+			"component" : "Unspecified",
+			"destination" : "include/serializers/schema_dependent",
+			"paths" : 
+			[
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/serializers/schema_dependent/XmlSerializer.h",
+				"cmake-build-debug/_deps/ifcopenshell-src/cmake/../src/serializers/schema_dependent/XmlSerializer.cpp"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "_deps/ifcopenshell-build",
+		"source" : "cmake-build-debug/_deps/ifcopenshell-src/cmake"
+	}
+}

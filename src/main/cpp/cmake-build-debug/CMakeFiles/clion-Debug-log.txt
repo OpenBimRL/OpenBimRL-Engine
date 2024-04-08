@@ -1,0 +1,40 @@
+/home/remote/.cache/JetBrains/RemoteDev/dist/3d8b36b2566c3_CLion-241.14494.229/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/home/remote/.cache/JetBrains/RemoteDev/dist/3d8b36b2566c3_CLion-241.14494.229/bin/ninja/linux/x64/ninja -G Ninja -S /home/remote/OpenBIMRL-Engine_workspace/OpenBimRL-Engine/src/main/cpp -B /home/remote/OpenBIMRL-Engine_workspace/OpenBimRL-Engine/src/main/cpp/cmake-build-debug
+-- The C compiler identification is GNU 12.2.0
+-- The CXX compiler identification is Clang 14.0.6
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+CMake Deprecation Warning at cmake-build-debug/_deps/ifcopenshell-src/cmake/CMakeLists.txt:28 (cmake_policy):
+  The OLD behavior for policy CMP0078 will be removed from a future version
+  of CMake.
+
+  The cmake-policies(7) manual explains that the OLD behaviors of all
+  policies are deprecated and that a policy should be set to OLD only under
+  specific short-term circumstances.  Projects should be ported to the NEW
+  behavior and not rely on setting a policy to OLD.
+
+
+-- Setting options for minimal build
+-- BINDIR: bin
+-- INCLUDEDIR: include
+-- LIBDIR: lib
+-- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found version "1.74.0") found components: system program_options regex thread date_time 
+-- Boost include files found in /usr/include
+-- Boost libraries found in /usr/lib/x86_64-linux-gnu
+-- Found Open CASCADE include files in: /usr/include/opencascade
+-- Found Open CASCADE library files in: /usr/lib/x86_64-linux-gnu
+-- Required Open Cascade Library files found
+-- IFC SCHEMA_VERSIONS that will be used for the build: 2x3;4;4x1;4x2;4x3_rc1;4x3_rc2;4x3_rc3;4x3_rc4;4x3;4x3_tc1;4x3_add1;4x3_add2.
+-- Found Threads: TRUE  
+-- Using the multi-header code from /home/remote/OpenBIMRL-Engine_workspace/OpenBimRL-Engine/src/main/cpp/cmake-build-debug/_deps/json-src/include/
+-- Found Python3: /usr/bin/python3.11 (found version "3.11.2") found components: Interpreter 
+-- Configuring done (29.7s)
+-- Generating done (0.5s)
+-- Build files have been written to: /home/remote/OpenBIMRL-Engine_workspace/OpenBimRL-Engine/src/main/cpp/cmake-build-debug

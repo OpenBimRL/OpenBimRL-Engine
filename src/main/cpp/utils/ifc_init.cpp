@@ -1,38 +1,33 @@
-// libstdc++
+#include "utils.h"
+#include "lib.h"
+
 #include <iostream>
-
-// local includes
-#include "utils/ifc_init.hpp"
-
-#include "utils/OpenBIMRL/file.hpp"
-#include "utils/OpenBIMRL/ifcStandards.hpp"
+#include <ifcparse/IfcFile.h>
 
 static IfcParse::IfcFile *currentFile;
-
-static bool init()
-{
-    // Redirect the output (both progress and log) to stdout
-    Logger::SetOutput(&std::cout, &std::cout);
-
-    return true;
-}
+static bool silent = false;
 
 // hopefully this doesn't leak memory... ¯\_(ツ)_/¯
 static void setCurrentFile(IfcParse::IfcFile *newFile)
 {
-    if (currentFile)
-        delete currentFile;
-
+    // clang-tidy: if not necessary due to deleting null pointer has no effect
+    delete currentFile;
     currentFile = newFile;
 }
 
-bool OpenBIMRLEngine::initIfc(JNA::String fileName)
-{
-    if (!init())
-    {
-        std::cerr << "failed to initialize IFC libary" << std::endl;
-        return false;
-    }
+IfcParse::IfcFile *OpenBimRL::Engine::Utils::getCurrentFile() {
+    return currentFile;
+}
+
+void OpenBimRL::Engine::Utils::setSilent(bool s) {
+    silent = s;
+}
+
+[[maybe_unused]]
+bool initIfc(JNA::String fileName) {
+
+    if (!silent)
+        Logger::SetOutput(&std::cout, &std::cout);
 
     if (!fileName)
     {
@@ -53,17 +48,11 @@ bool OpenBIMRLEngine::initIfc(JNA::String fileName)
     return true;
 }
 
-bool OpenBIMRLEngine::isIFC4()
-{
-    return getCurrentFile()->schema()->name() == "IFC4";
-}
-
-bool OpenBIMRLEngine::isIFC2x3()
-{
+bool OpenBimRL::Engine::Utils::isIFC2x3() {
     return getCurrentFile()->schema()->name() == "IFC2x3";
 }
 
-IfcParse::IfcFile *OpenBIMRLEngine::getCurrentFile()
+bool OpenBimRL::Engine::Utils::isIFC4()
 {
-    return currentFile;
+    return getCurrentFile()->schema()->name() == "IFC4";
 }

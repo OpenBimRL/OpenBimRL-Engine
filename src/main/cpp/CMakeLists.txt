@@ -1,40 +1,97 @@
-cmake_minimum_required(VERSION 3.27)
-project(cpp)
+cmake_minimum_required(VERSION 3.25)
+project(OpenBIMRL_Native)
 
-set(CMAKE_CXX_STANDARD 14)
+include(FetchContent)
 
-include_directories(include)
-include_directories(include/functions)
-include_directories(include/nlohmann)
-include_directories(include/types)
-include_directories(include/utils)
-include_directories(include/utils/OpenBIMRL)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(cpp
-        functions/filterByElement.cpp
-        functions/filterByGUID.cpp
-        functions/function.cpp
-        functions/getBoundingBox.cpp
-        functions/test.cpp
-        include/functions/filterByElement.hpp
-        include/functions/filterByGUID.hpp
-        include/functions/function.hpp
-        include/functions/getBoundingBox.hpp
-        include/functions/test.hpp
-        include/nlohmann/json.hpp
-        include/types/IFC_typedefs.hpp
-        include/types/JNA_typedefs.hpp
-        include/utils/OpenBIMRL/file.hpp
-        include/utils/OpenBIMRL/ifcStandards.hpp
-        include/utils/ifc_init.hpp
-        include/utils/ifc_properties.hpp
-        include/utils/ifc_quantities.hpp
-        include/utils/ifcObjectToString.hpp
-        include/lib.h
-        include/structs.h
-        include/types.hpp
+set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+
+# configure IfcOpenShell
+set(MINIMAL_BUILD ON)
+
+FetchContent_Declare(
+        ifcopenshell
+        GIT_REPOSITORY https://github.com/IfcOpenShell/IfcOpenShell.git
+        GIT_TAG cd5afacc979e6ffea2abd20e69e9e07b6fa90e2e
+        SOURCE_SUBDIR  cmake
+)
+
+# set(OCC_INCLUDE_DIR "/usr/include/opencascade")
+
+
+FetchContent_MakeAvailable(ifcopenshell)
+
+FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz)
+FetchContent_MakeAvailable(json)
+
+add_library(OpenBIMRL_Native SHARED
         utils/ifc_init.cpp
-        utils/ifc_properties.cpp
-        utils/ifc_quantities.cpp
-        utils/native_ifc_object_to_string.cpp
-        utils/native_initIfc.cpp)
+        utils/ifc_pointer_to_string.cpp
+        functions/filter_by_element.cpp
+        functions/function.cpp
+        functions/filter_by_guid.cpp
+)
+
+set_property(TARGET OpenBIMRL_Native PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+target_link_libraries(
+        OpenBIMRL_Native PRIVATE
+        IfcParse
+        nlohmann_json::nlohmann_json
+)
+
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "RELEASE")
+        target_link_libraries(
+                OpenBIMRL_Native PRIVATE
+                -static-libgcc
+                -static-libstdc++
+                -static
+        )
+        target_compile_options(OpenBIMRL_Native PRIVATE
+                -fexceptions
+                -Wall
+                -Werror
+                -O3
+        )
+else ()
+        target_compile_options(OpenBIMRL_Native PRIVATE
+                -fexceptions
+                -Wall
+                -Werror
+        )
+endif()
+
+
+FetchContent_GetProperties(ifcopenshell)
+
+include_directories("${ifcopenshell_SOURCE_DIR}/src" "${CMAKE_SOURCE_DIR}/include")
+
+# tests
+
+FetchContent_Declare(
+        googletest
+        URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
+)
+
+FetchContent_MakeAvailable(googletest)
+
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+enable_testing()
+
+add_definitions( -DRESOURCES_DIR="${CMAKE_SOURCE_DIR}/test/resources" )
+
+add_executable(
+        OpenBIMRL_Native_Test
+        test/src/test.cpp
+)
+target_link_libraries(
+        OpenBIMRL_Native_Test
+        OpenBIMRL_Native
+        GTest::gtest_main
+)
+
+include(GoogleTest)
+gtest_discover_tests(OpenBIMRL_Native_Test)

@@ -1,0 +1,369 @@
+{
+	"archive" : {},
+	"artifacts" : 
+	[
+		{
+			"path" : "_deps/ifcopenshell-build/libSerializers_ifc4x3_tc1.a"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"install",
+			"target_link_libraries",
+			"add_definitions",
+			"include_directories"
+		],
+		"files" : 
+		[
+			"cmake-build-debug/_deps/ifcopenshell-src/cmake/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 967,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 1122,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 973,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 275,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 789,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 789,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 789,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 789,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 789,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 789,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 789,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 789,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 789,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 789,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 789,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 789,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 793,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 762,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-g -std=gnu++14 -fcolor-diagnostics   -Wall -Wextra -Wno-tautological-constant-out-of-range-compare -fPIC"
+				},
+				{
+					"fragment" : "-DIFC_GEOM_EXPORTS -DIfcSchema=Ifc4x3_tc1"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 4,
+					"define" : "BOOST_ALL_NO_LIB"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "BOOST_ATOMIC_DYN_LINK"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "BOOST_DATE_TIME_DYN_LINK"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "BOOST_PROGRAM_OPTIONS_DYN_LINK"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "BOOST_REGEX_DYN_LINK"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "BOOST_SYSTEM_DYN_LINK"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "BOOST_THREAD_DYN_LINK"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "HAS_SCHEMA_2x3"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "HAS_SCHEMA_4"
+				},
+				{
+					"backtrace" : 7,
+					"define" : "HAS_SCHEMA_4x1"
+				},
+				{
+					"backtrace" : 8,
+					"define" : "HAS_SCHEMA_4x2"
+				},
+				{
+					"backtrace" : 9,
+					"define" : "HAS_SCHEMA_4x3"
+				},
+				{
+					"backtrace" : 10,
+					"define" : "HAS_SCHEMA_4x3_add1"
+				},
+				{
+					"backtrace" : 11,
+					"define" : "HAS_SCHEMA_4x3_add2"
+				},
+				{
+					"backtrace" : 12,
+					"define" : "HAS_SCHEMA_4x3_rc1"
+				},
+				{
+					"backtrace" : 13,
+					"define" : "HAS_SCHEMA_4x3_rc2"
+				},
+				{
+					"backtrace" : 14,
+					"define" : "HAS_SCHEMA_4x3_rc3"
+				},
+				{
+					"backtrace" : 15,
+					"define" : "HAS_SCHEMA_4x3_rc4"
+				},
+				{
+					"backtrace" : 16,
+					"define" : "HAS_SCHEMA_4x3_tc1"
+				},
+				{
+					"backtrace" : 17,
+					"define" : "SCHEMA_SEQ=(2x3)(4)(4x1)(4x2)(4x3_rc1)(4x3_rc2)(4x3_rc3)(4x3_rc4)(4x3)(4x3_tc1)(4x3_add1)(4x3_add2)"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 18,
+					"path" : "/usr/include/opencascade"
+				}
+			],
+			"language" : "CXX",
+			"languageStandard" : 
+			{
+				"backtraces" : 
+				[
+					1
+				],
+				"standard" : "14"
+			},
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 3,
+			"id" : "IfcParse::@6fbeeeafda5f4ae34570"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "IfcGeom_ifc2x3::@6fbeeeafda5f4ae34570"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "IfcGeom_ifc4::@6fbeeeafda5f4ae34570"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "IfcGeom_ifc4x1::@6fbeeeafda5f4ae34570"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "IfcGeom_ifc4x2::@6fbeeeafda5f4ae34570"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "IfcGeom_ifc4x3_rc1::@6fbeeeafda5f4ae34570"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "IfcGeom_ifc4x3_rc2::@6fbeeeafda5f4ae34570"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "IfcGeom_ifc4x3_rc3::@6fbeeeafda5f4ae34570"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "IfcGeom_ifc4x3_rc4::@6fbeeeafda5f4ae34570"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "IfcGeom_ifc4x3::@6fbeeeafda5f4ae34570"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "IfcGeom_ifc4x3_tc1::@6fbeeeafda5f4ae34570"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "IfcGeom_ifc4x3_add1::@6fbeeeafda5f4ae34570"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "IfcGeom_ifc4x3_add2::@6fbeeeafda5f4ae34570"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "IfcGeom::@6fbeeeafda5f4ae34570"
+		}
+	],
+	"id" : "Serializers_ifc4x3_tc1::@6fbeeeafda5f4ae34570",
+	"install" : 
+	{
+		"destinations" : 
+		[
+			{
+				"backtrace" : 2,
+				"path" : "lib"
+			}
+		],
+		"prefix" : 
+		{
+			"path" : "/usr/local"
+		}
+	},
+	"name" : "Serializers_ifc4x3_tc1",
+	"nameOnDisk" : "libSerializers_ifc4x3_tc1.a",
+	"paths" : 
+	{
+		"build" : "_deps/ifcopenshell-build",
+		"source" : "cmake-build-debug/_deps/ifcopenshell-src/cmake"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Header Files",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"path" : "cmake-build-debug/_deps/ifcopenshell-src/src/serializers/schema_dependent/XmlSerializer.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "cmake-build-debug/_deps/ifcopenshell-src/src/serializers/schema_dependent/XmlSerializer.cpp",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "STATIC_LIBRARY"
+}
