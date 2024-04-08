@@ -1,5 +1,0 @@
-if(EXISTS "/home/remote/OpenBIMRL-Engine_workspace/OpenBimRL-Engine/src/main/cpp/cmake-build-debug/OpenBIMRL_Native_Test[1]_tests.cmake")
-  include("/home/remote/OpenBIMRL-Engine_workspace/OpenBimRL-Engine/src/main/cpp/cmake-build-debug/OpenBIMRL_Native_Test[1]_tests.cmake")
-else()
-  add_test(OpenBIMRL_Native_Test_NOT_BUILT OpenBIMRL_Native_Test_NOT_BUILT)
-endif()
