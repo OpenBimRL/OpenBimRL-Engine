@@ -17,7 +17,7 @@ import java.util.*;
  * @author Marcel Stepien, Andre Vonthron
  */
 public class OpenRule extends RuleSet {
-    private ModelCheckType modelCheck = null;
+    private final ModelCheckType modelCheck;
     private PrecalculationContext precalculationContext = null;
     private final Map<String, Object> ruleIDtoValueMap = new HashMap<>();
 
@@ -37,8 +37,7 @@ public class OpenRule extends RuleSet {
      * @param value
      */
     private ResultObjectGroup computeResultsElements(String name, Object value) {
-        ResultObjectGroup group = new ResultObjectGroup(name);
-/*        if (value instanceof Collection<?>) {
+        /*        if (value instanceof Collection<?>) {
             int index = 0;
             for (Object o : (Collection<?>) value) {
 
@@ -88,21 +87,21 @@ public class OpenRule extends RuleSet {
             }
         }*/
 
-        return group;
+        return new ResultObjectGroup(name);
     }
 
     @Override
     public void check(RuleLogger logger) {
         //Reset the check
-        this.resultObjects = new ArrayList<ResultObjectGroup>();
+        this.resultObjects = new ArrayList<>();
         this.checkedStatus = CheckedStatus.UNCHECKED;
-        this.checkingProtocol = new ArrayList<String>();
+        this.checkingProtocol = new ArrayList<>();
 
         //Step 1: Build Precalculation
         this.handlePrecalculations(logger);
 
         //Step 2: Transfer via RuleIdentifier
-        boolean allParametersAvailable = handleRuleIdentifier();
+        boolean allParametersAvailable = handleRuleIdentifier(logger);
 
         //Step 3: Execute Rules
         if (allParametersAvailable) {
@@ -149,12 +148,14 @@ public class OpenRule extends RuleSet {
     /**
      * @return
      */
-    private boolean handleRuleIdentifier() {
+    private boolean handleRuleIdentifier(RuleLogger logger) {
         boolean allParametersAvailable = true;
         for (RuleIdentifierType ri : modelCheck.getRuleIdentifiers().getRuleIdentifier()) {
 
             NodeProxy nodeProxy = precalculationContext.getNodeProxy(ri.getSource());
             Object value = nodeProxy.getFunction().getResults().get(ri.getSourceHandle());
+
+            logger.logResult(ri.getLabel(), value);
 
             ruleIDtoValueMap.put(ri.getLabel(), value);
             if (value == null) {
@@ -210,7 +211,7 @@ public class OpenRule extends RuleSet {
                 if (elements instanceof Collection<?>) {
                     elementsList = (Collection<?>) elements;
                 } else if (elements != null) {
-                    ArrayList tempList = new ArrayList();
+                    final var tempList = new ArrayList<>();
                     tempList.add(elements);
                     elementsList = tempList;
                 }
