@@ -12,8 +12,6 @@ public interface FunctionsLibrary extends Library {
 
     boolean initIfc(String fileName);
 
-    boolean ifc_object_to_string(Pointer ifcPointer, Pointer outputStringPointer, long len);
-
     void init_function(
             get_input_pointer gip,
             get_input_double gid,
@@ -31,33 +29,8 @@ public interface FunctionsLibrary extends Library {
 
     void test();
 
-    NativeLong initPropertyIterator(IfcPointer pointer);
-
-    NativeLong getBufferSizePropertySetName(NativeLong index);
-
-    NativeLong getBufferSizePropertyName(NativeLong setIndex, NativeLong index);
-
-    NativeLong getNoOfPropertiesInSet(NativeLong index);
-
-    boolean getPropertySetName(NativeLong index, Pointer memory);
-
-    boolean getPropertyName(NativeLong setIndex, NativeLong index, Pointer memory);
-
-    boolean getPropertyValue(NativeLong setIndex, NativeLong index, Pointer memory);
-
-    NativeLong initQuantityIterator(IfcPointer pointer);
-
-    NativeLong getBufferSizeQuantitySetName(NativeLong index);
-
-    NativeLong getBufferSizeQuantityName(NativeLong setIndex, NativeLong index);
-
-    NativeLong getNoOfQuantitiesInSet(NativeLong index);
-
-    boolean getQuantitySetName(NativeLong index, Pointer memory);
-
-    boolean getQuantityName(NativeLong setIndex, NativeLong index, Pointer memory);
-
-    double getQuantityValue(NativeLong setIndex, NativeLong index);
+    NativeLong request_ifc_object_json_size(Pointer p);
+    void ifc_object_to_json(Pointer ifcObject, Pointer buffer);
 
     interface set_output_collection extends Callback {
         Pointer invoke(int at, int size);

@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>inf.bi.rub.de</groupId>
     <artifactId>openbimrl-engine</artifactId>
-    <version>2024.1.1-SNAPSHOT-0.3-CMAKE</version>
+    <version>2024.1.1-SNAPSHOT-0.4</version>
 
     <packaging>jar</packaging>
 
@@ -57,6 +57,12 @@
             <groupId>net.java.dev.jna</groupId>
             <artifactId>jna-platform</artifactId>
             <version>5.6.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
         </dependency>
 
 
