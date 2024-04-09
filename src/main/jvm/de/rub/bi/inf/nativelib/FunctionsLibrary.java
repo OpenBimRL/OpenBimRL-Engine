@@ -30,7 +30,7 @@ public interface FunctionsLibrary extends Library {
     void test();
 
     NativeLong request_ifc_object_json_size(Pointer p);
-    void ifc_object_to_json(Pointer ifcObject, Pointer buffer);
+    void ifc_object_to_json(Pointer buffer);
 
     interface set_output_collection extends Callback {
         Pointer invoke(int at, int size);
