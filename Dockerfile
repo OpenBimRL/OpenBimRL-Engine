@@ -7,7 +7,10 @@ USER root
 COPY --from=binaries /usr/include/ifcparse /usr/include/ifcparse
 COPY --from=binaries /usr/lib/libIfcParse.a /usr/local/lib/libIfcParse.a
 
-RUN apt update && apt install -y libboost-dev clang make
+RUN apt update && apt install -y libboost-dev clang make cmake git \
+    # libocct
+    xfonts-scalable libocct-data-exchange-dev libocct-draw-dev libocct-foundation-dev libocct-modeling-algorithms-dev \
+    libocct-modeling-data-dev libocct-ocaf-dev libocct-visualization-dev libboost-all-dev
 
 WORKDIR /app
 RUN git clone https://github.com/RUB-Informatik-im-Bauwesen/OpenBimRL.git /build/api
