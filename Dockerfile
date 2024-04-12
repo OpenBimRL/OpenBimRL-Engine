@@ -1,11 +1,6 @@
 # syntax=docker/dockerfile:1
-FROM aecgeeks/ifcopenshell:latest as binaries
-
 FROM maven:3.9.6-amazoncorretto-21-debian-bookworm
 USER root
-
-COPY --from=binaries /usr/include/ifcparse /usr/include/ifcparse
-COPY --from=binaries /usr/lib/libIfcParse.a /usr/local/lib/libIfcParse.a
 
 RUN apt update && apt install -y libboost-dev clang make cmake git \
     # libocct
