@@ -11,6 +11,9 @@ WORKDIR /app
 RUN git clone --quiet https://github.com/RUB-Informatik-im-Bauwesen/OpenBimRL.git /build/api
 RUN cd /build/api && git checkout 9699b39 && mvn install --quiet
 
+ENV CC=clang
+ENV CXX=clang++
+
 COPY . /build/engine
 RUN cd /build/engine && mvn install -Dmaven.test.skip -X --quiet && mvn package -Dmaven.test.skip --quiet  # build (and test package [in the future...])
 
