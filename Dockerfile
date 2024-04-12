@@ -2,17 +2,17 @@
 FROM maven:3.9.6-amazoncorretto-21-debian-bookworm
 USER root
 
-RUN apt update && apt install -y libboost-dev clang make cmake git \
+RUN apt update && apt install -yq libboost-dev clang make cmake git \
     # libocct
     xfonts-scalable libocct-data-exchange-dev libocct-draw-dev libocct-foundation-dev libocct-modeling-algorithms-dev \
     libocct-modeling-data-dev libocct-ocaf-dev libocct-visualization-dev libboost-all-dev
 
 WORKDIR /app
-RUN git clone https://github.com/RUB-Informatik-im-Bauwesen/OpenBimRL.git /build/api
-RUN cd /build/api && git checkout 9699b39 && mvn install
+RUN git clone --quiet https://github.com/RUB-Informatik-im-Bauwesen/OpenBimRL.git /build/api
+RUN cd /build/api && git checkout 9699b39 && mvn install --quiet
 
 COPY . /build/engine
-RUN cd /build/engine  && mvn package -Dmaven.test.skip -X  # build (and test package [in the future...])
+RUN cd /build/engine && mvn install -Dmaven.test.skip -X --quiet && mvn package -Dmaven.test.skip --quiet  # build (and test package [in the future...])
 
 RUN bash -c "cp /build/engine/target/*-jar-with-dependencies.jar app.jar"
 RUN cp /build/engine/src/main/resources/lib.so .
