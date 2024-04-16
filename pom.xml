@@ -235,7 +235,7 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <phase>process-resources</phase>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
