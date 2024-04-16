@@ -22,7 +22,7 @@ public class FunctionsNative {
     }
 
     private static String extractFile(final String fileName) throws IOException {
-        final InputStream source = ClassLoader.getSystemClassLoader().getResourceAsStream(fileName);
+        final InputStream source = FunctionsNative.class.getClassLoader().getResourceAsStream(fileName);
         final File file = File.createTempFile("lib", null);
         FileUtils.copyInputStreamToFile(source, file);
         return file.getAbsolutePath();
