@@ -1,5 +1,7 @@
 package de.rub.bi.inf.model;
 
+import de.rub.bi.inf.nativelib.IfcPointer;
+
 /**
  * A concrete singular result produced by the OpenBimRL engine.
  *
@@ -7,39 +9,28 @@ package de.rub.bi.inf.model;
  */
 public class ResultObject extends AbstractResultObject {
 
-    //private IIFCProduct product;
-    // private ArrayList<CadObject> additionalGeometries = new ArrayList<>();
+    private IfcPointer product;
 
     public ResultObject() {
         //Do nothing
     }
 
-/*    public ResultObject(IIFCProduct product) {
-        if (product.getName() != null) {
-            this.setName(product.getName());
-        }
-        this.setProduct(product);
-    }*/
+    public ResultObject(IfcPointer product) {
 
-/*    public ResultObject(String customName, IIFCProduct product) {
+        this.setName(product.getType());
+        this.setProduct(product);
+    }
+
+    public ResultObject(String customName, IfcPointer product) {
         this.setName(customName);
         this.setProduct(product);
-    }*/
+    }
 
-/*    public IIFCProduct getProduct() {
+    public IfcPointer getProduct() {
         return product;
     }
 
-    public void setProduct(IIFCProduct product) {
+    public void setProduct(IfcPointer product) {
         this.product = product;
-    }*/
-
-/*    public void addAdditionalGeometry(CadObject cadObject) {
-        this.additionalGeometries.add(cadObject);
     }
-
-    public ArrayList<CadObject> getAdditionalGeometries() {
-        return additionalGeometries;
-    }*/
-
 }
