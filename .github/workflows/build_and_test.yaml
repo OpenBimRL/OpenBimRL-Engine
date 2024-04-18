@@ -21,6 +21,9 @@ jobs:
         with:
           submodules: 'true'
 
+      - name: change version
+        run: mvn versions:set -DnewVersion=$(date +"%Y").$(date +"%m").$(date +"%d") versions:commit
+
       - name: Read Maven package version
         id: maven_version
         run: echo "::set-output name=PACKAGE_VERSION::$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"

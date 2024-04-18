@@ -46,22 +46,8 @@ jobs:
     - name: install API dependency
       run: cd deps && mvn install && cd .. && rm -rf deps
 
-    - name: change permission on lib folders
-      run: sudo chmod 777 /usr/include && sudo chmod 777 /usr/local/lib
-
-    - name: extract ifc lib headers from docker image
-      uses: shrink/actions-docker-extract@v3.0.0
-      with:
-        image: aecgeeks/ifcopenshell:latest
-        path: /usr/include/ifcparse
-        destination: /usr/include
-
-    - name: extract ifc lib binary from docker image
-      uses: shrink/actions-docker-extract@v3.0.0
-      with:
-        image: aecgeeks/ifcopenshell:latest
-        path: /usr/lib/libIfcParse.a
-        destination: /usr/local/lib/
+    - name: change version
+      run: mvn versions:set -DnewVersion=$(date +"%Y").$(date +"%m").$(date +"%d") versions:commit
 
     - name: Build with Maven
       run: mvn -B package --file pom.xml -Dmaven.test.skip
