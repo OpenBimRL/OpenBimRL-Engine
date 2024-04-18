@@ -25,7 +25,8 @@ class HandleQuantifierFactory(
             when (val op2 = ruleIDtoValueMap[it]) {
                 is Map<*, *> -> (op2[key] as? List<*>)?.get(index)
                 is AbstractCollection<*> -> op2.toTypedArray()[index]
-                else -> it
+                null -> it
+                else -> op2
             }
         }
     }
