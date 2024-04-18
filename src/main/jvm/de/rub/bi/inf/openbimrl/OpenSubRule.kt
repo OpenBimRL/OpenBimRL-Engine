@@ -41,20 +41,20 @@ class OpenSubRule(
 
                 // implied else
                 interpret(modelSubCheck.getRules()) -> {
-                    this.checkedStatus = CheckedStatus.SUCCESS
-                    checkingProtocol.add("This rule executed successfully.")
+                    super.checkedStatus = CheckedStatus.SUCCESS
+                    super.checkingProtocol.add("This rule executed successfully.")
                 }
 
                 // if both paths are not taken (not applicable and not interpreted)
                 else -> {
-                    this.checkedStatus = CheckedStatus.FAILED
-                    checkingProtocol.add("This rule executed unsuccessfully.")
+                    super.checkedStatus = CheckedStatus.FAILED
+                    super.checkingProtocol.add("This rule executed unsuccessfully.")
                 }
             }
         } catch (e2: Exception) {
             // sets status to "FAILED" if an error occurred
-            this.checkedStatus = CheckedStatus.FAILED
-            checkingProtocol.add("A error occured. Please revise the code")
+            super.checkedStatus = CheckedStatus.FAILED
+            super.checkingProtocol.add("A error occured. Please revise the code")
 
             e2.printStackTrace()
         }
@@ -107,10 +107,6 @@ class OpenSubRule(
     }
 
     private fun interpretRule(rule: RuleType): Boolean {
-        if (rule.getQuantifier() == null) {
-            return handleQuantifierDefault(rule)
-        }
-
         //Option to add a filter mask if quantifiers are provided
         val mask = rule.getFilter()?.let { FilterInterpreter.interpret(it, ruleIDtoValueMap) }
 
@@ -120,6 +116,7 @@ class OpenSubRule(
             "notexists" -> !factory.create(Boolean::or)(rule, mask)
             "exists" -> factory.create(Boolean::or)(rule, mask)
             "all" -> factory.create(Boolean::and)(rule, mask)
+            "null", "undefined", "", null -> handleQuantifierDefault(rule)
             else -> false
         }
     }
