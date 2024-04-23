@@ -20,7 +20,7 @@ class FilterByElement(nodeProxy: NodeProxy) : NativeFunction(nodeProxy) {
                 setResult(memoryStructure.at, emptyList<IfcPointer>())
             else setResult(
                 memoryStructure.at,
-                memoryStructure.memory.getLongArray(0, memoryStructure.size).map { IfcPointer(it) })
+                memoryStructure.memory.getLongArray(0, memoryStructure.size.toInt()).map { IfcPointer(it) })
         }
         memoryQueue.clear() // technically this should automatically happen.
     }

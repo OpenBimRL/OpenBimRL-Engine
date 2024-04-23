@@ -5,15 +5,21 @@ import de.rub.bi.inf.model.RuleBase
 import de.rub.bi.inf.nativelib.FunctionsNative
 import de.rub.bi.inf.openbimrl.helper.OpenBimRLReader
 import java.io.File
+import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
+    try {
+        FunctionsNative.create("lib.so")
+    } catch (_: Exception) {
+        println("Could not load native lib! Aborting...")
+        exitProcess(42)
+    }
 
-    FunctionsNative.create("lib.so")
     val functions = FunctionsNative.getInstance()
 
     if (args.isEmpty()) {
         println(usage())
-        return
+        exitProcess(0)
     }
 
     val openBimRlFiles = args.filter { arg -> arg.endsWith(".openbimrl") }.map { arg -> File(arg) }
@@ -25,7 +31,7 @@ fun main(args: Array<String>) {
 
     if (openBimRlFiles.isEmpty()) {
         println("no checking file loaded")
-        return
+        exitProcess(1)
     }
     val test = OpenBimRLReader(openBimRlFiles)
 
@@ -35,6 +41,7 @@ fun main(args: Array<String>) {
         println(ruleDef.resultObjects.size)
         println(ruleDef.getCheckingProtocol())
     }
+    exitProcess(0)
 }
 
 private fun usage(): String {
