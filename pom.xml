@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>inf.bi.rub.de</groupId>
     <artifactId>openbimrl-engine</artifactId>
-    <version>2024.04.18</version>
+    <version>2024.04.24</version>
 
     <packaging>jar</packaging>
 
@@ -79,6 +79,20 @@
             <version>2.3.1</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/java3d/j3d-core -->
+        <dependency>
+            <groupId>java3d</groupId>
+            <artifactId>j3d-core</artifactId>
+            <version>1.3.1</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/javax.vecmath/vecmath -->
+        <dependency>
+            <groupId>javax.vecmath</groupId>
+            <artifactId>vecmath</artifactId>
+            <version>1.5.2</version>
+        </dependency>
+
         <!-- ================================================= -->
 
         <dependency>
@@ -99,11 +113,13 @@
             <artifactId>kotlin-stdlib</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-test-junit</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
