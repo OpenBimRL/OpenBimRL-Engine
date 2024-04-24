@@ -12,7 +12,7 @@ import java.util.List;
  * Furthermore, an implemented function can be addressed in an OpenBimRL file as
  * and elementary node of the pre-calculation graph.
  *
- * @author Marcel Stepien, Andre Vonthron
+ * @author Marcel Stepien, Andre Vonthron (reworked by Florian Becker)
  */
 public abstract class AbstractFunction {
 

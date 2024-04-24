@@ -2,10 +2,12 @@
 FROM maven:3.9.6-amazoncorretto-21-debian-bookworm
 USER root
 
-RUN apt update && apt install -yq libboost-dev clang make cmake git \
-    # libocct
+RUN apt update && apt install -yq clang make cmake git \
+    # lib occt:
     xfonts-scalable libocct-data-exchange-dev libocct-draw-dev libocct-foundation-dev libocct-modeling-algorithms-dev \
-    libocct-modeling-data-dev libocct-ocaf-dev libocct-visualization-dev libboost-all-dev
+    libocct-modeling-data-dev libocct-ocaf-dev libocct-visualization-dev \
+    # other dependencies:
+    libmpfr-dev libboost-all-dev libhdf5-dev libgmp-dev
 
 WORKDIR /app
 RUN git clone --quiet https://github.com/RUB-Informatik-im-Bauwesen/OpenBimRL.git /build/api

@@ -21,19 +21,21 @@ public interface FunctionsLibrary extends Library {
             set_output_double sod,
             set_output_integer soi,
             set_output_string sos,
-            set_output_collection soc);
+            set_output_array soa);
 
     void filterByGUID();
 
     void filterByElement();
+
+    void getBoundingBox();
 
     void test();
 
     NativeLong request_ifc_object_json_size(Pointer p);
     void ifc_object_to_json(Pointer buffer);
 
-    interface set_output_collection extends Callback {
-        Pointer invoke(int at, int size);
+    interface set_output_array extends Callback {
+        Pointer invoke(int at, NativeLong size);
     }
 
     interface get_input_pointer extends Callback {

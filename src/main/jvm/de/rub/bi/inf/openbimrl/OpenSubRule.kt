@@ -6,6 +6,7 @@ import de.rub.bi.inf.model.SimpleRule
 import de.rub.bi.inf.openbimrl.helper.FilterInterpreter
 import java.util.*
 
+
 class OpenSubRule(
     private val modelSubCheck: ModelSubCheckType,
     private val ruleIDtoValueMap: MutableMap<String, Any>

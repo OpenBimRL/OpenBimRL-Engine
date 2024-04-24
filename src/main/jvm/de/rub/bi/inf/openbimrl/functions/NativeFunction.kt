@@ -11,7 +11,7 @@ import java.util.*
 abstract class NativeFunction(nodeProxy: NodeProxy?) : AbstractFunction(nodeProxy) {
     protected val nativeLib: FunctionsLibrary = FunctionsNative.getInstance()
 
-    protected data class MemoryStructure(val at: Int, val size: Int, val memory: Memory)
+    protected data class MemoryStructure(val at: Int, val size: Long, val memory: Memory)
 
     abstract fun executeNative()
 
@@ -35,9 +35,10 @@ abstract class NativeFunction(nodeProxy: NodeProxy?) : AbstractFunction(nodeProx
             { pos: Int, result: Double -> this.setResult(pos, result) },
             { pos: Int, result: Int -> this.setResult(pos, result) },
             { pos: Int, result: String? -> this.setResult(pos, result) },
-            { at: Int, size: Int ->
-                val memory = Memory((size * NativeLong.SIZE).toLong())
-                memoryQueue.add(MemoryStructure(at, size, memory))
+            { at: Int, size: NativeLong ->
+                val sizeAsLong = size.toLong()
+                val memory = Memory(sizeAsLong)
+                memoryQueue.add(MemoryStructure(at, sizeAsLong, memory))
                 memory
             })
 
