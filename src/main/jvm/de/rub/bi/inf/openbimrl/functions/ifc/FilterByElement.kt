@@ -1,5 +1,6 @@
 package de.rub.bi.inf.openbimrl.functions.ifc
 
+import com.sun.jna.NativeLong
 import com.sun.jna.Pointer
 import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.NodeProxy
@@ -16,11 +17,20 @@ class FilterByElement(nodeProxy: NodeProxy) : NativeFunction(nodeProxy) {
 
     override fun handleMemory(memoryQueue: Queue<MemoryStructure>) {
         for (memoryStructure in memoryQueue) {
-            if (memoryStructure.memory == Pointer.NULL)
+            if (memoryStructure.memory == Pointer.NULL) {
                 setResult(memoryStructure.at, emptyList<IfcPointer>())
-            else setResult(
-                memoryStructure.at,
-                memoryStructure.memory.getLongArray(0, memoryStructure.size.toInt()).map { IfcPointer(it) })
+                continue
+            }
+
+            try {
+                val noOfElements = (memoryStructure.size / NativeLong.SIZE).toInt()
+                setResult(
+                    memoryStructure.at,
+                    memoryStructure.memory.getLongArray(0, noOfElements).map { IfcPointer(it) })
+
+            } catch (_ : IndexOutOfBoundsException) {
+                throw IllegalArgumentException("provided array was not of type Pointer[]")
+            }
         }
         memoryQueue.clear() // technically this should automatically happen.
     }
