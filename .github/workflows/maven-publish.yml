@@ -25,7 +25,7 @@ jobs:
       run: sudo apt update
     
     - name: Install toolchain
-      run: apt install -y clang
+      run: sudo apt install -y clang
     
     - name: Install libboost
       run: sudo apt install -y libboost-all-dev
