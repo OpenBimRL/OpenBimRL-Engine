@@ -16,13 +16,25 @@ jobs:
       contents: read
       packages: write
 
+    env:
+        CC: clang
+        CXX: clang++
+
     steps:
+    - name: Update apt
+      run: sudo apt update
+    
+    - name: Install toolchain
+      run: apt install -y clang
+    
     - name: Install libboost
-      run: sudo apt update && sudo apt install libboost-all-dev
+      run: sudo apt install -y libboost-all-dev
 
     - name: Install libocct
-      run: sudo apt update && sudo apt install -y xfonts-scalable libocct-data-exchange-dev libocct-draw-dev libocct-foundation-dev libocct-modeling-algorithms-dev libocct-modeling-data-dev libocct-ocaf-dev libocct-visualization-dev
+      run: sudo apt install -y xfonts-scalable libocct-data-exchange-dev libocct-draw-dev libocct-foundation-dev libocct-modeling-algorithms-dev libocct-modeling-data-dev libocct-ocaf-dev libocct-visualization-dev
 
+    - name: Install other dependencies
+      run: sudo apt install -y libmpfr-dev libhdf5-dev libgmp-dev
 
     - uses: actions/checkout@v4
       with:
