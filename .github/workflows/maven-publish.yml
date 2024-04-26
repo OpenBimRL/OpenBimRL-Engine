@@ -16,17 +16,11 @@ jobs:
       contents: read
       packages: write
 
-    env:
-      CC: clang
-      CXX: clang++
+#    env:
+#      CC: /home/runner/work/OpenBimRL-Engine/OpenBimRL-Engine/llvm/clang
+#      CXX: /home/runner/work/OpenBimRL-Engine/OpenBimRL-Engine/llvm/clang++
 
     steps:
-    - name: Install LLVM and Clang
-      uses: KyleMayes/install-llvm-action@v2.0.2
-      with:
-        version: "17.0.6"
-        env: true
-
     - name: Update apt
       run: sudo apt update
 
@@ -63,6 +57,12 @@ jobs:
 
     - name: change version
       run: mvn versions:set -DnewVersion=$(date +"%Y").$(date +"%m").$(date +"%d") versions:commit
+
+    - name: Install LLVM and Clang
+      uses: KyleMayes/install-llvm-action@v2.0.2
+      with:
+        version: "17.0.6"
+        env: true # why does this not work???
 
     - name: Build with Maven
       run: mvn -B package --file pom.xml -Dmaven.test.skip
