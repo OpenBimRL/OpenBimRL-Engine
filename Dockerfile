@@ -20,8 +20,12 @@ COPY . /build/engine
 RUN cd /build/engine && mvn install -Dmaven.test.skip -X --quiet && mvn package -Dmaven.test.skip --quiet  # build (and test package [in the future...])
 
 RUN bash -c "cp /build/engine/target/*-jar-with-dependencies.jar app.jar"
-RUN cp /build/engine/src/main/resources/lib.so .
-
+RUN mv /build/engine/build/cmake/_deps/ifcopenshell-build/libIfcGeom.so.0.7.0 /usr/lib/
+RUN ln -s /usr/lib/libIfcGeom.so.0.7.0 /usr/lib/libIfcGeom.so.0.7
+RUN ln -s /usr/lib/libIfcGeom.so.0.7 /usr/lib/libIfcGeom.so
+RUN mv /build/engine/build/cmake/_deps/ifcopenshell-build/libIfcParse.so.0.7.0 /usr/lib/
+RUN ln -s /usr/lib/libIfcParse.so.0.7.0 /usr/lib/libIfcParse.so.0.7
+RUN ln -s /usr/lib/libIfcParse.so.0.7 /usr/lib/libIfcParse.so
 RUN rm -rf /build
 
 CMD java -jar app.jar
