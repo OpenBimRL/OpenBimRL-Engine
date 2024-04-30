@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>inf.bi.rub.de</groupId>
     <artifactId>openbimrl-engine</artifactId>
-    <version>2024.04.24</version>
+    <version>2024.04.30</version>
 
     <packaging>jar</packaging>
 

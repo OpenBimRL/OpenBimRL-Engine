@@ -142,9 +142,9 @@ public class FunctionFactory {
             case "geometry.createCollisionSphere":
                 function = new CreateCollisionSphere(nodeProxy);
                 break;
-            // case "geometry.checkIntersection":
-            // function = new CheckIntersection(nodeProxy);
-            // break;
+            case "geometry.checkIntersection":
+            function = new CheckIntersection(nodeProxy);
+            break;
             case "geometry.convertToRegionBSPTree":
                 function = new ConvertToRegionBSPTree(nodeProxy);
                 break;
