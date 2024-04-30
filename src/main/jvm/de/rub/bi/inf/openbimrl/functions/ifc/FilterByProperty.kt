@@ -3,6 +3,7 @@ package de.rub.bi.inf.openbimrl.functions.ifc
 import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction
+import java.util.stream.Collectors
 
 /**
  * Filters a list of IFC entities by their property definition. Returns all entities that contain the property information.
@@ -16,7 +17,7 @@ class FilterByProperty(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
         val propertyName = getInput<String>(2)
         val propertyValue = getInput<String?>(3)
 
-        val result = ifcPointer.filterIsInstance<IfcPointer>().filter {
+        val result = ifcPointer.filterIsInstance<IfcPointer>().parallelStream().filter {
             if (propertyValue == null) return@filter true
 
             if (!it.properties.containsKey(propertySetName)) return@filter false
@@ -27,7 +28,7 @@ class FilterByProperty(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
             val itPropertyValue = it.properties[propertySetName]!![propertyName]!!
 
             return@filter compareValues(propertyValue, itPropertyValue)
-        }
+        }.collect(Collectors.toList())
 
         setResult(0, result)
     }

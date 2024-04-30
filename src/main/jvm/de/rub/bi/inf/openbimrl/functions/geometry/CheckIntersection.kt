@@ -2,6 +2,7 @@ package de.rub.bi.inf.openbimrl.functions.geometry
 
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction
+import java.util.stream.Collectors
 import javax.media.j3d.BoundingBox
 
 /**
@@ -15,9 +16,14 @@ class CheckIntersection(nodeProxy: NodeProxy?) : AbstractFunction(nodeProxy) {
         val input2 = getInput<Any>(1)
 
         val result: Any? = when {
-            input1 is Collection<*> && input2 is Collection<*> -> input1.filterIsInstance<BoundingBox>().map {
-                intersectAny(it, input2.filterIsInstance<BoundingBox>())
-            }
+            input1 is Collection<*> && input2 is Collection<*> ->
+                input1
+                    .filterIsInstance<BoundingBox>()
+                    .parallelStream()
+                    .map {
+                        intersectAny(it, input2.filterIsInstance<BoundingBox>())
+                    }
+                    .collect(Collectors.toList()) // THIS. IS. FAST.
 
             // if input2 is not a collection
             input1 is Collection<*> && input2 is BoundingBox -> intersectAny(
@@ -38,6 +44,8 @@ class CheckIntersection(nodeProxy: NodeProxy?) : AbstractFunction(nodeProxy) {
     }
 
     private fun intersectAny(boundingBox: BoundingBox, targets: Collection<BoundingBox>): List<Boolean> {
+        if (targets.size > 100)
+            return targets.parallelStream().map { it.intersect(boundingBox) }.collect(Collectors.toList())
         return targets.map { it.intersect(boundingBox) }
     }
 

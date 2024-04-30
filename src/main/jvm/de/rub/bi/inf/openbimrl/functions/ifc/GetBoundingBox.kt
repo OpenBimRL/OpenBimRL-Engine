@@ -8,6 +8,7 @@ import java.util.*
 
 import javax.media.j3d.BoundingBox
 import javax.vecmath.Point3d
+import kotlin.collections.ArrayList
 
 /**
  * Retrieves the BoundingBox of an IFC element.
@@ -43,7 +44,7 @@ class GetBoundingBox(nodeProxy: NodeProxy?) : NativeFunction(nodeProxy) {
         val upper = Point3d(coords.sliceArray(3..5))
 
         val center = Point3d(lower)
-        center.interpolate(upper, .5) // attention! Modifies center
+        center.interpolate(upper, .5) // attention! Modifies final var center
         val bbox = BoundingBox(lower, upper)
         return Pair(center, bbox)
     }
@@ -57,13 +58,13 @@ class GetBoundingBox(nodeProxy: NodeProxy?) : NativeFunction(nodeProxy) {
             }
 
             is Collection<*> -> {
-                val centerPoints = arrayOfNulls<Point3d>(memoryQueue.size)
-                val bBoxes = arrayOfNulls<BoundingBox>(memoryQueue.size)
+                val centerPoints = ArrayList<Point3d>(memoryQueue.size)
+                val bBoxes = ArrayList<BoundingBox>(memoryQueue.size)
 
                 for ((index, element) in memoryQueue.withIndex()) {
                     val result = boxFromMemory(element)
-                    centerPoints[index] = result.first
-                    bBoxes[index] = result.second
+                    centerPoints.add(index, result.first)
+                    bBoxes.add(index, result.second)
                 }
                 setResult(0, bBoxes)
                 setResult(1, centerPoints)

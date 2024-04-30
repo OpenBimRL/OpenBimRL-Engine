@@ -3,6 +3,7 @@ package de.rub.bi.inf.openbimrl.functions.ifc
 import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction
+import java.util.stream.Collectors
 
 /**
  * Filters a list of IFC entities by their quantity value. Returns all entities that contain the quantity information.
@@ -25,7 +26,7 @@ class FilterByQuantity(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
         }
 
 
-        val result = ifcPointer.filterIsInstance<IfcPointer>().filter {
+        val result = ifcPointer.filterIsInstance<IfcPointer>().parallelStream().filter {
             if (!it.quantities.containsKey(quantitySetName)) return@filter false
 
             // !! is ok due to prev check
@@ -35,7 +36,7 @@ class FilterByQuantity(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
             val itQuantityValue = it.quantities[quantitySetName]!![quantityName]!!
 
             return@filter (itQuantityValue in quantityValue)
-        }
+        }.collect(Collectors.toList())
 
         setResult(0, result)
     }
