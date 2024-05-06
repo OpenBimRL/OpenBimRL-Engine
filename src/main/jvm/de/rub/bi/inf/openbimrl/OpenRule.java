@@ -205,7 +205,7 @@ public class OpenRule extends RuleSet {
                 // final var markedIfcElement = new ArrayList<IIFCProduct>();
 
                 List<?> filterList = FilterInterpreter.interpret(rs.getFilter(), ruleIDtoValueMap);
-                Collection<?> elementsList = null;
+                Collection<?> elementsList = Collections.EMPTY_LIST;
 
                 Object elements = ruleIDtoValueMap.get(rs.getElements());
                 if (elements instanceof Collection<?>) {
