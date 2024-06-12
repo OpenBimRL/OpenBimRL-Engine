@@ -4,7 +4,9 @@ import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import com.sun.jna.Memory
 import com.sun.jna.Pointer
+import java.awt.geom.Path2D
 import java.nio.charset.StandardCharsets
+import java.util.*
 
 data class IfcData(
     @SerializedName("ifc_class") val ifcClass: String,
@@ -37,6 +39,30 @@ class IfcPointer : Pointer {
     val guid = ifcData.guid
     val properties = ifcData.propertySets
     val quantities = ifcData.quantitySets
+
+    val polygon: Lazy<Optional<Path2D.Double>> = lazy {
+        try {
+            val size = nativeLib.request_geometry_polygon(this)
+            val memory = Memory(size.toLong() * Double.SIZE_BYTES)
+            nativeLib.copy_geometry_polygon(memory)
+            val values = memory.getDoubleArray(0, size.toInt()) // toInt is risky!
+
+            if (values.size < 3) return@lazy Optional.empty()
+
+            val polygon = Path2D.Double()
+            polygon.moveTo(values[0], values[1])
+
+            for (i in 1..((values.size - 1) / 3)) {
+                val actualIndex = i * 3
+                polygon.lineTo(values[actualIndex], values[actualIndex + 1])
+            }
+
+            polygon.closePath()
+            return@lazy Optional.of(polygon)
+        } catch (e: Exception) {
+            throw RuntimeException("encountered: " + e.stackTraceToString())
+        }
+    }
 }
 
 
