@@ -34,6 +34,9 @@ public interface FunctionsLibrary extends Library {
     NativeLong request_ifc_object_json_size(Pointer p);
     void ifc_object_to_json(Pointer buffer);
 
+    NativeLong request_geometry_polygon(IfcPointer ifcPointer);
+    void copy_geometry_polygon(Pointer buffer);
+
     interface set_output_array extends Callback {
         Pointer invoke(int at, NativeLong size);
     }
