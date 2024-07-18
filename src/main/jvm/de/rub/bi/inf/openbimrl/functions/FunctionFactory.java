@@ -155,7 +155,7 @@ public class FunctionFactory {
                 function = new DecomposeVector3D(nodeProxy);
                 break;
             case "geometry.createPointGraph":
-                function = new CreatePointGraph(nodeProxy);
+                function = new CreateHexagonLayout(nodeProxy);
                 break;
             case "geometry.createPointGraphNodes":
                 function = new CreatePointGraphNodes(nodeProxy);
