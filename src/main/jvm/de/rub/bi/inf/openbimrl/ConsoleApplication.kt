@@ -3,6 +3,7 @@ package de.rub.bi.inf.openbimrl
 import de.rub.bi.inf.logger.RuleLogger
 import de.rub.bi.inf.model.RuleBase
 import de.rub.bi.inf.nativelib.FunctionsNative
+import de.rub.bi.inf.nativelib.ThreeDTester
 import de.rub.bi.inf.openbimrl.helper.OpenBimRLReader
 import java.io.File
 import kotlin.system.exitProcess
@@ -13,6 +14,12 @@ fun main(args: Array<String>) {
     } catch (_: Exception) {
         println("Could not load native lib! Aborting...")
         exitProcess(42)
+    }
+
+    try {
+        ThreeDTester()
+    } catch (e: RuntimeException) {
+        // ignore
     }
 
     val functions = FunctionsNative.getInstance()
@@ -41,6 +48,10 @@ fun main(args: Array<String>) {
         println(ruleDef.resultObjects.size)
         println(ruleDef.getCheckingProtocol())
     }
+    while (true) {
+        Thread.sleep(100000)
+    }
+
     exitProcess(0)
 }
 

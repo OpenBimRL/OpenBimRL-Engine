@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>inf.bi.rub.de</groupId>
     <artifactId>openbimrl-engine</artifactId>
-    <version>2024.04.30</version>
+    <version>2024.07.19</version>
 
     <packaging>jar</packaging>
 
@@ -106,6 +106,29 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>33.0.0-jre</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/io.github.offlinebrain/khexagon-jvm -->
+        <dependency>
+            <groupId>io.github.offlinebrain</groupId>
+            <artifactId>khexagon-jvm</artifactId>
+            <version>0.2.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/io.arrow-kt/arrow-core -->
+        <dependency>
+            <groupId>io.arrow-kt</groupId>
+            <artifactId>arrow-core</artifactId>
+            <version>1.2.4</version>
+            <type>pom</type>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/io.arrow-kt/arrow-core-jvm -->
+        <dependency>
+            <groupId>io.arrow-kt</groupId>
+            <artifactId>arrow-core-jvm</artifactId>
+            <version>1.2.4</version>
         </dependency>
 
         <dependency>
