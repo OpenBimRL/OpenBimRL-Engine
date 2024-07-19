@@ -4,6 +4,7 @@ import de.rub.bi.inf.extensions.toRect
 import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction
+import de.rub.bi.inf.openbimrl.functions.DisplayableFunction
 import de.rub.bi.inf.openbimrl.helper.neighbors
 import de.rub.bi.inf.openbimrl.helper.pathfinding.filterObstacles
 import de.rub.bi.inf.openbimrl.helper.pathfinding.isWalkable
@@ -22,7 +23,7 @@ import javax.media.j3d.BoundingBox
  *
  * @author Marcel Stepien (reworked by Florian Becker)
  */
-class CalculateAStarSearch(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
+class CalculateAStarSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodeProxy) {
     /**
      * start: [IfcPointer], end: [IfcPointer], bounds: [BoundingBox], obstacles: [List], layout [Layout]
      */

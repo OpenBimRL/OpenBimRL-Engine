@@ -4,6 +4,7 @@ import de.rub.bi.inf.logger.RuleLogger;
 import de.rub.bi.inf.model.AbstractRuleDefinition;
 import de.rub.bi.inf.model.ResultObjectGroup;
 import de.rub.bi.inf.model.RuleSet;
+import de.rub.bi.inf.openbimrl.functions.DisplayableFunction;
 import de.rub.bi.inf.openbimrl.helper.FilterInterpreter;
 
 import java.util.*;
@@ -121,6 +122,9 @@ public class OpenRule extends RuleSet {
             //System.out.println(node.getId()+" (FunctionName): " + node.getFunction());
 
             NodeProxy nodeProxy = precalculationContext.getNodeProxy(node);
+
+            if (nodeProxy.getFunction() instanceof DisplayableFunction d)
+                d.setLogger(logger);
 
             try {
                 nodeProxy.execute();

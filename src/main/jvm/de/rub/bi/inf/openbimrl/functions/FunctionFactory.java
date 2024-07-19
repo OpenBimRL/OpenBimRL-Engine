@@ -154,7 +154,7 @@ public class FunctionFactory {
             case "geometry.decomposeVector3D":
                 function = new DecomposeVector3D(nodeProxy);
                 break;
-            case "geometry.createPointGraph":
+            case "geometry.createHexagonLayout":
                 function = new CreateHexagonLayout(nodeProxy);
                 break;
             case "geometry.createPointGraphNodes":
@@ -174,6 +174,9 @@ public class FunctionFactory {
                 break;
             case "geometry.calculateAStarSearch":
                 function = new CalculateAStarSearch(nodeProxy);
+                break;
+            case "geometry.calculateDistancesFromObject":
+                function = new CalculateDijkstraSearch(nodeProxy);
                 break;
             case "geometry.unifyRegionBSPTree":
                 function = new UnifyRegionBSPTree(nodeProxy);

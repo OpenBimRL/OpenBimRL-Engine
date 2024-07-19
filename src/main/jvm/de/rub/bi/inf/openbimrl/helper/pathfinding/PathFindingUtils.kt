@@ -1,6 +1,7 @@
 package de.rub.bi.inf.openbimrl.helper.pathfinding
 
 import de.rub.bi.inf.extensions.intersects
+import de.rub.bi.inf.extensions.toPoint2D
 import de.rub.bi.inf.nativelib.IfcPointer
 import io.github.offlinebrain.khexagon.coordinates.HexCoordinates
 import io.github.offlinebrain.khexagon.math.Layout
@@ -39,8 +40,8 @@ fun movementCost(
 ): (HexCoordinates, HexCoordinates) -> Double {
     return lambda@{ a, b ->
         if (a == b) return@lambda .0
-        val realCoordinatesA = hexToPixel(layout, a).let { Point2D.Float(it.x, it.y) }
-        val realCoordinatesB = hexToPixel(layout, b).let { Point2D.Float(it.x, it.y) }
+        val realCoordinatesA = hexToPixel(layout, a).toPoint2D()
+        val realCoordinatesB = hexToPixel(layout, b).toPoint2D()
         val line = Line2D.Float(realCoordinatesA, realCoordinatesB)
 
         // This is probably a horrible idea, but has that ever stopped me?
