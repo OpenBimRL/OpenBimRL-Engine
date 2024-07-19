@@ -22,14 +22,14 @@ import javax.media.j3d.BoundingSphere
 
 class CalculateDijkstraSearch(nodeProxy: NodeProxy?) : DisplayableFunction(nodeProxy) {
     /**
-     * start: [IfcPointer], end: [IfcPointer], bounds: [BoundingBox], obstacles: [List], layout [Layout], maxDistance [Double]
+     * start: [IfcPointer], bounds: [BoundingBox], obstacles: [List], layout [Layout], maxDistance [Double]
      */
     override fun execute() {
         val start = getInputAsCollection(0)?.filterIsInstance<IfcPointer>()?.get(0)?.polygon?.value
-        val bounds = getInputAsCollection(2)?.filterIsInstance<BoundingBox>()?.get(0)?.toRect()
-        val obstacles = filterObstacles(getInputAsCollection(3))
-        val layout = getInput<Layout>(4)
-        val maxDistance = getInput<Double?>(5) ?: 100.0
+        val bounds = getInputAsCollection(1)?.filterIsInstance<BoundingBox>()?.get(0)?.toRect()
+        val obstacles = filterObstacles(getInputAsCollection(2))
+        val layout = getInput<Layout>(3)
+        val maxDistance = getInput<Double?>(4) ?: 100.0
 
         if (start?.isEmpty == true || bounds == null || layout == null) return
         val startHexCoordinate =
