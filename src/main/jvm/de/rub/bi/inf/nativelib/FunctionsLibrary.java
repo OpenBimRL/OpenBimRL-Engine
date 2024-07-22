@@ -29,6 +29,8 @@ public interface FunctionsLibrary extends Library {
 
     void getBoundingBox();
 
+    void calculatingBuildingBounds();
+
     void test();
 
     NativeLong request_ifc_object_json_size(Pointer p);

@@ -11,7 +11,7 @@ import java.util.*
 abstract class NativeFunction(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
     protected val nativeLib: FunctionsLibrary = FunctionsNative.getInstance()
 
-    protected data class MemoryStructure(val at: Int, val size: Long, val memory: Memory)
+    data class MemoryStructure(val at: Int, val size: Long, val memory: Memory)
 
     abstract fun executeNative()
 

@@ -4,6 +4,7 @@ import com.sun.jna.Pointer
 import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.NativeFunction
+import de.rub.bi.inf.openbimrl.helper.boundingBoxFromMemory
 import java.util.*
 
 import javax.media.j3d.BoundingBox
@@ -38,31 +39,20 @@ class GetBoundingBox(nodeProxy: NodeProxy) : NativeFunction(nodeProxy) {
         }
     }
 
-    private fun boxFromMemory(s: MemoryStructure): Pair<Point3d, BoundingBox> {
-        val coords = s.memory.getDoubleArray(0, 6)
-        val lower = Point3d(coords.sliceArray(0..2))
-        val upper = Point3d(coords.sliceArray(3..5))
-
-        val center = Point3d(lower)
-        center.interpolate(upper, .5) // attention! Modifies final var center
-        val bbox = BoundingBox(lower, upper)
-        return Pair(center, bbox)
-    }
-
     override fun handleMemory(memoryQueue: Queue<MemoryStructure>) {
-        when (getInput<Any>(0)) {
+        when (getInput<Any>(0)) { // when single element
             is IfcPointer -> {
-                val result = boxFromMemory(memoryQueue.remove())
+                val result = boundingBoxFromMemory(memoryQueue.remove())
                 setResult(0, result.second)
                 setResult(1, result.first)
             }
 
-            is Collection<*> -> {
+            is Collection<*> -> { // when collection was requested
                 val centerPoints = ArrayList<Point3d>(memoryQueue.size)
                 val bBoxes = ArrayList<BoundingBox>(memoryQueue.size)
 
                 for ((index, element) in memoryQueue.withIndex()) {
-                    val result = boxFromMemory(element)
+                    val result = boundingBoxFromMemory(element)
                     centerPoints.add(index, result.first)
                     bBoxes.add(index, result.second)
                 }
