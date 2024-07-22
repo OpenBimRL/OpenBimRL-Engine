@@ -9,7 +9,7 @@ import de.rub.bi.inf.openbimrl.functions.AbstractFunction
  *
  * @author Marcel Stepien (reworked by Florian Becker)
  */
-class GetQuantity(nodeProxy: NodeProxy?) : AbstractFunction(nodeProxy) {
+class GetQuantity(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
     override fun execute() {
         val ifcElements = getInputAsCollection(0)
         val quantitySetName = getInput<String>(1)

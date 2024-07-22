@@ -28,9 +28,9 @@ class CalculateAStarSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodeProxy
      * start: [IfcPointer], end: [IfcPointer], bounds: [BoundingBox], obstacles: [List], layout [Layout]
      */
     override fun execute() {
-        val start = getInputAsCollection(0)?.filterIsInstance<IfcPointer>()?.get(0)?.polygon?.value
-        val end = getInputAsCollection(1)?.filterIsInstance<IfcPointer>()?.get(0)?.polygon?.value
-        val bounds = getInputAsCollection(2)?.filterIsInstance<BoundingBox>()?.get(0)?.toRect()
+        val start = getInputAsCollection(0).filterIsInstance<IfcPointer>()[0]?.polygon?.value
+        val end = getInputAsCollection(1).filterIsInstance<IfcPointer>()[0]?.polygon?.value
+        val bounds = getInputAsCollection(2).filterIsInstance<BoundingBox>()[0]?.toRect()
 
         val obstacles = filterObstacles(getInputAsCollection(3))
         val layout = getInput<Layout>(4)

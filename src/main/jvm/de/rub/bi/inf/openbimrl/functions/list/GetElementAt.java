@@ -21,34 +21,27 @@ public class GetElementAt extends AbstractFunction {
     @Override
     public void execute() {
 
-        ArrayList<?> list = getInput(0);
+        final var list = new ArrayList<>(getInputAsCollection(0));
 
-        ArrayList positions = new ArrayList();
-        if (getInput(1) instanceof Collection) {
-            positions.addAll(getInput(1));
-        } else {
-            positions.add(getInput(1));
-        }
+        final var positions = new ArrayList<>(getInputAsCollection(1));
 
 
         ArrayList<Object> elementsAt = new ArrayList<Object>();
-        if (positions instanceof Collection) {
-            for (int index = 0; index < positions.size(); index++) {
+        for (int index = 0; index < positions.size(); index++) {
 
-                String strPosition = positions.get(index).toString();
-                int position = Integer.parseInt(strPosition);
+            String strPosition = positions.get(index).toString();
+            int position = Integer.parseInt(strPosition);
 
-                if (positions.size() == 1) {
-                    Object value = list.get(position);
-                    elementsAt.add(value);
-                } else {
-                    Object values = list.get(index);
-                    if (values instanceof List) {
-                        elementsAt.add(((List) values).get(position));
-                    }
+            if (positions.size() == 1) {
+                Object value = list.get(position);
+                elementsAt.add(value);
+            } else {
+                Object values = list.get(index);
+                if (values instanceof List) {
+                    elementsAt.add(((List<?>) values).get(position));
                 }
-
             }
+
         }
 
         if (elementsAt.size() == 1) {

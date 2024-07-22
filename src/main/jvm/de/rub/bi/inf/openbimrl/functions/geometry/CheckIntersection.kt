@@ -10,7 +10,7 @@ import javax.media.j3d.BoundingBox
  *
  * @author Marcel Stepien (reworked by Florian Becker)
  */
-class CheckIntersection(nodeProxy: NodeProxy?) : AbstractFunction(nodeProxy) {
+class CheckIntersection(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
     override fun execute() {
         val input1 = getInput<Any>(0)
         val input2 = getInput<Any>(1)

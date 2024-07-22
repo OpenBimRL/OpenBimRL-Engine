@@ -20,9 +20,9 @@ public class ColorizeGeometryAppearance extends AbstractFunction {
         final var objects = getInputAsCollection(0);
         if (objects.isEmpty()) return;
 
-        Object input1 = getInput(1);
-        Object input2 = getInput(2);
-        Object input3 = getInput(3);
+        Object input1 = getInput(1, Object.class);
+        Object input2 = getInput(2, Object.class);
+        Object input3 = getInput(3, Object.class);
 
 /*        for (Object o : objects) {
 

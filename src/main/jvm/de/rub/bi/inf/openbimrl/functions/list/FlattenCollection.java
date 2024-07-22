@@ -20,7 +20,7 @@ public class FlattenCollection extends AbstractFunction {
     @Override
     public void execute() {
 
-        Object input0 = getInput(0);
+        Object input0 = getInput(0, Object.class);
         if (input0 == null) {
             return;
         }

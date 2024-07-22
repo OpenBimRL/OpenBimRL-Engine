@@ -10,7 +10,7 @@ import java.awt.geom.Line2D
 import java.awt.geom.Path2D
 import java.awt.geom.Point2D
 
-fun filterObstacles(collection: MutableCollection<*>): List<Path2D.Double> = collection
+fun filterObstacles(collection: Collection<*>): List<Path2D.Double> = collection
         .filterIsInstance<IfcPointer>()
         .map { it.polygon.value }
         .filter { it.isPresent }

@@ -23,9 +23,9 @@ public class OrderBy extends AbstractFunction {
     @Override
     public void execute() {
 
-        Collection<?> list = getInput(0);
+        Collection<?> list = getInputAsCollection(0);
 
-        Collection<?> referenceList = getInput(1);
+        Collection<?> referenceList = getInputAsCollection(1);
 
         if (list.size() != referenceList.size())
             return;
@@ -41,7 +41,7 @@ public class OrderBy extends AbstractFunction {
             oldPositions.put(resultValues1.get(i), i);
         }
 
-        String order = getInput(2);
+        String order = getInput(2, String.class);
         if (order != null && order.equalsIgnoreCase("desc")) {
             resultValues1 = resultValues1.stream().sorted(Collections.reverseOrder()).collect(Collectors.toCollection(ArrayList::new));
         } else {

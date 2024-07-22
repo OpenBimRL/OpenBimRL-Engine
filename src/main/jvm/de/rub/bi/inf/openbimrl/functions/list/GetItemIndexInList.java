@@ -18,19 +18,11 @@ public class GetItemIndexInList extends AbstractFunction {
     @Override
     public void execute() {
 
-        ArrayList collection = new ArrayList();
-        if (getInput(0) instanceof Collection) {
-            collection.addAll(getInput(0));
-        } else {
-            return;
-        }
+        final var collection = new ArrayList<>(getInputAsCollection(0));
 
-        ArrayList<Object> values = new ArrayList<Object>();
-        if (getInput(1) instanceof Collection) {
-            for (Object i : (Collection) getInput(1)) {
-                //System.out.println(collection);
-                //System.out.println(i);
-
+        ArrayList<Object> values = new ArrayList<>();
+        if (getInput(1, Object.class) instanceof Collection<?> c) {
+            for (Object i : c) {
                 int index = findIndex(collection, i);
                 values.add(index);
             }
@@ -45,7 +37,7 @@ public class GetItemIndexInList extends AbstractFunction {
     }
 
     // Linear-search function to find the index of an element
-    public int findIndex(ArrayList list, Object item) {
+    public int findIndex(ArrayList<?> list, Object item) {
         // if array is Null
         if (list == null) {
             return -1;

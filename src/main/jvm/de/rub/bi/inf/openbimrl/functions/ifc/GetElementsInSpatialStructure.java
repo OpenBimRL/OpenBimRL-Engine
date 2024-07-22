@@ -20,13 +20,7 @@ public class GetElementsInSpatialStructure extends AbstractFunction {
     @Override
     public void execute() {
 
-        Collection<Object> objects = new ArrayList();
-        Object input0 = getInput(0);
-        if (input0 instanceof Collection<?>) {
-            objects = (Collection<Object>) input0;
-        } else {
-            objects.add(input0);
-        }
+        Object input0 = getInputAsCollection(0);
 
         ArrayList<Object> resultValues = new ArrayList<>();
 

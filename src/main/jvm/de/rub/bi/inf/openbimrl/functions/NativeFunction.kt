@@ -8,7 +8,7 @@ import de.rub.bi.inf.nativelib.FunctionsNative
 import de.rub.bi.inf.openbimrl.NodeProxy
 import java.util.*
 
-abstract class NativeFunction(nodeProxy: NodeProxy?) : AbstractFunction(nodeProxy) {
+abstract class NativeFunction(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
     protected val nativeLib: FunctionsLibrary = FunctionsNative.getInstance()
 
     protected data class MemoryStructure(val at: Int, val size: Long, val memory: Memory)

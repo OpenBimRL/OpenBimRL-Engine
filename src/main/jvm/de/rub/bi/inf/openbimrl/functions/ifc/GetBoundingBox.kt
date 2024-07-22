@@ -15,7 +15,7 @@ import kotlin.collections.ArrayList
  *
  * @author Marcel Stepien (reworked by Florian Becker)
  */
-class GetBoundingBox(nodeProxy: NodeProxy?) : NativeFunction(nodeProxy) {
+class GetBoundingBox(nodeProxy: NodeProxy) : NativeFunction(nodeProxy) {
     private var currentPointer: IfcPointer? = null
 
     override fun handlePointerInput(at: Int): Pointer? {

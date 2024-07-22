@@ -20,8 +20,8 @@ public class Subtraction extends AbstractFunction {
 
     @Override
     public void execute() {
-        Object object0 = getInput(0);
-        Object object1 = getInput(1);
+        Object object0 = getInput(0, Object.class);
+        Object object1 = getInput(1, Object.class);
 
         ArrayList<Double> results = new ArrayList<Double>();
         if (object0 instanceof List &&

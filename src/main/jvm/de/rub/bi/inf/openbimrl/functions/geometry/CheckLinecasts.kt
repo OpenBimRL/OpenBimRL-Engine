@@ -8,7 +8,7 @@ import de.rub.bi.inf.openbimrl.functions.AbstractFunction
  *
  * @author Marcel Stepien
  */
-class CheckLinecasts(nodeProxy: NodeProxy?) : AbstractFunction(nodeProxy) {
+class CheckLinecasts(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
 
     override fun execute() {
       // TODO redo

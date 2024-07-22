@@ -43,7 +43,7 @@ public class EdgeProxy {
     }
 
     public Object getCurrentData() {
-        return getSourceNode().getFunction().getResults().get(sourceHandle);
+        return getSourceNode().getFunction().results.get(sourceHandle);
     }
 
 }

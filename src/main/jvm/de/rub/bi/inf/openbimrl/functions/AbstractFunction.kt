@@ -1,55 +1,53 @@
-package de.rub.bi.inf.openbimrl.functions;
+package de.rub.bi.inf.openbimrl.functions
 
-import de.rub.bi.inf.openbimrl.NodeProxy;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import de.rub.bi.inf.openbimrl.NodeProxy
 
 /**
  * An abstract super-type of all functions supported by the OpenBimRL engine.
- * Instances of this class need to be registered in {@link FunctionFactory}.
+ * Instances of this class need to be registered in [FunctionFactory].
  * Furthermore, an implemented function can be addressed in an OpenBimRL file as
  * and elementary node of the pre-calculation graph.
  *
  * @author Marcel Stepien, Andre Vonthron (reworked by Florian Becker)
  */
-public abstract class AbstractFunction {
+abstract class AbstractFunction(@JvmField protected var nodeProxy: NodeProxy) {
+    @JvmField
+    val results: ArrayList<Any?>
 
-    private final ArrayList<Object> results;
-    protected NodeProxy nodeProxy;
-
-    public AbstractFunction(NodeProxy nodeProxy) {
-        this.nodeProxy = nodeProxy;
-        results = new ArrayList<>(nodeProxy.getNode().getOutputs().getOutput().size());
-        for (int i = 0; i < nodeProxy.getNode().getOutputs().getOutput().size(); i++) {
-            results.add(null); //initializing for set(i, element) method
+    init {
+        val outputLength = nodeProxy.node.outputs?.output?.size ?: 0
+        results = ArrayList(outputLength)
+        for (i in 0 until outputLength) {
+            results.add(null) //initializing for set(i, element) method
         }
     }
 
-    public abstract void execute();
+    abstract fun execute()
 
-    @SuppressWarnings("unchecked")
-    protected <T> T getInput(int pos) {
-        final var inputEdge = nodeProxy.getInputEdge(pos);
-        return inputEdge != null ? (T) inputEdge.getCurrentData() : null;
+    protected inline fun <reified T> getInput(pos: Int): T? {
+        return when (val data = nodeProxy.getInputEdge(pos)?.currentData){
+            is T -> data
+            else -> null
+        }
     }
 
-    protected Collection<?> getInputAsCollection(int pos) {
-        final var in = getInput(pos);
-        if (in instanceof Collection<?> out)
-            return out;
-
-        if (in == null) return new ArrayList<>();
-        return List.of(in);
+    protected fun <T> getInput(pos: Int, clazz: Class<T>): T? {
+        val data = nodeProxy.getInputEdge(pos)?.currentData
+        return when {
+            clazz.isInstance(data) -> clazz.cast(data)
+            else -> null
+        }
     }
 
-    protected void setResult(int pos, Object result) {
-        results.set(pos, result);
+    protected fun getInputAsCollection(pos: Int): Collection<*> {
+        val `in` = getInput<Any>(pos)
+        if (`in` is Collection<*>) return `in`
+
+        if (`in` == null) return ArrayList<Any>()
+        return listOf(`in`)
     }
 
-    public ArrayList<Object> getResults() {
-        return results;
+    protected fun setResult(pos: Int, result: Any?) {
+        results[pos] = result
     }
-
 }

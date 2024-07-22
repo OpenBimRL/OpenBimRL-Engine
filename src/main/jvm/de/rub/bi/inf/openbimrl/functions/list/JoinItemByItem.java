@@ -20,8 +20,8 @@ public class JoinItemByItem extends AbstractFunction {
     @Override
     public void execute() {
 
-        Object input0 = getInput(0);
-        Object input1 = getInput(1);
+        Object input0 = getInput(0, Object.class);
+        Object input1 = getInput(1, Object.class);
 
         ArrayList<?> elements0 = null;
         if (input0 instanceof ArrayList<?>) {

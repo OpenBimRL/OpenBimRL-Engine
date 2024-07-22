@@ -134,11 +134,11 @@ public class OpenRule extends RuleSet {
 
             logger.logNode(node.function + node.getId(),
                     nodeProxy.getInputEdges().stream().map(EdgeProxy::getCurrentData).toArray(),
-                    nodeProxy.getFunction().getResults().toArray()
+                    nodeProxy.getFunction().results.toArray()
             );
 
             for (int i = 0; i < node.getOutputs().getOutput().size(); i++) {
-                Object outputValue = nodeProxy.getFunction().getResults().get(i);
+                Object outputValue = nodeProxy.getFunction().results.get(i);
                 //System.out.println(nodeProxy.getNode().getId()+" (Result): "+ outputValue);
 
                 if (outputValue == null) {
@@ -157,7 +157,7 @@ public class OpenRule extends RuleSet {
         for (RuleIdentifierType ri : modelCheck.getRuleIdentifiers().getRuleIdentifier()) {
 
             NodeProxy nodeProxy = precalculationContext.getNodeProxy(ri.getSource());
-            Object value = nodeProxy.getFunction().getResults().get(ri.getSourceHandle());
+            Object value = nodeProxy.getFunction().results.get(ri.getSourceHandle());
 
             logger.logResult(ri.getLabel(), value);
 

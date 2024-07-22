@@ -18,7 +18,7 @@ public class Maximum extends AbstractFunction {
 
     @Override
     public void execute() {
-        Object object0 = getInput(0);
+        Object object0 = getInput(0, Object.class);
 
         ArrayList<Object> results = calculateMaximun(object0);
 
