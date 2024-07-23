@@ -1,8 +1,6 @@
 package de.rub.bi.inf.openbimrl.functions.geometry
 
 import arrow.core.Either
-import de.rub.bi.inf.extensions.center
-import de.rub.bi.inf.utils.math.lerp
 import de.rub.bi.inf.extensions.toPoint3d
 import de.rub.bi.inf.extensions.toRect
 import de.rub.bi.inf.nativelib.IfcPointer
@@ -12,6 +10,7 @@ import de.rub.bi.inf.openbimrl.helper.neighbors
 import de.rub.bi.inf.openbimrl.helper.pathfinding.filterObstacles
 import de.rub.bi.inf.openbimrl.helper.pathfinding.isWalkable
 import de.rub.bi.inf.openbimrl.helper.pathfinding.movementCost
+import de.rub.bi.inf.utils.math.lerp
 import io.github.offlinebrain.khexagon.coordinates.HexCoordinates
 import io.github.offlinebrain.khexagon.math.Layout
 import io.github.offlinebrain.khexagon.math.Point
@@ -20,22 +19,21 @@ import io.github.offlinebrain.khexagon.math.pixelToHex
 import java.util.*
 import javax.media.j3d.BoundingBox
 import javax.media.j3d.BoundingSphere
-import javax.vecmath.Point3d
 
 class CalculateDijkstraSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodeProxy) {
     /**
      * start: [IfcPointer], end: [IfcPointer], bounds: [BoundingBox], obstacles: [List], layout [Layout], maxDistance [Double]
      */
     override fun execute() {
-        val start = getInputAsCollection(0).filterIsInstance<Point3d>().getOrNull(0)
+        val start = getInputAsCollection(0).filterIsInstance<IfcPointer>().getOrNull(0)?.polygon?.value
         val bounds = getInputAsCollection(1).filterIsInstance<BoundingBox>().getOrNull(0)?.toRect()
         val obstacles = filterObstacles(getInputAsCollection(2))
         val layout = getInput<Layout>(3)
         val maxDistance = getInput<Any?>(4)?.toString()?.toDouble() ?: 100.0
 
-        if (start == null || bounds == null || layout == null) return
+        if (start?.isEmpty == true || bounds == null || layout == null) return
         val startHexCoordinate =
-            pixelToHex(layout, start.let { Point(it.x.toFloat(), it.z.toFloat()) }).hexRound()
+            pixelToHex(layout, start!!.get().bounds2D.let { Point(it.x.toFloat(), it.y.toFloat()) }).hexRound()
 
         val path = dijkstra<HexCoordinates>(
             from = startHexCoordinate,
@@ -72,7 +70,7 @@ class CalculateDijkstraSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodePr
             neighbors(node).forEach { adjacent ->
                 if (!isWalkable(adjacent)) return@forEach
                 val totalDistance = currentDistance + distance(node, adjacent)
-                if (totalDistance < distances.getValue(adjacent)) return@forEach
+                if (totalDistance > distances.getValue(adjacent)) return@forEach
                 distances[adjacent] = totalDistance
                 priorityQueue.add(adjacent to totalDistance)
             }

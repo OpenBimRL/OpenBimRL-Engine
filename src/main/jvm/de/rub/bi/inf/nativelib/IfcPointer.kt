@@ -56,11 +56,10 @@ class IfcPointer : Pointer {
             var x = .0
             for ((index, coordinate) in values.withIndex()) {
                 if (index % 2 == 0) {
-                    x = coordinate + 800
+                    x = coordinate
                     continue
                 }
-                val y = coordinate + 400
-                println("[$x, $y]")
+                val y = coordinate
                 coordsList.add(Point2D.Double(x, y))
             }
 
