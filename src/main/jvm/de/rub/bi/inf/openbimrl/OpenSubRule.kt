@@ -9,7 +9,7 @@ import java.util.*
 
 class OpenSubRule(
     private val modelSubCheck: ModelSubCheckType,
-    private val ruleIDtoValueMap: MutableMap<String, Any>
+    private val ruleIDtoValueMap: MutableMap<String, Any?>
 ) :
     SimpleRule() {
     init {

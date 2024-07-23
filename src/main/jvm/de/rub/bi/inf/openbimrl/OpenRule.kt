@@ -1,33 +1,32 @@
-package de.rub.bi.inf.openbimrl;
+package de.rub.bi.inf.openbimrl
 
-import de.rub.bi.inf.logger.RuleLogger;
-import de.rub.bi.inf.model.AbstractRuleDefinition;
-import de.rub.bi.inf.model.ResultObjectGroup;
-import de.rub.bi.inf.model.RuleSet;
-import de.rub.bi.inf.openbimrl.functions.DisplayableFunction;
-import de.rub.bi.inf.openbimrl.helper.FilterInterpreter;
-
-import java.util.*;
+import de.rub.bi.inf.logger.RuleLogger
+import de.rub.bi.inf.model.AbstractRuleDefinition
+import de.rub.bi.inf.model.ResultObjectGroup
+import de.rub.bi.inf.model.RuleSet
+import de.rub.bi.inf.nativelib.IfcPointer
+import de.rub.bi.inf.openbimrl.functions.DisplayableFunction
+import de.rub.bi.inf.openbimrl.helper.FilterInterpreter
 
 /**
  * Defines the entry-point for execution of an OpenBimRL file, containing precalculations and rules. The check-method
  * is providing the main process for rule checking execution and should be used to run the engine.
- * An instance of {@link OpenRule} is derived from {@link RuleSet}, containing several sub checks of the type
- * {@link OpenSubRule}. The results of the precaluations are executed and stored prior the actuall rule check.
+ * An instance of [OpenRule] is derived from [RuleSet], containing several sub checks of the typ
+ * [OpenSubRule]. The results of the precaluations are executed and stored prior the actual rule check.
  *
- * @author Marcel Stepien, Andre Vonthron
+ * @author Marcel Stepien, Andre Vonthron (Reworked by Florian Becker)
  */
-public class OpenRule extends RuleSet {
-    private final ModelCheckType modelCheck;
-    private PrecalculationContext precalculationContext = null;
-    private final Map<String, Object> ruleIDtoValueMap = new HashMap<>();
+class OpenRule(modelCheck: ModelCheckType, precalculations: PrecalculationsType?) : RuleSet() {
+    private val modelCheck: ModelCheckType
+    private var precalculationContext: PrecalculationContext? = null
+    private val ruleIDtoValueMap: MutableMap<String, Any?> = HashMap()
 
-    public OpenRule(ModelCheckType modelCheck, PrecalculationsType precalculations) {
-        this.name = modelCheck.getName();
-        this.modelCheck = modelCheck;
-        this.precalculationContext = new PrecalculationContext(precalculations);
+    init {
+        this.name = modelCheck.getName()
+        this.modelCheck = modelCheck
+        this.precalculationContext = PrecalculationContext(precalculations)
 
-        generateRules(modelCheck);
+        generateRules(modelCheck)
     }
 
 
@@ -37,7 +36,7 @@ public class OpenRule extends RuleSet {
      * @param name
      * @param value
      */
-    private ResultObjectGroup computeResultsElements(String name, Object value) {
+    private fun computeResultsElements(name: String, value: Any?): ResultObjectGroup {
         /*        if (value instanceof Collection<?>) {
             int index = 0;
             for (Object o : (Collection<?>) value) {
@@ -88,175 +87,164 @@ public class OpenRule extends RuleSet {
             }
         }*/
 
-        return new ResultObjectGroup(name);
+        return ResultObjectGroup(name)
     }
 
-    @Override
-    public void check(RuleLogger logger) {
+    override fun check(logger: RuleLogger) {
         //Reset the check
-        this.resultObjects = new ArrayList<>();
-        this.checkedStatus = CheckedStatus.UNCHECKED;
-        this.checkingProtocol = new ArrayList<>();
+        this.resultObjects = ArrayList()
+        this.checkedStatus = CheckedStatus.UNCHECKED
+        this.checkingProtocol = ArrayList()
 
         //Step 1: Build Precalculation
-        this.handlePrecalculations(logger);
+        this.handlePrecalculations(logger)
 
         //Step 2: Transfer via RuleIdentifier
-        boolean allParametersAvailable = handleRuleIdentifier(logger);
+        val allParametersAvailable = handleRuleIdentifier(logger)
 
         //Step 3: Execute Rules
         if (allParametersAvailable) {
-            handleRuleChecks(logger);
+            handleRuleChecks(logger)
         } else {
-            this.checkingProtocol.add("Some precalculations were not available");
-            this.checkedStatus = CheckedStatus.FAILED;
+            checkingProtocol.add("Some precalculations were not available")
+            this.checkedStatus = CheckedStatus.FAILED
         }
 
         //Step 4: Extract Predefined ResultSet
-        this.handleResultSets();
+        this.handleResultSets()
     }
 
-    private void handlePrecalculations(RuleLogger logger) {
-        for (NodeType node : precalculationContext.getGraphSortedNodes()) { // precalculationContext.getGraphNodes()) {
-
+    private fun handlePrecalculations(logger: RuleLogger) {
+        precalculationContext?.graphSortedNodes?.forEach { node ->
             //System.out.println(node.getId()+" (FunctionName): " + node.getFunction());
 
-            NodeProxy nodeProxy = precalculationContext.getNodeProxy(node);
+            // precalculationContext can safely be assumed to have a value since this point can't be reached if it's null
+            val nodeProxy = precalculationContext!!.getNodeProxy(node)
 
-            if (nodeProxy.getFunction() instanceof DisplayableFunction d)
-                d.setLogger(logger);
+            if (nodeProxy.function is DisplayableFunction)
+                nodeProxy.function.setLogger(logger)
 
             try {
-                nodeProxy.execute();
-            } catch (Exception e) {
-                e.printStackTrace();
+                nodeProxy.execute()
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
 
-            logger.logNode(node.function + node.getId(),
-                    nodeProxy.getInputEdges().stream().map(EdgeProxy::getCurrentData).toArray(),
-                    nodeProxy.getFunction().results.toArray()
-            );
+            logger.logNode(
+                node.function + node.getId(),
+                nodeProxy.getInputEdges().stream().map { obj: EdgeProxy -> obj.currentData }.toArray(),
+                nodeProxy.function.results.filterNotNull().toTypedArray()
+            )
 
-            for (int i = 0; i < node.getOutputs().getOutput().size(); i++) {
-                Object outputValue = nodeProxy.getFunction().results.get(i);
+            node.getOutputs()?.getOutput()?.indices?.forEach { i ->
+                val outputValue = nodeProxy.function.results[i]
+
                 //System.out.println(nodeProxy.getNode().getId()+" (Result): "+ outputValue);
-
                 if (outputValue == null) {
-                    this.checkingProtocol.add("Please Check Node " + nodeProxy.getNode().getId() + " (Type: " + node.getFunction() + "): " + outputValue);
+                    checkingProtocol.add("Please Check Node ${nodeProxy.node.id} (Type: ${node.getFunction()}): ${outputValue.toString()}")
                 }
             }
-
         }
     }
 
     /**
      * @return
      */
-    private boolean handleRuleIdentifier(RuleLogger logger) {
-        boolean allParametersAvailable = true;
-        for (RuleIdentifierType ri : modelCheck.getRuleIdentifiers().getRuleIdentifier()) {
+    private fun handleRuleIdentifier(logger: RuleLogger): Boolean {
+        var allParametersAvailable = true
 
-            NodeProxy nodeProxy = precalculationContext.getNodeProxy(ri.getSource());
-            Object value = nodeProxy.getFunction().results.get(ri.getSourceHandle());
+        modelCheck.getRuleIdentifiers().getRuleIdentifier().forEach { ri ->
 
-            logger.logResult(ri.getLabel(), value);
+            // unsafe assumption of not null
+            val nodeProxy = precalculationContext!!.getNodeProxy(ri.getSource())
+            val value = nodeProxy.function.results[ri.getSourceHandle()]
 
-            ruleIDtoValueMap.put(ri.getLabel(), value);
+            logger.logResult(ri.getLabel(), value)
+
+            ruleIDtoValueMap[ri.getLabel()] = value
             if (value == null) {
-                allParametersAvailable = false;
-                checkingProtocol.add(ri.getLabel() + " nicht mit einem Wert belegt!");
+                allParametersAvailable = false
+                checkingProtocol.add(ri.getLabel() + " nicht mit einem Wert belegt!")
             } else {
-                checkingProtocol.add(ri.getLabel() + "=" + value);
+                checkingProtocol.add(ri.getLabel() + "=" + value)
             }
 
             //Register results of the precalculation to the result view, for selection and
-            ResultObjectGroup group = this.computeResultsElements("RuleIdentifier: " + ri.getLabel(), value);
+            val group = this.computeResultsElements("RuleIdentifier: " + ri.getLabel(), value)
 
-            if (!group.getChildren().isEmpty()) {
-                resultObjects.add(group);
+            if (group.children.isNotEmpty()) {
+                resultObjects.add(group)
             }
-
         }
-        return allParametersAvailable;
+
+        return allParametersAvailable
     }
 
-    private void handleRuleChecks(RuleLogger logger) {
+    private fun handleRuleChecks(logger: RuleLogger) {
         //Execute for all subrules
-        CheckedStatus tempStatus = CheckedStatus.WARNING;
+        var tempStatus = CheckedStatus.WARNING
 
-        for (AbstractRuleDefinition subRule : getChildren()) {
-            subRule.check(logger);
+        for (subRule in getChildren()) {
+            subRule.check(logger)
 
-            if (subRule.getCheckedStatus().equals(CheckedStatus.FAILED)) {
-                tempStatus = CheckedStatus.FAILED;
-            } else if (subRule.getCheckedStatus().equals(CheckedStatus.SUCCESS) && !tempStatus.equals(CheckedStatus.FAILED)) {
-                tempStatus = CheckedStatus.SUCCESS;
-            } else if (subRule.getCheckedStatus().equals(CheckedStatus.WARNING) && !tempStatus.equals(CheckedStatus.FAILED) && !tempStatus.equals(CheckedStatus.SUCCESS)) {
-                tempStatus = CheckedStatus.WARNING;
+            if (subRule.checkedStatus == CheckedStatus.FAILED) {
+                tempStatus = CheckedStatus.FAILED
+            } else if (subRule.checkedStatus == CheckedStatus.SUCCESS && tempStatus != CheckedStatus.FAILED) {
+                tempStatus = CheckedStatus.SUCCESS
+            } else if (subRule.checkedStatus == CheckedStatus.WARNING && tempStatus != CheckedStatus.FAILED && tempStatus != CheckedStatus.SUCCESS) {
+                tempStatus = CheckedStatus.WARNING
             }
         }
 
-        this.checkedStatus = tempStatus;
+        this.checkedStatus = tempStatus
     }
 
     /**
      *
      */
-    private void handleResultSets() {
-        if (modelCheck.getResultSets() != null) {
-            for (ResultSetType rs : modelCheck.getResultSets().getResultSet()) {
+    private fun handleResultSets() {
+        modelCheck.getResultSets()?.getResultSet()?.forEach { rs ->
+            val markedIfcElement = mutableListOf<IfcPointer>()
 
-                // final var markedIfcElement = new ArrayList<IIFCProduct>();
+            val filterList: List<*>? = FilterInterpreter.interpret(rs.getFilter(), ruleIDtoValueMap)
+            val elementsList = mutableListOf<Any?>()
 
-                List<?> filterList = FilterInterpreter.interpret(rs.getFilter(), ruleIDtoValueMap);
-                Collection<?> elementsList = Collections.EMPTY_LIST;
+            when (val elements = ruleIDtoValueMap[rs.getElements()]) {
+                is Collection<*> -> elementsList.addAll(elements)
+                is Any -> elementsList.add(elements)
+            }
 
-                Object elements = ruleIDtoValueMap.get(rs.getElements());
-                if (elements instanceof Collection<?>) {
-                    elementsList = (Collection<?>) elements;
-                } else if (elements != null) {
-                    final var tempList = new ArrayList<>();
-                    tempList.add(elements);
-                    elementsList = tempList;
-                }
+            if (filterList?.size != elementsList.size) {
+                val msg =
+                    "Size of elements and filter do not match for ResultSet: ${rs.getName()}( ${elementsList.size} != ${filterList?.size.toString()})"
+                checkingProtocol.add(msg)
+            }
 
-                if (filterList != null && filterList.size() != elementsList.size()) {
-                    String msg = "Size of elements and filter do not match for ResultSet: " +
-                            rs.getName() + "(" + elementsList.size() + "!=" + filterList.size() + ")";
-                    this.checkingProtocol.add(msg);
-                }
+            for ((index, nO) in elementsList.withIndex()) {
 
-                int index = -1;
-                for (Object nO : elementsList) {
-                    index++;
+                if (filterList != null) {
+                    val maskObj = filterList[index]!!
 
-                    if (filterList != null) {
-                        Object maskObj = filterList.get(index);
-
-                        if (maskObj instanceof Boolean) {
-                            if (!(Boolean) maskObj) {
-                                continue;
-                            }
+                    if (maskObj is Boolean) {
+                        if (!maskObj) {
+                            continue
                         }
-
                     }
-
-/*                    if (nO instanceof IIFCProduct product) {
-                        markedIfcElement.add(product);
-                    }*/
                 }
 
-                //Register results of the pre-calculation to the result
-                ResultObjectGroup group = this.computeResultsElements(
-                        "ResultSet: " + rs.getName(),
-                        null // prev markedIfcElement
-                );
-
-                if (!group.getChildren().isEmpty()) {
-                    resultObjects.add(group);
+                if (nO is IfcPointer) {
+                    markedIfcElement.add(nO);
                 }
+            }
 
+            //Register results of the pre-calculation to the result
+            val group = this.computeResultsElements(
+                "ResultSet: " + rs.getName(),
+                null // prev markedIfcElement
+            )
 
+            if (group.children.isNotEmpty()) {
+                resultObjects.add(group)
             }
         }
     }
@@ -264,24 +252,19 @@ public class OpenRule extends RuleSet {
     /**
      * @param modelCheck
      */
-    public void generateRules(ModelCheckType modelCheck) {
+    fun generateRules(modelCheck: ModelCheckType) {
+        val root = ArrayList<AbstractRuleDefinition>()
 
-        final var root = new ArrayList<AbstractRuleDefinition>();
-
-        ModelSubChecksType subchecks = modelCheck.getModelSubChecks();
+        val subchecks = modelCheck.getModelSubChecks()
         if (subchecks != null) {
-            for (ModelSubCheckType subcheck : subchecks.getModelSubCheck()) {
+            for (subcheck in subchecks.getModelSubCheck()) {
+                val ruleName = subcheck.getName()
 
-                String ruleName = subcheck.getName();
+                val subrule = OpenSubRule(subcheck, ruleIDtoValueMap)
+                subrule.name = ruleName
 
-                OpenSubRule subrule = new OpenSubRule(subcheck, ruleIDtoValueMap);
-                subrule.setName(ruleName);
-
-                this.addChild(subrule);
+                this.addChild(subrule)
             }
         }
-
     }
-
-
 }
