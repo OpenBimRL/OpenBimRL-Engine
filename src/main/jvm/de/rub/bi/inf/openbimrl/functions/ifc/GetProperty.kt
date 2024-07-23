@@ -9,7 +9,7 @@ import de.rub.bi.inf.openbimrl.functions.AbstractFunction
  *
  * @author Marcel Stepien (reworked by Florian Becker)
  */
-class GetProperty(nodeProxy: NodeProxy?) : AbstractFunction(nodeProxy) {
+class GetProperty(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
     override fun execute() {
         val ifcElements = getInputAsCollection(0)
         val propertySetName = getInput<String>(1)

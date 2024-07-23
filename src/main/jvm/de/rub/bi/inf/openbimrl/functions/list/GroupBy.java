@@ -19,9 +19,9 @@ public class GroupBy extends AbstractFunction {
 
     @Override
     public void execute() {
-        ArrayList<?> list = getInput(0);
+        final var list = new ArrayList<Object>(getInputAsCollection(0));
 
-        ArrayList<?> referenceList = getInput(1);
+        final var referenceList = new ArrayList<Object>(getInputAsCollection(1));
 
         if (list.size() != referenceList.size())
             return;

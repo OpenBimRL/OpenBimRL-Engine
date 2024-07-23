@@ -6,7 +6,7 @@ import de.rub.bi.inf.nativelib.IfcPointer
 
 class HandleQuantifierFactory(
     private val checkingProtocol: MutableList<String>,
-    private val ruleIDtoValueMap: MutableMap<String, Any>,
+    private val ruleIDtoValueMap: MutableMap<String, Any?>,
     private val successes: ResultObjectGroup?,
     private val failures: ResultObjectGroup?,
     private val compare: (Any?, Any?, String) -> Boolean

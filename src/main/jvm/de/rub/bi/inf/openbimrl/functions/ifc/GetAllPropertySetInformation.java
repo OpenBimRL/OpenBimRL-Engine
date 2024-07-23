@@ -22,13 +22,8 @@ public class GetAllPropertySetInformation extends AbstractFunction {
     @Override
     public void execute() {
 
-        Collection<Object> objects = new ArrayList();
-        Object input0 = getInput(0);
-        if (input0 instanceof Collection<?>) {
-            objects = (Collection<Object>) input0;
-        } else {
-            objects.add(input0);
-        }
+        Collection<Object> objects = new ArrayList<>();
+        Object input0 = getInputAsCollection(0);
 
         final var resultValues = new LinkedHashMap<Object, List<String>>();
         //System.out.println("GetProperty: " + objects + " | " + setName + " | " + propertyName);

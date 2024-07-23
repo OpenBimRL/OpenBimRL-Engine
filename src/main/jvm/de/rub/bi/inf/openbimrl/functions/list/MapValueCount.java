@@ -21,7 +21,7 @@ public class MapValueCount extends AbstractFunction {
     @Override
     public void execute() {
 
-        Map<?, ?> map = getInput(0);
+        Map<?, ?> map = getInput(0, Map.class);
         if (map == null)
             return;
 

@@ -20,7 +20,7 @@ class CreateHexagonLayout(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
         val center = getInputAsCollection(0).filterIsInstance<Point3d>()[0]
         val size = getInput<Any>(1).toString().toDouble().toFloat()
 
-        val layout = Layout(Orientation.Pointy, Point(center.x.toFloat(), center.z.toFloat()), Point(size, size))
+        val layout = Layout(Orientation.Pointy, origin = Point(center.x.toFloat(), center.z.toFloat()), size = Point(size, size))
         setResult(0, layout)
     }
 }

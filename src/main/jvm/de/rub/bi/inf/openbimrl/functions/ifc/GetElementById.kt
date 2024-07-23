@@ -12,7 +12,7 @@ import de.rub.bi.inf.openbimrl.functions.NativeFunction
  *
  * @author Marcel Stepien (reworked by Florian Becker)
  */
-class GetElementById(nodeProxy: NodeProxy?) : NativeFunction(nodeProxy) {
+class GetElementById(nodeProxy: NodeProxy) : NativeFunction(nodeProxy) {
     override fun executeNative() {
         nativeLib.filterByGUID()
     }

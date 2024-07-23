@@ -21,15 +21,15 @@ public class FilterByMasks extends AbstractFunction {
     @Override
     public void execute() {
 
-        Object input0 = getInput(0);
-        Object input1 = getInput(1);
+        Object input0 = getInput(0, Object.class);
+        Object input1 = getInput(1, Object.class);
 
         if (input0 == null || input1 == null)
             return;
 
         ArrayList<?> elements = null;
         if (input0 instanceof Collection<?>) {
-            elements = new ArrayList((Collection<?>) input0);
+            elements = new ArrayList<>((Collection<?>) input0);
         }
 
         LinkedHashMap<Object, ArrayList<Boolean>> filterMap = new LinkedHashMap<Object, ArrayList<Boolean>>();
@@ -44,7 +44,7 @@ public class FilterByMasks extends AbstractFunction {
         }
 
 
-        if (elements == null || filterMap == null)
+        if (elements == null)
             return;
 
         LinkedHashMap<Object, ArrayList<?>> resultValues = new LinkedHashMap<Object, ArrayList<?>>();
@@ -52,7 +52,7 @@ public class FilterByMasks extends AbstractFunction {
         for (Object maskKey : filterMap.keySet()) {
             ArrayList<?> mask = filterMap.get(maskKey);
 
-            ArrayList filteredList = new ArrayList();
+            final var filteredList = new ArrayList<>();
             for (int i = 0; i < mask.size(); i++) {
                 boolean flag = mask.get(i) != null && Boolean.parseBoolean(mask.get(i).toString());
                 if (flag) {

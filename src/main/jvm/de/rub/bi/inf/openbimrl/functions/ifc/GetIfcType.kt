@@ -10,7 +10,7 @@ import kotlin.collections.AbstractCollection
  *
  * @author Marcel Stepien
  */
-class GetIfcType(nodeProxy: NodeProxy?) : AbstractFunction(nodeProxy) {
+class GetIfcType(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
     override fun execute() {
         when (val input = getInput<Any>(0)) {
             is AbstractCollection<*> -> setResult(0, input.filterIsInstance<IfcPointer>().map { it.type })

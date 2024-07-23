@@ -10,7 +10,7 @@ import de.rub.bi.inf.openbimrl.functions.NativeFunction
  *
  * @author Marcel Stepien (reworked by Florian Becker)
  */
-class FilterByGUID(nodeProxy: NodeProxy?) : NativeFunction(nodeProxy) {
+class FilterByGUID(nodeProxy: NodeProxy) : NativeFunction(nodeProxy) {
     override fun executeNative() {
         nativeLib.filterByGUID()
     }

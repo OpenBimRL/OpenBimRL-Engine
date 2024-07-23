@@ -126,7 +126,9 @@ public class FunctionFactory {
             case "geometry.calculateClosestDistanceToBounds":
                 function = new CalculateClosestDistanceToBounds(nodeProxy);
                 break;
-
+            case "geometry.calculateBuildingBounds":
+                function = new CalculateBuildingBounds(nodeProxy);
+                break;
             case "geometry.checkIntersectionByBounds":
                 function = new CheckIntersectionByBounds(nodeProxy);
                 break;

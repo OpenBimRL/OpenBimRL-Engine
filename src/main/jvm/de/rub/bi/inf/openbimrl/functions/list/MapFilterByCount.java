@@ -21,11 +21,11 @@ public class MapFilterByCount extends AbstractFunction {
     @Override
     public void execute() {
 
-        Map<?, ?> map = getInput(0);
+        Map<?, ?> map = getInput(0, Map.class);
         if (map == null)
             return;
 
-        String counterStr = getInput(1);
+        String counterStr = getInput(1, String.class);
         int counter = 0;
         if (counterStr != null)
             counter = Integer.parseInt(counterStr);

@@ -5,6 +5,7 @@ import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * @author Marcel Stepien
@@ -20,9 +21,9 @@ public class AsList extends AbstractFunction {
         String delimiterDim1 = ",";
         String delimiterDim2 = ";";
 
-        ArrayList<ArrayList<Object>> dim2Results = new ArrayList();
-        for (String dim1Str : getInput(0).toString().split(delimiterDim2)) {
-            ArrayList<Object> dim1Results = new ArrayList();
+        ArrayList<ArrayList<Object>> dim2Results = new ArrayList<>();
+        for (String dim1Str : Objects.requireNonNull(getInput(0, Object.class)).toString().split(delimiterDim2)) {
+            ArrayList<Object> dim1Results = new ArrayList<>();
             if (dim1Str != null) {
                 dim1Results.addAll(
                         Arrays.asList(dim1Str.split(delimiterDim1))

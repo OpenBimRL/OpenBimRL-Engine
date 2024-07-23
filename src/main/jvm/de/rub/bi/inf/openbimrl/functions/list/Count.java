@@ -18,7 +18,7 @@ public class Count extends AbstractFunction {
 
     @Override
     public void execute() {
-        final Collection<?> list = getInput(0);
+        final Collection<?> list = getInputAsCollection(0);
         setResult(0, list.size());
     }
 

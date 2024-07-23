@@ -8,7 +8,7 @@ import de.rub.bi.inf.openbimrl.functions.AbstractFunction
  *
  * @author Marcel Stepien
  */
-class Sum(nodeProxy: NodeProxy?) : AbstractFunction(nodeProxy) {
+class Sum(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
     override fun execute() {
         val objects = getInputAsCollection(0)
 

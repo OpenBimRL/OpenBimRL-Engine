@@ -6,6 +6,7 @@ import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author Marcel Stepien
@@ -18,10 +19,10 @@ public class GetMapValueByKeyList extends AbstractFunction {
 
     @Override
     public void execute() {
-        Map<?, ?> map = getInput(0);
+        Map<?, ?> map = getInput(0, Map.class);
 
         ArrayList<Object> values = new ArrayList<Object>();
-        Object keys = getInput(1);
+        Object keys = getInput(1, Object.class);
         if (keys instanceof Collection) {
             for (Object k : (Collection) keys) {
                 values.add(map.get(k.toString()));

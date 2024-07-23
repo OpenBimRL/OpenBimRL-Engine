@@ -8,7 +8,7 @@ import de.rub.bi.inf.openbimrl.functions.AbstractFunction
  *
  * @author Marcel Stepien
  */
-class FilterInvert(nodeProxy: NodeProxy?) : AbstractFunction(nodeProxy) {
+class FilterInvert(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
     override fun execute() {
         val input0 = getInput<Any>(0) ?: return
 

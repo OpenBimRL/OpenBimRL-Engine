@@ -18,9 +18,11 @@ public class GetMapValueAtKey extends AbstractFunction {
 
     @Override
     public void execute() {
-        Map<?, ?> map = getInput(0);
+        Map<?, ?> map = getInput(0, Map.class);
 
-        Object key = getInput(1);
+        Object key = getInput(1, Object.class);
+
+        if (map == null) return;
 
         Object valueAtKey = map.get(key);
 
