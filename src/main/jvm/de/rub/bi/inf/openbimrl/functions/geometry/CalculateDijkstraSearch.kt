@@ -34,6 +34,7 @@ class CalculateDijkstraSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodePr
      * maxDistance (optional) [Double]
      */
     override fun execute() {
+
         val start = getInputAsCollection(0).filterIsInstance<IfcPointer>().getOrNull(0)?.polygon?.value
         val bBox = getInputAsCollection(1).filterIsInstance<BoundingBox>().getOrNull(0)
         val bounds = bBox?.toRect()
