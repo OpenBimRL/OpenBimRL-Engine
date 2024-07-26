@@ -115,6 +115,13 @@
             <version>0.2.0</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.github.ajalt.colormath/colormath-jvm -->
+        <dependency>
+            <groupId>com.github.ajalt.colormath</groupId>
+            <artifactId>colormath-jvm</artifactId>
+            <version>3.6.0</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/io.arrow-kt/arrow-core -->
         <dependency>
             <groupId>io.arrow-kt</groupId>

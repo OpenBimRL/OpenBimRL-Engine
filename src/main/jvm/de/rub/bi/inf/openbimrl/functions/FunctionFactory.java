@@ -177,7 +177,7 @@ public class FunctionFactory {
             case "geometry.calculateAStarSearch":
                 function = new CalculateAStarSearch(nodeProxy);
                 break;
-            case "geometry.calculateDistancesFromObject":
+            case "geometry.calculateDistancesFromElement":
                 function = new CalculateDijkstraSearch(nodeProxy);
                 break;
             case "geometry.unifyRegionBSPTree":

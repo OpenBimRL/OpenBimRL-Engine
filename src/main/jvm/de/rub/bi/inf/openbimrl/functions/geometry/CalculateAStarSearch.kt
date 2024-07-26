@@ -3,10 +3,9 @@ package de.rub.bi.inf.openbimrl.functions.geometry
 import de.rub.bi.inf.extensions.toRect
 import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.NodeProxy
-import de.rub.bi.inf.openbimrl.functions.AbstractFunction
 import de.rub.bi.inf.openbimrl.functions.DisplayableFunction
 import de.rub.bi.inf.openbimrl.helper.neighbors
-import de.rub.bi.inf.openbimrl.helper.pathfinding.filterObstacles
+import de.rub.bi.inf.openbimrl.helper.pathfinding.geometryFromPointers
 import de.rub.bi.inf.openbimrl.helper.pathfinding.isWalkable
 import de.rub.bi.inf.openbimrl.helper.pathfinding.movementCost
 import io.github.offlinebrain.khexagon.algorythm.aStar
@@ -32,8 +31,9 @@ class CalculateAStarSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodeProxy
         val end = getInputAsCollection(1).filterIsInstance<IfcPointer>()[0]?.polygon?.value
         val bounds = getInputAsCollection(2).filterIsInstance<BoundingBox>()[0]?.toRect()
 
-        val obstacles = filterObstacles(getInputAsCollection(3))
-        val layout = getInput<Layout>(4)
+        val obstacles = geometryFromPointers(getInputAsCollection(3))
+        val passages = geometryFromPointers(getInputAsCollection(4))
+        val layout = getInput<Layout>(5)
 
         if (start?.isEmpty == true || end?.isEmpty == true || bounds == null || layout == null) return
         val startHexCoordinate =
@@ -47,9 +47,9 @@ class CalculateAStarSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodeProxy
             from = startHexCoordinate,
             to = endHexCoordinates,
             neighbors = ::neighbors,
-            isWalkable = isWalkable(layout, bounds, obstacles),
+            isWalkable = isWalkable(layout, bounds, obstacles, passages),
             distance = HexCoordinates::distance,
-            movementCost = movementCost(layout, obstacles)
+            movementCost = movementCost(layout, obstacles, passages)
         )
     }
 }
