@@ -35,7 +35,7 @@ class CalculateDijkstraSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodePr
      */
     override fun execute() {
 
-        val start = getInputAsCollection(0).filterIsInstance<IfcPointer>().getOrNull(0)?.polygon?.value
+        val start = geometryFromPointers(getInputAsCollection(0))
         val bBox = getInputAsCollection(1).filterIsInstance<BoundingBox>().getOrNull(0)
         val bounds = bBox?.toRect()
         val obstacles = geometryFromPointers(getInputAsCollection(2))
@@ -43,12 +43,15 @@ class CalculateDijkstraSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodePr
         val layout = getInput<Layout>(4)
         val maxDistance = getInput<Any?>(5)?.toString()?.toDouble() ?: 100.0
 
-        if (start?.isEmpty == true || bounds == null || layout == null) return
-        val startHexCoordinate =
-            pixelToHex(layout, start!!.get().bounds2D.let { Point(it.x.toFloat(), it.y.toFloat()) }).hexRound()
+        if (start.isEmpty() || bounds == null || layout == null) return
+        val startHexCoordinates = start.map { point ->
+            pixelToHex(
+                layout,
+                point.bounds2D.let { Point(it.x.toFloat(), it.y.toFloat()) }).hexRound()
+        }
 
         val path = dijkstra<HexCoordinates>(
-            from = startHexCoordinate,
+            from = startHexCoordinates,
             neighbors = ::neighbors,
             isWalkable = isWalkable(layout, bounds, obstacles, passages),
             distance = movementCost(layout, obstacles, passages)
@@ -80,14 +83,14 @@ class CalculateDijkstraSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodePr
     }
 
     private fun <T> dijkstra(
-        from: T, neighbors: (T) -> List<T>, isWalkable: (T) -> Boolean, distance: (T, T) -> Double
+        from: List<T>, neighbors: (T) -> List<T>, isWalkable: (T) -> Boolean, distance: (T, T) -> Double
     ): Map<T, Double> {
         val distances = mutableMapOf<T, Double>().withDefault { Double.POSITIVE_INFINITY }
         val priorityQueue = PriorityQueue<Pair<T, Double>>(compareBy { it.second })
         val visited = mutableSetOf<Pair<T, Double>>()
 
-        priorityQueue.add(from to .0)
-        distances[from] = .0
+        priorityQueue.addAll(from.map { it to .0 })
+        from.forEach { distances[it] = .0 }
 
         while (priorityQueue.isNotEmpty()) {
             val (node, currentDistance) = priorityQueue.poll()
