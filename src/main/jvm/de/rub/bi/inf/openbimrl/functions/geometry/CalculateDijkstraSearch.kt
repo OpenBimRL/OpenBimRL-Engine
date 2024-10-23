@@ -13,6 +13,7 @@ import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.DisplayableFunction
 import de.rub.bi.inf.openbimrl.helper.neighbors
+import de.rub.bi.inf.openbimrl.helper.pathfinding.dijkstra
 import de.rub.bi.inf.openbimrl.helper.pathfinding.geometryFromPointers
 import de.rub.bi.inf.openbimrl.helper.pathfinding.isWalkable
 import de.rub.bi.inf.openbimrl.helper.pathfinding.movementCost
@@ -80,31 +81,5 @@ class CalculateDijkstraSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodePr
                 )
             }
         })
-    }
-
-    private fun <T> dijkstra(
-        from: List<T>, neighbors: (T) -> List<T>, isWalkable: (T) -> Boolean, distance: (T, T) -> Double
-    ): Map<T, Double> {
-        val distances = mutableMapOf<T, Double>().withDefault { Double.POSITIVE_INFINITY }
-        val priorityQueue = PriorityQueue<Pair<T, Double>>(compareBy { it.second })
-        val visited = mutableSetOf<Pair<T, Double>>()
-
-        priorityQueue.addAll(from.map { it to .0 })
-        from.forEach { distances[it] = .0 }
-
-        while (priorityQueue.isNotEmpty()) {
-            val (node, currentDistance) = priorityQueue.poll()
-            if (!visited.add(node to currentDistance)) continue
-
-            neighbors(node).forEach { adjacent ->
-                if (!isWalkable(adjacent)) return@forEach
-                val totalDistance = currentDistance + distance(node, adjacent)
-                if (totalDistance > distances.getValue(adjacent)) return@forEach
-                distances[adjacent] = totalDistance
-                priorityQueue.add(adjacent to totalDistance)
-            }
-        }
-
-        return distances
     }
 }

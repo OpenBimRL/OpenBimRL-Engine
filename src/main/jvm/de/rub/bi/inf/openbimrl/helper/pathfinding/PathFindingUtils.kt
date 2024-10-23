@@ -10,6 +10,7 @@ import io.github.offlinebrain.khexagon.math.hexToPixel
 import java.awt.geom.Line2D
 import java.awt.geom.Path2D
 import java.awt.geom.Point2D
+import java.util.*
 import java.util.stream.Stream
 
 fun geometryFromPointers(collection: Collection<*>): List<Path2D.Double> = collection
@@ -74,4 +75,30 @@ fun movementCost(
 
         return@lambda returnValue
     }
+}
+
+fun <T> dijkstra(
+    from: List<T>, neighbors: (T) -> List<T>, isWalkable: (T) -> Boolean, distance: (T, T) -> Double
+): Map<T, Double> {
+    val distances = mutableMapOf<T, Double>().withDefault { Double.POSITIVE_INFINITY }
+    val priorityQueue = PriorityQueue<Pair<T, Double>>(compareBy { it.second })
+    val visited = mutableSetOf<Pair<T, Double>>()
+
+    priorityQueue.addAll(from.map { it to .0 })
+    from.forEach { distances[it] = .0 }
+
+    while (priorityQueue.isNotEmpty()) {
+        val (node, currentDistance) = priorityQueue.poll()
+        if (!visited.add(node to currentDistance)) continue
+
+        neighbors(node).forEach { adjacent ->
+            if (!isWalkable(adjacent)) return@forEach
+            val totalDistance = currentDistance + distance(node, adjacent)
+            if (totalDistance > distances.getValue(adjacent)) return@forEach
+            distances[adjacent] = totalDistance
+            priorityQueue.add(adjacent to totalDistance)
+        }
+    }
+
+    return distances
 }
