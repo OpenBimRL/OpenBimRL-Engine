@@ -27,21 +27,20 @@ class CalculateAStarSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodeProxy
      * start: [IfcPointer], end: [IfcPointer], bounds: [BoundingBox], obstacles: [List], layout [Layout]
      */
     override fun execute() {
-        val start = getInputAsCollection(0).filterIsInstance<IfcPointer>()[0]?.polygon?.value
-        val end = getInputAsCollection(1).filterIsInstance<IfcPointer>()[0]?.polygon?.value
-        val bounds = getInputAsCollection(2).filterIsInstance<BoundingBox>()[0]?.toRect()
+        val start = getInputAsCollection(0).filterIsInstance<IfcPointer>()[0].polygon.value
+        val end = getInputAsCollection(1).filterIsInstance<IfcPointer>()[0].polygon.value
+        val bounds = getInputAsCollection(2).filterIsInstance<BoundingBox>()[0].toRect()
 
         val obstacles = geometryFromPointers(getInputAsCollection(3))
         val passages = geometryFromPointers(getInputAsCollection(4))
         val layout = getInput<Layout>(5)
 
-        if (start?.isEmpty == true || end?.isEmpty == true || bounds == null || layout == null) return
+        if (start.isEmpty || end.isEmpty || layout == null) return
         val startHexCoordinate =
-            pixelToHex(layout, start!!.get().bounds2D.let { Point(it.x.toFloat(), it.y.toFloat()) }).hexRound()
-        val endHexCoordinates =
-            pixelToHex(layout, end!!.get().bounds2D.let {
-                Point(it.x.toFloat(), it.y.toFloat())
-            }).hexRound()
+            pixelToHex(layout, start.get().bounds2D.let { Point(it.x.toFloat(), it.y.toFloat()) }).hexRound()
+        val endHexCoordinates = pixelToHex(layout, end.get().bounds2D.let {
+            Point(it.x.toFloat(), it.y.toFloat())
+        }).hexRound()
 
         aStar(
             from = startHexCoordinate,
