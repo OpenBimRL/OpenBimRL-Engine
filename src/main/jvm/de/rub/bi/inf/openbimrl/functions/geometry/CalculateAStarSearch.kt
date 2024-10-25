@@ -5,9 +5,7 @@ import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.DisplayableFunction
 import de.rub.bi.inf.openbimrl.helper.neighbors
-import de.rub.bi.inf.openbimrl.helper.pathfinding.geometryFromPointers
-import de.rub.bi.inf.openbimrl.helper.pathfinding.isWalkable
-import de.rub.bi.inf.openbimrl.helper.pathfinding.movementCost
+import de.rub.bi.inf.openbimrl.helper.pathfinding.*
 import io.github.offlinebrain.khexagon.algorythm.aStar
 import io.github.offlinebrain.khexagon.coordinates.HexCoordinates
 import io.github.offlinebrain.khexagon.math.Layout
@@ -41,6 +39,9 @@ class CalculateAStarSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodeProxy
         val endHexCoordinates = pixelToHex(layout, end.get().bounds2D.let {
             Point(it.x.toFloat(), it.y.toFloat())
         }).hexRound()
+
+        clearGeometryBuffer()
+        fillGeometryBuffer(arrayOf(*passages.toTypedArray(), *obstacles.toTypedArray()))
 
         aStar(
             from = startHexCoordinate,
