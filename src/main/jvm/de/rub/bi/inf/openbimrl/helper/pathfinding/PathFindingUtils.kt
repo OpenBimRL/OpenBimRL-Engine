@@ -36,17 +36,21 @@ private fun checkGeometryWithCache(geometry: List<Path2D.Double>, coordinates: P
 
 // check if point is out of bounds or inside obstacle
 fun isWalkable(
-    layout: Layout, bounds: Path2D, obstacles: List<Path2D.Double>, passages: List<Path2D.Double>
+    layout: Layout,
+    bounds: Path2D,
+    obstacles: List<Path2D.Double>,
+    passages: List<Path2D.Double>,
+    alwaysWalkable: Array<HexCoordinates> = emptyArray()
 ): (HexCoordinates) -> Boolean {
     return inner@{ point ->
+
+        if (alwaysWalkable.contains(point)) return@inner true
+
         val coordinates = hexToPixel(layout, point).let {
             Point2D.Float(it.x, it.y)
         }
 
         if (!bounds.contains(coordinates)) return@inner false // point is not in the building
-
-        // caching bounds of obstacles
-        obstacles.forEach { if (!lookUpBuffer.contains(it)) lookUpBuffer[it] = it.bounds }
 
         // if point is in passage way, it's walkable
         if (checkGeometryWithCache(passages, coordinates)) return@inner true
