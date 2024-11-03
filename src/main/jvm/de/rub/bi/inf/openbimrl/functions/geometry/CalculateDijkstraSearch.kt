@@ -12,6 +12,7 @@ import de.rub.bi.inf.extensions.upper
 import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.DisplayableFunction
+import de.rub.bi.inf.openbimrl.helper.addPaddingToObstacles
 import de.rub.bi.inf.openbimrl.helper.neighbors
 import de.rub.bi.inf.openbimrl.helper.pathfinding.*
 import de.rub.bi.inf.utils.math.lerp
@@ -20,9 +21,11 @@ import io.github.offlinebrain.khexagon.math.Layout
 import io.github.offlinebrain.khexagon.math.Point
 import io.github.offlinebrain.khexagon.math.hexToPixel
 import io.github.offlinebrain.khexagon.math.pixelToHex
-import java.awt.geom.AffineTransform
+import java.awt.geom.Path2D
+import java.awt.geom.Point2D
 import javax.media.j3d.BoundingBox
 import javax.media.j3d.BoundingSphere
+import javax.vecmath.Vector2d
 import kotlin.math.*
 
 class CalculateDijkstraSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodeProxy) {
@@ -35,28 +38,12 @@ class CalculateDijkstraSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodePr
         val start = geometryFromPointers(getInputAsCollection(0))
         val bBox = getInputAsCollection(1).filterIsInstance<BoundingBox>().getOrNull(0)
         val bounds = bBox?.toRect()
-        val obstacles = geometryFromPointers(getInputAsCollection(2))
         val passages = geometryFromPointers(getInputAsCollection(3))
         val layout = getInput<Layout>(4)
-        val maxDistance = getInput<Any?>(5)?.toString()?.toDouble() ?: 100.0
-        val obstaclePadding = getInput<Any?>(6)?.toString()?.toDouble() ?: 0
+        val obstaclePadding = getInput<Any?>(5)?.toString()?.toDouble() ?: 0.0
+        val maxDistance = getInput<Any?>(6)?.toString()?.toDouble() ?: 100.0
 
-        if (obstaclePadding != 0) {
-            obstacles.map {
-                val pi = it.getPathIterator(null)
-                while (!pi.isDone) {
-                    val coordinates = DoubleArray(6)
-                    pi.currentSegment(coordinates)
-                    val xSq = coordinates[0].pow(2)
-                    val ySq = coordinates[1].pow(2)
-                    if ((xSq + ySq).roundToInt() == 0) continue
-                    val scale = sqrt(2 * xSq + 2 * ySq + 1) / (sqrt(2.0) * sqrt(xSq + ySq))
-                    return@map it.createTransformedShape(AffineTransform().apply {
-                        setToScale(scale, scale)
-                    })
-                }
-            }
-        }
+        val obstacles = addPaddingToObstacles(geometryFromPointers(getInputAsCollection(2)), obstaclePadding)
 
         if (start.isEmpty() || bounds == null || layout == null) return
         val startHexCoordinates = start.map { point ->
