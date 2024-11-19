@@ -2,12 +2,14 @@ package de.rub.bi.inf.openbimrl.functions.ifc;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
+import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction;
 
 /**
  * Retrieves the property value of a specific entity as String value.
  *
  * @author Marcel Stepien
  */
+@OpenBIMRLFunction
 public class GetPropertyAsString extends AbstractFunction {
 
     public GetPropertyAsString(NodeProxy nodeProxy) {

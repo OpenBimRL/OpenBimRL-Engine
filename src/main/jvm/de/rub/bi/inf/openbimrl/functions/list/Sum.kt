@@ -2,12 +2,14 @@ package de.rub.bi.inf.openbimrl.functions.list
 
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction
+import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction
 
 /**
  * Calculates the sum of all numbers contained in a given list.
  *
  * @author Marcel Stepien
  */
+@OpenBIMRLFunction
 class Sum(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
     override fun execute() {
         val objects = getInputAsCollection(0)

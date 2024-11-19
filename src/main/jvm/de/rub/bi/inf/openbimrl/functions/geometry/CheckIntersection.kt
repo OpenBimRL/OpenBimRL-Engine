@@ -2,6 +2,7 @@ package de.rub.bi.inf.openbimrl.functions.geometry
 
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction
+import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction
 import java.util.stream.Collectors
 import javax.media.j3d.BoundingBox
 
@@ -10,6 +11,7 @@ import javax.media.j3d.BoundingBox
  *
  * @author Marcel Stepien (reworked by Florian Becker)
  */
+@OpenBIMRLFunction
 class CheckIntersection(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
     override fun execute() {
         val input1 = getInput<Any>(0)

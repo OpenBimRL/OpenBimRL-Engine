@@ -2,6 +2,7 @@ package de.rub.bi.inf.openbimrl.functions.list;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
+import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -12,6 +13,7 @@ import java.util.Map;
  *
  * @author Marcel Stepien
  */
+@OpenBIMRLFunction
 public class MapValueCount extends AbstractFunction {
 
     public MapValueCount(NodeProxy nodeProxy) {

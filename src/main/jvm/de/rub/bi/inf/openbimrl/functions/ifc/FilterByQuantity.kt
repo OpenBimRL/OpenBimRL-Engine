@@ -3,6 +3,7 @@ package de.rub.bi.inf.openbimrl.functions.ifc
 import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction
+import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction
 import java.util.stream.Collectors
 
 /**
@@ -10,6 +11,7 @@ import java.util.stream.Collectors
  *
  * @author Marcel Stepien (reworked by Florian Becker)
  */
+@OpenBIMRLFunction
 class FilterByQuantity(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
     override fun execute() {
         val ifcPointer = getInputAsCollection(0)

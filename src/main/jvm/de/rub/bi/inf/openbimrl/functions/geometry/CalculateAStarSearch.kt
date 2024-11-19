@@ -9,6 +9,7 @@ import de.rub.bi.inf.extensions.upper
 import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.DisplayableFunction
+import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction
 import de.rub.bi.inf.openbimrl.utils.addPaddingToObstacles
 import de.rub.bi.inf.openbimrl.utils.math.neighbors
 import de.rub.bi.inf.openbimrl.utils.pathfinding.*
@@ -25,6 +26,7 @@ import kotlin.math.max
  *
  * @author Marcel Stepien (reworked by Florian Becker)
  */
+@OpenBIMRLFunction
 class CalculateAStarSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodeProxy) {
     /**
      * start: [IfcPointer], end: [IfcPointer], bounds: [BoundingBox], obstacles: [List], layout [Layout]

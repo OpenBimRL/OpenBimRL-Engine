@@ -12,6 +12,7 @@ import de.rub.bi.inf.extensions.upper
 import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.DisplayableFunction
+import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction
 import de.rub.bi.inf.openbimrl.utils.addPaddingToObstacles
 import de.rub.bi.inf.openbimrl.utils.math.neighbors
 import de.rub.bi.inf.openbimrl.utils.pathfinding.*
@@ -25,6 +26,7 @@ import javax.media.j3d.BoundingBox
 import javax.media.j3d.BoundingSphere
 import kotlin.math.*
 
+@OpenBIMRLFunction(name = "calculateDistancesFromElement")
 class CalculateDijkstraSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodeProxy) {
     /**
      * start: [IfcPointer], bounds: [BoundingBox], obstacles: [List], passage ways [List], layout [Layout],

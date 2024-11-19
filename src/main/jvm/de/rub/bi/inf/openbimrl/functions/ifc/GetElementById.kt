@@ -4,6 +4,7 @@ import com.sun.jna.Pointer
 import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.NativeFunction
+import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction
 
 /**
  * Retrieves the IFC entity of a specific id from the model.
@@ -12,6 +13,7 @@ import de.rub.bi.inf.openbimrl.functions.NativeFunction
  *
  * @author Marcel Stepien (reworked by Florian Becker)
  */
+@OpenBIMRLFunction
 class GetElementById(nodeProxy: NodeProxy) : NativeFunction(nodeProxy) {
     override fun executeNative() {
         nativeLib.filterByGUID()

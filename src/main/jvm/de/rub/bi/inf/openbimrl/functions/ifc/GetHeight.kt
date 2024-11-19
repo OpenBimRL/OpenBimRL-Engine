@@ -2,6 +2,7 @@ package de.rub.bi.inf.openbimrl.functions.ifc
 
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction
+import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction
 import javax.media.j3d.BoundingBox
 import javax.vecmath.Point3d
 
@@ -10,6 +11,7 @@ import javax.vecmath.Point3d
  *
  * @author Marcel Stepien
  */
+@OpenBIMRLFunction
 class GetHeight(nodeProxy: NodeProxy?) : AbstractFunction(nodeProxy!!) {
     override fun execute() {
         val input0 = getInputAsCollection(0)
