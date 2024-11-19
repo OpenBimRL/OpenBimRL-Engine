@@ -4,7 +4,7 @@ import com.sun.jna.Pointer
 import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.NativeFunction
-import de.rub.bi.inf.openbimrl.helper.boundingBoxFromMemory
+import de.rub.bi.inf.openbimrl.utils.boundingBoxFromMemory
 import java.util.*
 
 import javax.media.j3d.BoundingBox

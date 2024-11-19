@@ -1,4 +1,4 @@
-package de.rub.bi.inf.openbimrl.helper.pathfinding
+package de.rub.bi.inf.openbimrl.utils.pathfinding
 
 import de.rub.bi.inf.extensions.intersects
 import de.rub.bi.inf.extensions.toPoint2D

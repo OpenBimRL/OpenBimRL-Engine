@@ -9,9 +9,9 @@ import de.rub.bi.inf.extensions.upper
 import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.DisplayableFunction
-import de.rub.bi.inf.openbimrl.helper.addPaddingToObstacles
-import de.rub.bi.inf.openbimrl.helper.neighbors
-import de.rub.bi.inf.openbimrl.helper.pathfinding.*
+import de.rub.bi.inf.openbimrl.utils.addPaddingToObstacles
+import de.rub.bi.inf.openbimrl.utils.math.neighbors
+import de.rub.bi.inf.openbimrl.utils.pathfinding.*
 import io.github.offlinebrain.khexagon.algorythm.aStar
 import io.github.offlinebrain.khexagon.coordinates.HexCoordinates
 import io.github.offlinebrain.khexagon.math.*

@@ -1,4 +1,4 @@
-package de.rub.bi.inf.openbimrl.helper;
+package de.rub.bi.inf.openbimrl.utils;
 
 import de.rub.bi.inf.model.RuleBase;
 import de.rub.bi.inf.openbimrl.BIMRuleType;

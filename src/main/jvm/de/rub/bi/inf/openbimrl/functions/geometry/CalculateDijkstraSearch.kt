@@ -12,20 +12,17 @@ import de.rub.bi.inf.extensions.upper
 import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.DisplayableFunction
-import de.rub.bi.inf.openbimrl.helper.addPaddingToObstacles
-import de.rub.bi.inf.openbimrl.helper.neighbors
-import de.rub.bi.inf.openbimrl.helper.pathfinding.*
-import de.rub.bi.inf.utils.math.lerp
+import de.rub.bi.inf.openbimrl.utils.addPaddingToObstacles
+import de.rub.bi.inf.openbimrl.utils.math.neighbors
+import de.rub.bi.inf.openbimrl.utils.pathfinding.*
+import de.rub.bi.inf.openbimrl.utils.math.lerp
 import io.github.offlinebrain.khexagon.coordinates.HexCoordinates
 import io.github.offlinebrain.khexagon.math.Layout
 import io.github.offlinebrain.khexagon.math.Point
 import io.github.offlinebrain.khexagon.math.hexToPixel
 import io.github.offlinebrain.khexagon.math.pixelToHex
-import java.awt.geom.Path2D
-import java.awt.geom.Point2D
 import javax.media.j3d.BoundingBox
 import javax.media.j3d.BoundingSphere
-import javax.vecmath.Vector2d
 import kotlin.math.*
 
 class CalculateDijkstraSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodeProxy) {

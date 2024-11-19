@@ -3,7 +3,7 @@ package de.rub.bi.inf.openbimrl
 import de.rub.bi.inf.logger.RuleLogger
 import de.rub.bi.inf.model.ResultObjectGroup
 import de.rub.bi.inf.model.SimpleRule
-import de.rub.bi.inf.openbimrl.helper.FilterInterpreter
+import de.rub.bi.inf.openbimrl.utils.FilterInterpreter
 import java.util.*
 
 

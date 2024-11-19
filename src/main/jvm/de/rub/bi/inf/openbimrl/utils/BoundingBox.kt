@@ -1,4 +1,4 @@
-package de.rub.bi.inf.openbimrl.helper
+package de.rub.bi.inf.openbimrl.utils
 
 import de.rub.bi.inf.openbimrl.functions.NativeFunction
 import javax.media.j3d.BoundingBox

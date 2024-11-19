@@ -28,15 +28,6 @@ public class FunctionFactory {
         AbstractFunction function = null;
 
         switch (functionString) {
-            case "ifc.addRepresentationItemToEntity":
-                function = new AddRepresentationItemToEntity(nodeProxy);
-                break;
-            case "ifc.getCurveLength":
-                function = new GetCurveLength(nodeProxy);
-                break;
-            case "ifc.createPolyline":
-                function = new CreatePolyline(nodeProxy);
-                break;
             case "ifc.filterByElement":
                 function = new FilterByElement(nodeProxy);
                 break;
@@ -52,9 +43,6 @@ public class FunctionFactory {
             case "ifc.getIfcType":
                 function = new GetIfcType(nodeProxy);
                 break;
-            case "ifc.getAllPropertySetInformation":
-                function = new GetAllPropertySetInformation(nodeProxy);
-                break;
             case "ifc.getProperty":
                 function = new GetProperty(nodeProxy);
                 break;
@@ -67,41 +55,14 @@ public class FunctionFactory {
             case "ifc.getHeight":
                 function = new GetHeight(nodeProxy);
                 break;
-            case "ifc.getGeometry":
-                function = new GetGeometry(nodeProxy);
-                break;
             case "ifc.getBoundingBox":
                 function = new GetBoundingBox(nodeProxy);
-                break;
-            case "ifc.getGeometryByElement":
-                function = new GetGeometryByElement(nodeProxy);
-                break;
-            case "ifc.getRepresentationItems":
-                function = new GetRepresentationItems(nodeProxy);
-                break;
-            case "ifc.getGeometryAppearance":
-                function = new GetGeometryAppearance(nodeProxy);
-                break;
-            case "ifc.checkElementIntersection":
-                function = new CheckElementIntersection(nodeProxy);
-                break;
-            case "ifc.checkSpaceBounds":
-                function = new CheckSpaceBounds(nodeProxy);
-                break;
-            case "ifc.getStorey":
-                function = new GetStorey(nodeProxy);
-                break;
-            case "ifc.getElementsInSpatialStructure":
-                function = new GetElementsInSpatialStructure(nodeProxy);
                 break;
             case "ifc.getGlobalID":
                 function = new GetGlobalID(nodeProxy);
                 break;
             case "ifc.getElementById":
                 function = new GetElementById(nodeProxy);
-                break;
-            case "ifc.getOpeningElements":
-                function = new GetOpeningElements(nodeProxy);
                 break;
 
             case "math.addition":
@@ -117,15 +78,6 @@ public class FunctionFactory {
                 function = new Multiplication(nodeProxy);
                 break;
 
-            case "geometry.loadRepresentationItemGeometry":
-                function = new LoadRepresentationItemGeometry(nodeProxy);
-                break;
-            case "geometry.convertStrToVectorList":
-                function = new ConvertStrToVectorList(nodeProxy);
-                break;
-            case "geometry.calculateClosestDistanceToBounds":
-                function = new CalculateClosestDistanceToBounds(nodeProxy);
-                break;
             case "geometry.calculateBuildingBounds":
                 function = new CalculateBuildingBounds(nodeProxy);
                 break;
@@ -135,24 +87,9 @@ public class FunctionFactory {
             case "geometry.checkIncludedInBounds":
                 function = new CheckIncludedInBounds(nodeProxy);
                 break;
-            case "geometry.colorizeGeometryAppearance":
-                function = new ColorizeGeometryAppearance(nodeProxy);
-                break;
-            case "geometry.checkNeighborhoodByDistance":
-                function = new CheckNeighborhoodByDistance(nodeProxy);
-                break;
-            case "geometry.createCollisionSphere":
-                function = new CreateCollisionSphere(nodeProxy);
-                break;
             case "geometry.checkIntersection":
             function = new CheckIntersection(nodeProxy);
             break;
-            case "geometry.convertToRegionBSPTree":
-                function = new ConvertToRegionBSPTree(nodeProxy);
-                break;
-            case "geometry.decomposeGeometry":
-                function = new DecomposeGeometry(nodeProxy);
-                break;
             case "geometry.decomposeVector3D":
                 function = new DecomposeVector3D(nodeProxy);
                 break;
@@ -168,38 +105,14 @@ public class FunctionFactory {
             case "geometry.createPointGraphEdgesByReference":
                 function = new CreatePointGraphEdgesByReference(nodeProxy);
                 break;
-            case "geometry.groupGraphEdges":
-                function = new GroupGraphEdges(nodeProxy);
-                break;
-            case "geometry.calculateDistancesByOrderedGraphEdges":
-                function = new CalculateDistancesByOrderedGraphEdges(nodeProxy);
-                break;
             case "geometry.calculateAStarSearch":
                 function = new CalculateAStarSearch(nodeProxy);
                 break;
             case "geometry.calculateDistancesFromElement":
                 function = new CalculateDijkstraSearch(nodeProxy);
                 break;
-            case "geometry.unifyRegionBSPTree":
-                function = new UnifyRegionBSPTree(nodeProxy);
-                break;
-            // case "geometry.checkLinecasts":
-            // function = new CheckLinecasts(nodeProxy);
-            // break;
-            case "geometry.showGraph":
-                function = new ShowGraph(nodeProxy);
-                break;
-            case "geometry.showGraphColoredByValues":
-                function = new ShowGraphColoredByValues(nodeProxy);
-                break;
             case "geometry.showPaths":
                 function = new ShowPaths(nodeProxy);
-                break;
-            case "geometry.getCentroidOfRegionBSPTree":
-                function = new GetCentroidOfRegionBSPTree(nodeProxy);
-                break;
-            case "geometry.convertToVector3D":
-                function = new ConvertToVector3D(nodeProxy);
                 break;
 
 

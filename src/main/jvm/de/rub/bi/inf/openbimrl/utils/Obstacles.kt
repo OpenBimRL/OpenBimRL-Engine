@@ -1,4 +1,4 @@
-package de.rub.bi.inf.openbimrl.helper
+package de.rub.bi.inf.openbimrl.utils
 
 import java.awt.geom.Path2D
 import java.awt.geom.Point2D

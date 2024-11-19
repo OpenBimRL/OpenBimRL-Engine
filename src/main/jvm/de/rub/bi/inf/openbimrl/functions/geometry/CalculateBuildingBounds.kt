@@ -2,7 +2,7 @@ package de.rub.bi.inf.openbimrl.functions.geometry
 
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.NativeFunction
-import de.rub.bi.inf.openbimrl.helper.boundingBoxFromMemory
+import de.rub.bi.inf.openbimrl.utils.boundingBoxFromMemory
 import java.util.*
 
 class CalculateBuildingBounds(nodeProxy: NodeProxy) : NativeFunction(nodeProxy) {
