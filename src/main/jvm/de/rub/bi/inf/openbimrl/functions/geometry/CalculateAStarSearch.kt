@@ -9,6 +9,8 @@ import de.rub.bi.inf.extensions.upper
 import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.DisplayableFunction
+import de.rub.bi.inf.openbimrl.functions.annotations.FunctionInput
+import de.rub.bi.inf.openbimrl.functions.annotations.FunctionOutput
 import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction
 import de.rub.bi.inf.openbimrl.utils.addPaddingToObstacles
 import de.rub.bi.inf.openbimrl.utils.math.neighbors
@@ -18,6 +20,8 @@ import io.github.offlinebrain.khexagon.coordinates.HexCoordinates
 import io.github.offlinebrain.khexagon.math.*
 import javax.media.j3d.BoundingBox
 import javax.media.j3d.BoundingSphere
+import javax.vecmath.Point3d
+import javax.vecmath.Vector2d
 import kotlin.math.max
 
 
@@ -28,21 +32,35 @@ import kotlin.math.max
  */
 @OpenBIMRLFunction
 class CalculateAStarSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodeProxy) {
+
+    @FunctionInput(0, IfcPointer::class)
+    lateinit var starts: List<IfcPointer>
+
+    @FunctionInput(1, IfcPointer::class)
+    lateinit var ends: List<IfcPointer>
+
+    @FunctionInput(2, BoundingBox::class)
+    lateinit var bBox: List<BoundingBox>
+
+    @FunctionInput(6, nullable = false)
+    lateinit var layout: Layout
+
+    @FunctionOutput(0, Point3d::class)
+    var path: List<Point3d>? = null
+
+
     /**
      * start: [IfcPointer], end: [IfcPointer], bounds: [BoundingBox], obstacles: [List], layout [Layout]
      */
     override fun execute() {
-        val starts = getInputAsCollection(0).filterIsInstance<IfcPointer>().map { it.polygon.value }
-        val ends = getInputAsCollection(1).filterIsInstance<IfcPointer>().map { it.polygon.value }
-        val bBox = getInputAsCollection(2).filterIsInstance<BoundingBox>().getOrNull(0)
-        val bounds = bBox?.toRect()
+        val starts = this.starts.map { it.polygon.value }
+        val ends = this.ends.map { it.polygon.value }
+        val bounds = bBox.getOrNull(0)?.toRect()
         val passages = geometryFromPointers(getInputAsCollection(4))
         val obstaclePadding = getInput<Any?>(5)?.toString()?.toDouble() ?: 0.0
-        val layout = getInput<Layout>(6)
         val obstacles = addPaddingToObstacles(geometryFromPointers(getInputAsCollection(3)), obstaclePadding)
 
-        if (layout == null || bounds == null) return
-
+        if (bounds == null) return
 
         clearGeometryBuffer()
         fillGeometryBuffer(arrayOf(*passages.toTypedArray(), *obstacles.toTypedArray()))
@@ -72,10 +90,8 @@ class CalculateAStarSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodeProxy
             }
         }
 
-        // setResult(0, paths)
+        if (paths.size == 0) return
 
-
-        if (logger.isEmpty) return
         val path = paths.reduce { acc: List<HexCoordinates>, hexCoordinates: List<HexCoordinates> ->
             val newList = ArrayList<HexCoordinates>(acc.size + hexCoordinates.size)
             newList.addAll(acc)
@@ -83,10 +99,14 @@ class CalculateAStarSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodeProxy
             return@reduce newList
         }
 
+        this.path = path.map { hexToPixel(layout, it).toPoint3d() }
+
+        if (logger.isEmpty) return
         logger.get().logGraphicalOutput(this.nodeProxy.node.id, path.let {
             it.map { key ->
                 Pair(
-                    BoundingSphere(hexToPixel(layout, key).toPoint3d(max(bBox.lower().y, bBox.upper().y)), .25),
+                    // can safely assert that bBox[0] is not null due to check at the start of execute
+                    BoundingSphere(hexToPixel(layout, key).toPoint3d(max(bBox[0].lower().y, bBox[0].upper().y)), .25),
                     mapOf("color" to Either.Right(RGB("0F0").toHex()))
                 )
             }

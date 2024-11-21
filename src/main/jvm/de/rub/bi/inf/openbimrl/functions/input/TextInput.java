@@ -2,6 +2,7 @@ package de.rub.bi.inf.openbimrl.functions.input;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
+import de.rub.bi.inf.openbimrl.functions.annotations.FunctionOutput;
 import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction;
 
 /**
@@ -9,17 +10,19 @@ import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction;
  *
  * @author Marcel Stepien
  */
-@OpenBIMRLFunction
+@OpenBIMRLFunction(type = "inputType")
 public class TextInput extends AbstractFunction {
 
     public TextInput(NodeProxy nodeProxy) {
         super(nodeProxy);
     }
 
+    @FunctionOutput(position = 0)
+    private String string;
+
     @Override
     public void execute() {
-        Object value = nodeProxy.getNode().getOutputs().getOutput().get(0).getValue();
-        setResult(0, value);
+        string = nodeProxy.getNode().getOutputs().getOutput().get(0).getValue();
     }
 
 }

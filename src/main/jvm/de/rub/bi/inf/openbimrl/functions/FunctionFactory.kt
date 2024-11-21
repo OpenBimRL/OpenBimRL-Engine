@@ -55,6 +55,9 @@ class FunctionFactory private constructor() {
             functionPackages.addAll(packages)
         }
 
+        val registeredFunctions: Map<String, Class<*>>
+            get() = instance!!.functions.toMap()
+
         private var instance: FunctionFactory? = null
             get() {
                 if (field == null) field = FunctionFactory()

@@ -27,7 +27,7 @@ class NodeProxy(val node: NodeType) {
         return@let map
     }
 
-    val function = let { FunctionFactory.getFunction(this) }!!
+    val function = let { FunctionFactory.getFunction(this) }
 
     private fun setEdge(edgeMap: MutableMap<Int, MutableList<EdgeProxy>?>?, edge: EdgeProxy, pos: Int) {
         if (edgeMap.isNullOrEmpty() || edgeMap.size <= pos) return
@@ -65,7 +65,9 @@ class NodeProxy(val node: NodeType) {
 
     fun execute() {
         try {
+            function.injectInputs()
             function.execute()
+            function.injectOutputs()
         } catch (e: Exception) {
             e.printStackTrace()
         }
