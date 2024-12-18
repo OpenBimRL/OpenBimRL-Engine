@@ -3,12 +3,14 @@ package de.rub.bi.inf.openbimrl.functions.ifc
 import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction
+import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction
 
 /**
  * Retrieves the quantity value of a specific entity.
  *
  * @author Marcel Stepien (reworked by Florian Becker)
  */
+@OpenBIMRLFunction
 class GetQuantity(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
     override fun execute() {
         val ifcElements = getInputAsCollection(0)

@@ -2,6 +2,7 @@ package de.rub.bi.inf.openbimrl.functions.filter;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
+import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,6 +13,7 @@ import java.util.LinkedHashMap;
  *
  * @author Marcel Stepien
  */
+@OpenBIMRLFunction
 public class FilterByMasks extends AbstractFunction {
 
     public FilterByMasks(NodeProxy nodeProxy) {

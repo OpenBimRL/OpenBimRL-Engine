@@ -2,12 +2,14 @@ package de.rub.bi.inf.openbimrl.functions.filter
 
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction
+import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction
 
 /**
  * Inverts the result of a filter. Basically, performing a boolean flip on all values of a list.
  *
  * @author Marcel Stepien
  */
+@OpenBIMRLFunction
 class FilterInvert(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
     override fun execute() {
         val input0 = getInput<Any>(0) ?: return

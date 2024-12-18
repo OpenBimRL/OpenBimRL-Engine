@@ -2,6 +2,7 @@ package de.rub.bi.inf.openbimrl.functions.list;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
+import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.HashMap;
  *
  * @author Marcel Stepien
  */
+@OpenBIMRLFunction
 public class GroupBy extends AbstractFunction {
 
     public GroupBy(NodeProxy nodeProxy) {

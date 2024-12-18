@@ -3,7 +3,7 @@ package de.rub.bi.inf.openbimrl
 import de.rub.bi.inf.logger.RuleLogger
 import de.rub.bi.inf.model.RuleBase
 import de.rub.bi.inf.nativelib.FunctionsNative
-import de.rub.bi.inf.openbimrl.helper.OpenBimRLReader
+import de.rub.bi.inf.openbimrl.utils.OpenBimRLReader
 import java.io.File
 import kotlin.system.exitProcess
 

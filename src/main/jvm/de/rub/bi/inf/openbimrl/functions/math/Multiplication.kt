@@ -2,12 +2,14 @@ package de.rub.bi.inf.openbimrl.functions.math
 
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction
+import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction
 
 /**
  * Performs a multiplication operation given two number values.
  *
  * @author Florian Becker
  */
+@OpenBIMRLFunction(name = "multiply")
 class Multiplication(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
     override fun execute() {
         val object0 = getInput<Any>(0)

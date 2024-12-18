@@ -6,7 +6,7 @@ import de.rub.bi.inf.model.ResultObjectGroup
 import de.rub.bi.inf.model.RuleSet
 import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.functions.DisplayableFunction
-import de.rub.bi.inf.openbimrl.helper.FilterInterpreter
+import de.rub.bi.inf.openbimrl.utils.FilterInterpreter
 
 /**
  * Defines the entry-point for execution of an OpenBimRL file, containing precalculations and rules. The check-method

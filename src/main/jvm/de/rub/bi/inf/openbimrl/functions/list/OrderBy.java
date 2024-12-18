@@ -2,6 +2,7 @@ package de.rub.bi.inf.openbimrl.functions.list;
 
 import de.rub.bi.inf.openbimrl.NodeProxy;
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction;
+import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
  *
  * @author Marcel Stepien
  */
+@OpenBIMRLFunction
 public class OrderBy extends AbstractFunction {
 
     public OrderBy(NodeProxy nodeProxy) {
