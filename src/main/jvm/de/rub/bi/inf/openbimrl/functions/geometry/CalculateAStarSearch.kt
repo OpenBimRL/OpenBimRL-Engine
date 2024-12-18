@@ -2,10 +2,7 @@ package de.rub.bi.inf.openbimrl.functions.geometry
 
 import arrow.core.Either
 import com.github.ajalt.colormath.model.RGB
-import de.rub.bi.inf.extensions.lower
-import de.rub.bi.inf.extensions.toPoint3d
-import de.rub.bi.inf.extensions.toRect
-import de.rub.bi.inf.extensions.upper
+import de.rub.bi.inf.extensions.*
 import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.DisplayableFunction
@@ -101,13 +98,12 @@ class CalculateAStarSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodeProxy
 
         this.path = path.map { hexToPixel(layout, it).toPoint3d() }
 
-        if (logger.isEmpty) return
-        logger.get().logGraphicalOutput(this.nodeProxy.node.id, path.let {
+        this.logGraphically(path.let {
             it.map { key ->
                 Pair(
                     // can safely assert that bBox[0] is not null due to check at the start of execute
                     BoundingSphere(hexToPixel(layout, key).toPoint3d(max(bBox[0].lower().y, bBox[0].upper().y)), .25),
-                    mapOf("color" to Either.Right(RGB("0F0").toHex()))
+                    mapOf("color" to Either.Right(RGB.GREEN()))
                 )
             }
         })
