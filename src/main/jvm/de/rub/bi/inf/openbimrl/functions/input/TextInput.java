@@ -18,7 +18,7 @@ public class TextInput extends AbstractFunction {
     }
 
     @FunctionOutput(position = 0)
-    private String string;
+    public String string;
 
     @Override
     public void execute() {

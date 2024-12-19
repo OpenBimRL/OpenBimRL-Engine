@@ -12,10 +12,9 @@ import javax.media.j3d.Bounds
 @OpenBIMRLFunction
 class VisualizeBounds(nodeProxy: NodeProxy) : DisplayableFunction(nodeProxy) {
     @FunctionInput(0, Bounds::class)
-    private lateinit var bounds: List<Bounds>
+    lateinit var bounds: List<Bounds>
 
     override fun execute() {
-
         logGraphically(bounds.map {
             Pair(it, mapOf("color" to Either.Right(RGB.RED())))
         })

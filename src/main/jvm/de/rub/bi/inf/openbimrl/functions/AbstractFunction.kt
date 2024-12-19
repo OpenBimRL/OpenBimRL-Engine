@@ -52,6 +52,7 @@ abstract class AbstractFunction(@JvmField protected var nodeProxy: NodeProxy) {
         val (_, outputs) = findFunctionFields(this.javaClass)
 
         outputs.forEach {
+            it.trySetAccessible()
             setResult(it.getAnnotation(FunctionOutput::class.java).position, it.get(this))
         }
     }

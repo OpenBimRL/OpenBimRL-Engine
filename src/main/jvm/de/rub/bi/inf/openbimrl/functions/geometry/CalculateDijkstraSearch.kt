@@ -65,10 +65,7 @@ class CalculateDijkstraSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodePr
             stop(RGB("F00"))
         }
 
-
-
-        if (logger.isEmpty) return
-        logger.get().logGraphicalOutput(this.nodeProxy.node.id, path.let {
+        logGraphically(path.let {
             it.keys.map { key ->
                 val interpolation = min(lerp(min(it[key]!!, maxDistance), .0, maxDistance, .0, 1.0), 1.0)
                 val color =

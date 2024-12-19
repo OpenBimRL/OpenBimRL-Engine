@@ -7,6 +7,7 @@ import de.rub.bi.inf.openbimrl.functions.AbstractFunction
 import de.rub.bi.inf.openbimrl.functions.annotations.FunctionInput
 import de.rub.bi.inf.openbimrl.functions.annotations.FunctionOutput
 import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction
+import java.util.concurrent.ConcurrentLinkedQueue
 import javax.media.j3d.BoundingBox
 import javax.vecmath.Point3d
 import kotlin.math.max
@@ -14,26 +15,44 @@ import kotlin.math.min
 
 @OpenBIMRLFunction
 class GetIntersection(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
-    @FunctionInput(0)
-    private lateinit var bounds0: BoundingBox
+    @FunctionInput(0, BoundingBox::class)
+    lateinit var bounds0: List<BoundingBox>
 
-    @FunctionInput(1)
-    private lateinit var bounds1: BoundingBox
+    @FunctionInput(1, BoundingBox::class)
+    lateinit var bounds1: List<BoundingBox>
 
-    @FunctionOutput(0)
-    private var outputBound: BoundingBox? = null
+    @FunctionInput(2)
+    var threshold: String? = null
+
+    @FunctionOutput(0, BoundingBox::class)
+    var outputBounds: List<BoundingBox> = emptyList()
 
     override fun execute() {
-        outputBound = findPoints(
-            bounds0.lower().x,
-            bounds0.lower().y,
-            bounds0.upper().x,
-            bounds0.upper().y,
-            bounds1.lower().x,
-            bounds1.lower().y,
-            bounds1.upper().x,
-            bounds1.upper().y
-        )
+        val threadSafeQueue = ConcurrentLinkedQueue<BoundingBox?>()
+
+        val thresholdFloat = threshold?.toFloatOrNull() ?: 0.01f
+
+        bounds0.parallelStream().forEach { e1 ->
+            bounds1.forEach inner@{ e2 ->
+                if (e1 == e2) return@inner
+                val bbox = findPoints(
+                    e1.lower().x,
+                    e1.lower().z,
+                    e1.upper().x,
+                    e1.upper().z,
+                    e2.lower().x,
+                    e2.lower().z,
+                    e2.upper().x,
+                    e2.upper().z
+                )
+
+                if (bbox == null) return@inner
+                if (bbox.upper().x - bbox.lower().x < thresholdFloat || bbox.upper().z - bbox.lower().z < thresholdFloat) return@inner
+                threadSafeQueue.add(bbox)
+            }
+        }
+
+        outputBounds = ArrayList(threadSafeQueue.filterNotNull())
     }
 
     private fun findPoints(
