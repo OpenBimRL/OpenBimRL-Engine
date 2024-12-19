@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM maven:3.9.6-amazoncorretto-21-debian-bookworm
+FROM maven:3.9.9-eclipse-temurin-23-noble
 USER root
 
 RUN apt update && apt install -yq clang make cmake git \
