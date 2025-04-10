@@ -51,10 +51,12 @@ class FunctionFactory private constructor() {
             "de.rub.bi.inf.openbimrl.functions.math",
         )
 
+        @JvmStatic
         fun registerFunctionPackage(vararg packages: String) {
             functionPackages.addAll(packages)
         }
 
+        @JvmStatic
         val registeredFunctions: Map<String, Class<*>>
             get() = instance!!.functions.toMap()
 
