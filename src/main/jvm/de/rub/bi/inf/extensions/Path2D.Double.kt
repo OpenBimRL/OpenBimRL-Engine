@@ -5,6 +5,12 @@ import java.awt.geom.Path2D
 import java.awt.geom.PathIterator
 import java.util.*
 
+/**
+ * Function takes the [PathIterator] of this shape and computes for each line between points by creating a new [Line2D]
+ * and using the [Line2D.intersectsLine] function.
+ * @param line
+ * @return true when the given line intersects the traced path
+ */
 fun Path2D.Double.intersects(line: Line2D): Boolean {
     var x1 = Optional.empty<Double>()
     var y1 = Optional.empty<Double>()
@@ -25,8 +31,7 @@ fun Path2D.Double.intersects(line: Line2D): Boolean {
             }
         }
         if (x1.isPresent && y1.isPresent && x2.isPresent && y2.isPresent) {
-            val segment: Line2D = Line2D.Double(x1.get(), y1.get(), x2.get(), y2.get())
-            if (segment.intersectsLine(line)) {
+            if (line.intersectsLine(x1.get(), y1.get(), x2.get(), y2.get())) {
                 return true
             }
             x1 = Optional.empty()
