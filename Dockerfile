@@ -13,6 +13,9 @@ WORKDIR /app
 RUN git clone --quiet https://github.com/RUB-Informatik-im-Bauwesen/OpenBimRL.git /build/api
 RUN cd /build/api && git checkout 9699b39 && mvn install --quiet
 
+RUN git clone --quiet https://github.com/RUB-Informatik-im-Bauwesen/Maven-Bounding-Volume-Hierarchy.git /build/bvh
+RUN cd /build/bvh && mvn install --quiet
+
 ENV CC=clang
 ENV CXX=clang++
 

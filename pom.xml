@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>inf.bi.rub.de</groupId>
     <artifactId>openbimrl-engine</artifactId>
-    <version>2024.12.19</version>
+    <version>2025.04.25</version>
 
     <packaging>jar</packaging>
 
@@ -63,6 +63,11 @@
             <version>2.11.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>de.rub.bi.inf</groupId>
+            <artifactId>BVH</artifactId>
+            <version>1.0</version>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/javax.xml.bind/activation -->
         <dependency>
