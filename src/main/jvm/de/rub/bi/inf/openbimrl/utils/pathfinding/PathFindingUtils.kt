@@ -20,8 +20,8 @@ private fun Stream<Boolean>.any(): Boolean = this.reduce(false, Boolean::or)
 
 private val lookUpBuffer = mutableMapOf<Path2D.Double, Rectangle>()
 
-public fun clearGeometryBuffer() = lookUpBuffer.clear()
-public fun fillGeometryBuffer(stuff: Array<Path2D.Double>) {
+fun clearGeometryBuffer() = lookUpBuffer.clear()
+fun fillGeometryBuffer(stuff: Array<Path2D.Double>) {
     stuff.forEach { lookUpBuffer[it] = it.bounds }
 }
 
