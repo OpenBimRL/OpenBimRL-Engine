@@ -4,3 +4,8 @@ class InvalidFunctionInputException : RuntimeException {
     constructor(m: String) : super(m)
     constructor(m: String, e: Exception) : super(m, e)
 }
+
+class InvalidFunctionDefinitionException : RuntimeException {
+    constructor(m: String) : super(m)
+    constructor(m: String, e: Exception) : super(m, e)
+}

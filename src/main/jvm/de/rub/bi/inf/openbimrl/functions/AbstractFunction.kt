@@ -4,7 +4,9 @@ import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.annotations.FunctionInput
 import de.rub.bi.inf.openbimrl.functions.annotations.FunctionOutput
 import de.rub.bi.inf.openbimrl.functions.annotations.findFunctionFields
+import de.rub.bi.inf.openbimrl.utils.InvalidFunctionDefinitionException
 import de.rub.bi.inf.openbimrl.utils.InvalidFunctionInputException
+import java.lang.reflect.InaccessibleObjectException
 
 /**
  * An abstract super-type of all functions supported by the OpenBimRL engine.
@@ -26,9 +28,9 @@ abstract class AbstractFunction(@JvmField protected var nodeProxy: NodeProxy) {
         }
     }
 
-    @Throws(IllegalArgumentException::class)
+    @Throws(InvalidFunctionInputException::class)
     fun injectInputs() {
-        val (inputs) = findFunctionFields(this.javaClass)
+        val (inputs) = findFunctionFields(javaClass)
         inputs.forEach {
             val annotation = it.getAnnotation(FunctionInput::class.java)
             val position = annotation.position
@@ -40,7 +42,20 @@ abstract class AbstractFunction(@JvmField protected var nodeProxy: NodeProxy) {
                     )
                 } else {
                     if (!annotation.nullable && getInput<Any?>(position) == null) throw InvalidFunctionInputException("Parameter with name ${it.name} is not Nullable!")
-                    it.set(this, it.type.cast(getInput(position)))
+                    try {
+                        it.isAccessible = true
+                        it.set(this, it.type.cast(getInput(position)))
+                    } catch (e: IllegalAccessException) {
+                        throw InvalidFunctionDefinitionException(
+                            "cannot access member ${it.name} of class ${javaClass.name}",
+                            e
+                        )
+                    } catch (e: InaccessibleObjectException) {
+                        throw InvalidFunctionDefinitionException(
+                            "could not set accessibility for field ${it.name} in class ${javaClass.name}",
+                            e
+                        )
+                    }
                 }
             } catch (e: ClassCastException) {
                 throw InvalidFunctionInputException("Can not convert input of type ${getInput<Any>(position)!!.javaClass.name} to ${it.type.name}")
@@ -49,7 +64,7 @@ abstract class AbstractFunction(@JvmField protected var nodeProxy: NodeProxy) {
     }
 
     fun injectOutputs() {
-        val (_, outputs) = findFunctionFields(this.javaClass)
+        val (_, outputs) = findFunctionFields(javaClass)
 
         outputs.forEach {
             it.trySetAccessible()
