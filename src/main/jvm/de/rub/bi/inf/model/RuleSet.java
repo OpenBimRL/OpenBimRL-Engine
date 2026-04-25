@@ -1,6 +1,5 @@
 package de.rub.bi.inf.model;
 
-import de.rub.bi.inf.logger.RuleLogger;
 
 import java.util.ArrayList;
 
@@ -14,7 +13,7 @@ public class RuleSet extends AbstractRuleDefinition {
     protected ArrayList<AbstractRuleDefinition> children = new ArrayList<>();
 
     @Override
-    public void check(RuleLogger logger) {
+    public void check(de.rub.bi.inf.logger.RuleLogger logger) {
         children.forEach(r -> r.check(logger));
     }
 

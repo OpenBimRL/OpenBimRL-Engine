@@ -36,7 +36,7 @@ public interface FunctionsLibrary extends Library {
     NativeLong request_ifc_object_json_size(Pointer p);
     void ifc_object_to_json(Pointer buffer);
 
-    NativeLong request_geometry_polygon(IfcPointer ifcPointer);
+    NativeLong request_geometry_polygon(de.rub.bi.inf.nativelib.IfcPointer ifcPointer);
     void copy_geometry_polygon(Pointer buffer);
 
     interface set_output_array extends Callback {

@@ -1,6 +1,5 @@
 package de.rub.bi.inf.model;
 
-import de.rub.bi.inf.logger.RuleLogger;
 
 import java.util.ArrayList;
 
@@ -47,7 +46,7 @@ public abstract class AbstractRuleDefinition {
     /**
      * Template method for defining a function or rule for execution.
      */
-    public abstract void check(RuleLogger logger);
+    public abstract void check(de.rub.bi.inf.logger.RuleLogger logger);
 
     public String getCheckingProtocol() {
         final var text = new StringBuilder();
