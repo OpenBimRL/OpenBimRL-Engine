@@ -5,6 +5,7 @@ import kotlin.reflect.KClass
 @Target(AnnotationTarget.CLASS)
 annotation class OpenBIMRLFunction(
     val name: String = "",
+    val description: String = "",
     val packageName: String = "",
     val type: String = "functionType"
 )
