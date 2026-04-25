@@ -3,6 +3,7 @@ package de.rub.bi.inf.openbimrl.utils;
 import de.rub.bi.inf.model.RuleBase;
 import de.rub.bi.inf.openbimrl.BIMRuleType;
 import de.rub.bi.inf.openbimrl.OpenRule;
+import static de.rub.bi.inf.openbimrl.io.OpenBimRLReader.readFromFile;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -20,11 +21,9 @@ public class OpenBimRLReader {
 
     public OpenBimRLReader(List<File> files) {
         for (File f : files) {
-            de.rub.bi.inf.openbimrl.io.OpenBimRLReader ruleImporter =
-                    new de.rub.bi.inf.openbimrl.io.OpenBimRLReader();
             try {
 
-                Object obj = de.rub.bi.inf.openbimrl.io.OpenBimRLReader.readFromFile(f.getAbsolutePath());
+                Object obj = readFromFile(f.getAbsolutePath());
 
                 JAXBElement<?> element = (JAXBElement<?>) obj;
                 BIMRuleType bimRuleType = (BIMRuleType) element.getValue();
