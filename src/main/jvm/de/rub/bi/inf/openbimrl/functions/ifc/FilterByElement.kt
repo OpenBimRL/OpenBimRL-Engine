@@ -5,15 +5,19 @@ import com.sun.jna.Pointer
 import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.NativeFunction
+import de.rub.bi.inf.openbimrl.functions.annotations.FunctionPort
 import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction
 import java.util.*
 
-/**
- * Filters an IFC model and retrieves all elements of a certain type.
- *
- * @author Marcel Stepien (reworked by Florian Becker)
- */
-@OpenBIMRLFunction
+@OpenBIMRLFunction(
+    description = "Filters a IFC model and retrieves all elements of a certain type.",
+    inputs = [
+        FunctionPort(0, "IfcType", String::class),
+    ],
+    outputs = [
+        FunctionPort(0, "IfcElement_List", IfcPointer::class, isCollection = true),
+    ],
+)
 class FilterByElement(nodeProxy: NodeProxy) : NativeFunction(nodeProxy) {
     override fun executeNative() = nativeLib.filterByElement()
 
@@ -28,18 +32,15 @@ class FilterByElement(nodeProxy: NodeProxy) : NativeFunction(nodeProxy) {
                 val noOfElements = (memoryStructure.size / NativeLong.SIZE).toInt()
                 setResult(
                     memoryStructure.at,
-                    memoryStructure.memory.getLongArray(0, noOfElements).map { IfcPointer(it) })
-
-            } catch (_ : IndexOutOfBoundsException) {
+                    memoryStructure.memory.getLongArray(0, noOfElements).map { IfcPointer(it) },
+                )
+            } catch (_: IndexOutOfBoundsException) {
                 throw IllegalArgumentException("provided array was not of type Pointer[]")
             }
         }
-        memoryQueue.clear() // technically this should automatically happen.
+        memoryQueue.clear()
     }
 
-    /**
-     * can happen if the returned pointer is null
-     */
     override fun handlePointerOutput(at: Int, pointer: Pointer?) {
         setResult(at, emptyList<IfcPointer>())
     }

@@ -65,24 +65,18 @@ fun findFunctionPortDefinitions(`class`: Class<*>): FunctionPortDefinitions {
     return FunctionPortDefinitions(inputs, outputs)
 }
 
+private fun Field.portDisplayName(explicitName: String): String =
+    explicitName.takeIf { it.isNotBlank() }
+        ?: name.replaceFirstChar { char -> char.titlecase() }
+
 private fun Field.toInputPortInfo(): FunctionPortInfo {
     val annotation = getAnnotation(FunctionInput::class.java)
-    val displayName = when {
-        annotation.name.isNotBlank() -> annotation.name
-        Collection::class.java.isAssignableFrom(type) -> annotation.collectionType.simpleName!!
-        else -> type.simpleName
-    }
-    return FunctionPortInfo(annotation.position, displayName)
+    return FunctionPortInfo(annotation.position, portDisplayName(annotation.name))
 }
 
 private fun Field.toOutputPortInfo(): FunctionPortInfo {
     val annotation = getAnnotation(FunctionOutput::class.java)
-    val displayName = when {
-        annotation.name.isNotBlank() -> annotation.name
-        Collection::class.java.isAssignableFrom(type) -> annotation.collectionType.simpleName!!
-        else -> type.simpleName
-    }
-    return FunctionPortInfo(annotation.position, displayName)
+    return FunctionPortInfo(annotation.position, portDisplayName(annotation.name))
 }
 
 private fun FunctionPort.toPortInfo(): FunctionPortInfo {

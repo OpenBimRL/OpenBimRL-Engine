@@ -15,13 +15,13 @@ import javax.vecmath.Vector3d
     description = "Creates a straight line from a point and a direction vector.",
 )
 class CreateStraight(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
-    @FunctionInput(0, name = "Point")
+    @FunctionInput(0)
     lateinit var point: Point3d
 
-    @FunctionInput(1, name = "Direction")
+    @FunctionInput(1)
     lateinit var direction: Vector3d
 
-    @FunctionOutput(0, name = "Straight")
+    @FunctionOutput(0)
     var straight: Straight? = null
 
     override fun execute() {
@@ -34,7 +34,7 @@ class CreateStraight(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
     description = "Creates a plane from a point on the plane and two non-parallel in-plane axis vectors.",
 )
 class CreatePlane(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
-    @FunctionInput(0, name = "Point")
+    @FunctionInput(0)
     lateinit var point: Point3d
 
     @FunctionInput(1, name = "Axis U")
@@ -43,7 +43,7 @@ class CreatePlane(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
     @FunctionInput(2, name = "Axis V")
     lateinit var axisV: Vector3d
 
-    @FunctionOutput(0, name = "Plane")
+    @FunctionOutput(0)
     var plane: Plane? = null
 
     override fun execute() {

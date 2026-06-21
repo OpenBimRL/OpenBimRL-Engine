@@ -3,44 +3,43 @@ package de.rub.bi.inf.openbimrl.functions.ifc
 import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction
+import de.rub.bi.inf.openbimrl.functions.annotations.FunctionInput
+import de.rub.bi.inf.openbimrl.functions.annotations.FunctionOutput
 import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction
-import java.util.stream.Collectors
 
-/**
- * Filters a list of IFC entities by their quantity value. Returns all entities that contain the quantity information.
- *
- * @author Marcel Stepien (reworked by Florian Becker)
- */
-@OpenBIMRLFunction
+@OpenBIMRLFunction(
+    description = "Filters a list of IFC entities by their quantity value. Returns all entities that contain the quantity information.",
+)
 class FilterByQuantity(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
-    override fun execute() {
-        val ifcPointer = getInputAsCollection(0)
-        val quantitySetName = getInput<String>(1)
-        val quantityName = getInput<String>(2)
-        val quantityValue = let {
-            val temp = getInput<Any>(3)
-            if (temp is Double) return@let listOf(temp)
-            if (temp is String)
-            // works even if there is no ';'
-                return@let temp.split(';').map(String::toDouble)
 
-            return@let listOf(temp.toString().toDouble())
+    @FunctionInput(0, name = "IfcElement List", collectionType = IfcPointer::class)
+    lateinit var ifcElements: Collection<IfcPointer>
+
+    @FunctionInput(1)
+    lateinit var quantitySetName: String
+
+    @FunctionInput(2)
+    lateinit var quantityName: String
+
+    @FunctionInput(3)
+    lateinit var value: Any
+
+    @FunctionOutput(0, name = "IfcElement List", collectionType = IfcPointer::class)
+    var result: List<IfcPointer>? = null
+
+    override fun execute() {
+        val quantityValues = when (val input = value) {
+            is Double -> listOf(input)
+            is String -> input.split(';').map(String::toDouble)
+            else -> listOf(input.toString().toDouble())
         }
 
+        result = ifcElements.filter { element ->
+            if (!element.quantities.containsKey(quantitySetName)) return@filter false
+            if (!element.quantities[quantitySetName]!!.containsKey(quantityName)) return@filter false
 
-        val result = ifcPointer.filterIsInstance<IfcPointer>().parallelStream().filter {
-            if (!it.quantities.containsKey(quantitySetName)) return@filter false
-
-            // !! is ok due to prev check
-            if (!it.quantities[quantitySetName]!!.containsKey(quantityName)) return@filter false
-
-            // !! is ok due to prev check
-            val itQuantityValue = it.quantities[quantitySetName]!![quantityName]!!
-
-            return@filter (itQuantityValue in quantityValue)
-        }.collect(Collectors.toList())
-
-        setResult(0, result)
+            val elementQuantityValue = element.quantities[quantitySetName]!![quantityName]!!
+            elementQuantityValue in quantityValues
+        }
     }
-
 }

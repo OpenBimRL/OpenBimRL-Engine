@@ -2,35 +2,34 @@ package de.rub.bi.inf.openbimrl.functions.ifc
 
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction
+import de.rub.bi.inf.openbimrl.functions.annotations.FunctionInput
+import de.rub.bi.inf.openbimrl.functions.annotations.FunctionOutput
 import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction
 import javax.media.j3d.BoundingBox
 import javax.vecmath.Point3d
 
-/**
- * Calculates the height given a list of entities.
- *
- * @author Marcel Stepien
- */
-@OpenBIMRLFunction
-class GetHeight(nodeProxy: NodeProxy?) : AbstractFunction(nodeProxy!!) {
+@OpenBIMRLFunction(description = "Calculates the height given a list of entities.")
+class GetHeight(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
+
+    @FunctionInput(0, name = "IfcElement_List", collectionType = Any::class)
+    lateinit var elements: Collection<Any>
+
+    @FunctionOutput(0)
+    var minHeight: Any? = null
+
+    @FunctionOutput(1)
+    var maxHeight: Any? = null
+
     override fun execute() {
-        val input0 = getInputAsCollection(0)
+        val lowerHeights = ArrayList<Double>()
+        val upperHeights = ArrayList<Double>()
 
-        val resultValues0 = ArrayList<Double>()
-        val resultValues1 = ArrayList<Double>()
-
-        input0.filterIsInstance<BoundingBox>().forEach { element ->
-            resultValues0.add(Point3d().apply { element.getLower(this) }.z)
-            resultValues1.add(Point3d().apply { element.getUpper(this) }.z)
+        elements.filterIsInstance<BoundingBox>().forEach { element ->
+            lowerHeights.add(Point3d().apply { element.getLower(this) }.z)
+            upperHeights.add(Point3d().apply { element.getUpper(this) }.z)
         }
 
-        // 2nd comparison not needed due that they always get added by the two of them
-        if (resultValues0.size == 1 /* && resultValues1.size == 1 */) {
-            setResult(0, resultValues0[0])
-            setResult(1, resultValues1[0])
-        } else {
-            setResult(0, resultValues0)
-            setResult(1, resultValues1)
-        }
+        minHeight = if (lowerHeights.size == 1) lowerHeights[0] else lowerHeights
+        maxHeight = if (upperHeights.size == 1) upperHeights[0] else upperHeights
     }
 }

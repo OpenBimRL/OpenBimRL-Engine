@@ -3,42 +3,44 @@ package de.rub.bi.inf.openbimrl.functions.ifc
 import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction
+import de.rub.bi.inf.openbimrl.functions.annotations.FunctionInput
+import de.rub.bi.inf.openbimrl.functions.annotations.FunctionOutput
 import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction
-import java.util.stream.Collectors
 
-/**
- * Filters a list of IFC entities by their property definition. Returns all entities that contain the property information.
- *
- * @author Marcel Stepien (reworked by Florian Becker)
- */
-@OpenBIMRLFunction
+@OpenBIMRLFunction(
+    description = "Filters a list of IFC entities by their property definition. Returns all entities that contain the property information.",
+)
 class FilterByProperty(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
+
+    @FunctionInput(0, name = "IfcElement List", collectionType = IfcPointer::class)
+    lateinit var ifcElements: Collection<IfcPointer>
+
+    @FunctionInput(1)
+    lateinit var propertySetName: String
+
+    @FunctionInput(2)
+    lateinit var propertyName: String
+
+    @FunctionInput(3, nullable = true)
+    var value: String? = null
+
+    @FunctionOutput(0, name = "IfcElement List", collectionType = IfcPointer::class)
+    var result: List<IfcPointer>? = null
+
     override fun execute() {
-        val ifcPointer = getInputAsCollection(0)
-        val propertySetName = getInput<String>(1)
-        val propertyName = getInput<String>(2)
-        val propertyValue = getInput<String?>(3)
+        result = ifcElements.filter { element ->
+            if (value == null) return@filter true
+            if (!element.properties.containsKey(propertySetName)) return@filter false
+            if (!element.properties[propertySetName]!!.containsKey(propertyName)) return@filter false
 
-        val result = ifcPointer.filterIsInstance<IfcPointer>().parallelStream().filter {
-            if (propertyValue == null) return@filter true
-
-            if (!it.properties.containsKey(propertySetName)) return@filter false
-
-            // !! is ok due to prev check
-            if (!it.properties[propertySetName]!!.containsKey(propertyName)) return@filter false
-
-            val itPropertyValue = it.properties[propertySetName]!![propertyName]!!
-
-            return@filter compareValues(propertyValue, itPropertyValue)
-        }.collect(Collectors.toList())
-
-        setResult(0, result)
+            val elementPropertyValue = element.properties[propertySetName]!![propertyName]!!
+            compareValues(value!!, elementPropertyValue)
+        }
     }
 
-    private fun compareValues(val1: String, val2: String): Boolean {
-        val collection1 = if (val1.contains(';')) val1.split(';') else listOf(val1)
-        val collection2 = if (val2.contains(';')) val2.split(';') else listOf(val2)
-
+    private fun compareValues(first: String, second: String): Boolean {
+        val collection1 = if (first.contains(';')) first.split(';') else listOf(first)
+        val collection2 = if (second.contains(';')) second.split(';') else listOf(second)
         return collection1.any { it in collection2 }
     }
 }

@@ -10,10 +10,10 @@ import de.rub.bi.inf.openbimrl.utils.list.singleOrList
 @OpenBIMRLFunction(description = "Creates a map of elements, if a key and value list is provided.")
 class CreateMapByPairs(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
 
-    @FunctionInput(0, name = "Keys", collectionType = Any::class)
+    @FunctionInput(0, collectionType = Any::class)
     lateinit var keys: Collection<Any>
 
-    @FunctionInput(1, name = "Values", collectionType = Any::class)
+    @FunctionInput(1, collectionType = Any::class)
     lateinit var values: Collection<Any>
 
     @FunctionOutput(0, name = "Keys")
@@ -22,7 +22,7 @@ class CreateMapByPairs(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
     @FunctionOutput(1, name = "Values")
     var resultValues: Collection<Any>? = null
 
-    @FunctionOutput(2, name = "Map")
+    @FunctionOutput(2)
     var map: LinkedHashMap<Any, List<Any>>? = null
 
     override fun execute() {
@@ -108,7 +108,7 @@ class MapValues(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
     @FunctionInput(0, name = "Map", nullable = true)
     var sourceMap: Map<*, *>? = null
 
-    @FunctionOutput(0, name = "Values")
+    @FunctionOutput(0)
     var values: Collection<Any?>? = null
 
     override fun execute() {
@@ -122,10 +122,10 @@ class GetMapValueAtKey(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
     @FunctionInput(0, name = "Map", nullable = true)
     var sourceMap: Map<*, *>? = null
 
-    @FunctionInput(1, name = "Key", nullable = true)
+    @FunctionInput(1, nullable = true)
     var key: Any? = null
 
-    @FunctionOutput(0, name = "Value")
+    @FunctionOutput(0)
     var value: Any? = null
 
     override fun execute() {
@@ -140,10 +140,10 @@ class GetMapValueByKeyList(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
     @FunctionInput(0, name = "Map", nullable = true)
     var sourceMap: Map<*, *>? = null
 
-    @FunctionInput(1, name = "Keys", collectionType = Any::class)
+    @FunctionInput(1, collectionType = Any::class)
     lateinit var keys: Collection<Any>
 
-    @FunctionOutput(0, name = "Values")
+    @FunctionOutput(0)
     var values: Any? = null
 
     override fun execute() {
@@ -162,7 +162,7 @@ class MapFilterByCount(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
     @FunctionInput(1, name = "Counting Limit", nullable = true)
     var minimumCountInput: String? = null
 
-    @FunctionOutput(0, name = "Filter")
+    @FunctionOutput(0)
     var filter: ArrayList<Boolean>? = null
 
     override fun execute() {

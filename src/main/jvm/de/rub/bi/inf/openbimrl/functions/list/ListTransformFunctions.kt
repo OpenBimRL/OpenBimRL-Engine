@@ -10,14 +10,14 @@ import de.rub.bi.inf.openbimrl.utils.list.parseIntInput
 @OpenBIMRLFunction(description = "Parses a delimited string into a list.")
 class AsList(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
 
-    @FunctionInput(0, name = "Values")
-    lateinit var text: Any
+    @FunctionInput(0)
+    lateinit var values: Any
 
-    @FunctionOutput(0, name = "List")
+    @FunctionOutput(0)
     var list: Any? = null
 
     override fun execute() {
-        val dim2Results = text.toString().split(";").map { dim1Str ->
+        val dim2Results = values.toString().split(";").map { dim1Str ->
             ArrayList<Any>(dim1Str.split(","))
         }
 
@@ -46,15 +46,15 @@ class RepeatAsList(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
 @OpenBIMRLFunction(description = "Flattens the hierarchy of an Collection by one level.")
 class FlattenCollection(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
 
-    @FunctionInput(0, name = "List", collectionType = Any::class)
-    lateinit var nestedList: Collection<Any>
+    @FunctionInput(0, collectionType = Any::class)
+    lateinit var list: Collection<Any>
 
     @FunctionOutput(0, name = "Flattened List")
     var flattenedList: Collection<Any>? = null
 
     override fun execute() {
         val flattened = ArrayList<Any>()
-        nestedList.forEach { item ->
+        list.forEach { item ->
             if (item is Collection<*>) {
                 item.forEach { flattened.add(it as Any) }
             } else {

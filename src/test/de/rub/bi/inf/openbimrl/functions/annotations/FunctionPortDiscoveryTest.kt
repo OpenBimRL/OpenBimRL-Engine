@@ -4,7 +4,6 @@ import de.rub.bi.inf.openbimrl.functions.geometry.CalculateDijkstraSearch
 import de.rub.bi.inf.openbimrl.functions.math.CreatePlane
 import de.rub.bi.inf.openbimrl.functions.math.DistancePointPoint
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class FunctionPortDiscoveryTest {
@@ -26,9 +25,12 @@ class FunctionPortDiscoveryTest {
     }
 
     @Test
-    fun `field based discovery keeps collection type names`() {
+    fun `field based discovery uses capitalized field names when port name is omitted`() {
         val ports = findFunctionPortDefinitions(CalculateDijkstraSearch::class.java)
 
-        assertTrue(ports.inputs.any { it.displayName == "IfcPointer" })
+        assertEquals(
+            listOf("Start", "BuildingBoundingBox", "Obstacles", "PassageWays", "Layout", "ObstaclePadding", "MaxDistance"),
+            ports.inputs.map { it.displayName },
+        )
     }
 }

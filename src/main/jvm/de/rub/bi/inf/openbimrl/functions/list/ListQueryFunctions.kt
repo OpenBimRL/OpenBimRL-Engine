@@ -12,24 +12,24 @@ import de.rub.bi.inf.openbimrl.utils.list.singleOrList
 @OpenBIMRLFunction(description = "Retrieves an item of a specific index contained in a list of elements.")
 class GetElementAt(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
 
-    @FunctionInput(0, name = "List", collectionType = Any::class)
+    @FunctionInput(0, collectionType = Any::class)
     lateinit var list: Collection<Any>
 
-    @FunctionInput(1, name = "Index", collectionType = Any::class)
-    lateinit var indices: Collection<Any>
+    @FunctionInput(1, collectionType = Any::class)
+    lateinit var index: Collection<Any>
 
-    @FunctionOutput(0, name = "Item")
+    @FunctionOutput(0)
     var item: Any? = null
 
     override fun execute() {
         val listValues = list.toList()
-        val elementsAt = indices.mapIndexed { index, positionInput ->
-            val position = parseIntInput(positionInput)
-            if (indices.size == 1) {
-                listValues[position]
+        val elementsAt = index.mapIndexed { position, positionInput ->
+            val parsedIndex = parseIntInput(positionInput)
+            if (index.size == 1) {
+                listValues[parsedIndex]
             } else {
-                val values = listValues[index]
-                if (values is List<*>) values[position] else values
+                val values = listValues[position]
+                if (values is List<*>) values[parsedIndex] else values
             }
         }
 
@@ -40,18 +40,18 @@ class GetElementAt(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
 @OpenBIMRLFunction(description = "Retrieves an item index of a specific value contained in a list of elements.")
 class GetItemIndexInList(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
 
-    @FunctionInput(0, name = "List", collectionType = Any::class)
+    @FunctionInput(0, collectionType = Any::class)
     lateinit var list: Collection<Any>
 
-    @FunctionInput(1, name = "Item", collectionType = Any::class)
-    lateinit var items: Collection<Any>
+    @FunctionInput(1, collectionType = Any::class)
+    lateinit var item: Collection<Any>
 
-    @FunctionOutput(0, name = "Index")
+    @FunctionOutput(0)
     var index: Any? = null
 
     override fun execute() {
         val listValues = ArrayList(list)
-        val indices = items.map { findIndex(listValues, it) }
+        val indices = item.map { findIndex(listValues, it) }
         index = singleOrList(indices)
     }
 }
@@ -59,17 +59,17 @@ class GetItemIndexInList(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
 @OpenBIMRLFunction(description = "Checks if a list of elements are included in another set individually.")
 class ElementIncludedInList(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
 
-    @FunctionInput(0, name = "Elements", collectionType = Any::class)
-    lateinit var candidates: Collection<Any>
+    @FunctionInput(0, collectionType = Any::class)
+    lateinit var elements: Collection<Any>
 
-    @FunctionInput(1, name = "InclusionList", collectionType = Any::class)
-    lateinit var haystack: Collection<Any>
+    @FunctionInput(1, collectionType = Any::class)
+    lateinit var inclusionList: Collection<Any>
 
     @FunctionOutput(0, name = "ListOfChecks")
     var included: List<Boolean>? = null
 
     override fun execute() {
-        included = candidates.map { haystack.contains(it) }
+        included = elements.map { inclusionList.contains(it) }
     }
 }
 
@@ -79,16 +79,16 @@ class ElementIncludedInList(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) 
 )
 class AllElementsIncludedInList(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
 
-    @FunctionInput(0, name = "Elements", collectionType = Any::class)
-    lateinit var candidates: Collection<Any>
+    @FunctionInput(0, collectionType = Any::class)
+    lateinit var elements: Collection<Any>
 
-    @FunctionInput(1, name = "InclusionList", collectionType = Any::class)
-    lateinit var haystack: Collection<Any>
+    @FunctionInput(1, collectionType = Any::class)
+    lateinit var inclusionList: Collection<Any>
 
-    @FunctionOutput(0, name = "Check")
-    var allIncluded: Boolean? = null
+    @FunctionOutput(0)
+    var check: Boolean? = null
 
     override fun execute() {
-        allIncluded = haystack.containsAll(candidates)
+        check = inclusionList.containsAll(elements)
     }
 }
