@@ -7,11 +7,11 @@ import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction
 @OpenBIMRLFunction(
     description = "Performes an addition operator given two number values.",
     inputs = [
-        FunctionPort(0, "number(s)", Double::class),
-        FunctionPort(1, "number(s)", Double::class),
+        FunctionPort(0, "Number(s)", Double::class),
+        FunctionPort(1, "Number(s)", Double::class),
     ],
     outputs = [
-        FunctionPort(0, "result", Double::class),
+        FunctionPort(0, "Result", Double::class),
     ],
 )
 class Addition(nodeProxy: NodeProxy) : PairwiseNumericFunction(nodeProxy) {
@@ -21,11 +21,11 @@ class Addition(nodeProxy: NodeProxy) : PairwiseNumericFunction(nodeProxy) {
 @OpenBIMRLFunction(
     description = "Performes an subtraction operator given two number values.",
     inputs = [
-        FunctionPort(0, "number(s)", Double::class),
-        FunctionPort(1, "number(s)", Double::class),
+        FunctionPort(0, "Number(s)", Double::class),
+        FunctionPort(1, "Number(s)", Double::class),
     ],
     outputs = [
-        FunctionPort(0, "result", Double::class),
+        FunctionPort(0, "Result", Double::class),
     ],
 )
 class Subtraction(nodeProxy: NodeProxy) : PairwiseNumericFunction(nodeProxy) {
@@ -36,11 +36,11 @@ class Subtraction(nodeProxy: NodeProxy) : PairwiseNumericFunction(nodeProxy) {
     name = "multiply",
     description = "Performes an multiplication operator given two number values.",
     inputs = [
-        FunctionPort(0, "number(s)", Double::class),
-        FunctionPort(1, "number(s)", Double::class),
+        FunctionPort(0, "Number(s)", Double::class),
+        FunctionPort(1, "Number(s)", Double::class),
     ],
     outputs = [
-        FunctionPort(0, "result", Double::class),
+        FunctionPort(0, "Result", Double::class),
     ],
 )
 class Multiplication(nodeProxy: NodeProxy) : PairwiseNumericFunction(nodeProxy) {

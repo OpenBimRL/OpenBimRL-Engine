@@ -7,12 +7,12 @@ import org.junit.jupiter.api.Test
 class MaximumTest {
 
     @Test
-    fun `maximum exposes double collection input and output ports`() {
+    fun `maximum exposes semantic input and output ports`() {
         val ports = findFunctionPortDefinitions(Maximum::class.java)
 
         assertEquals(1, ports.inputs.size)
         assertEquals(1, ports.outputs.size)
-        assertEquals("Double", ports.inputs.single().displayName)
-        assertEquals("Double", ports.outputs.single().displayName)
+        assertEquals("Values", ports.inputs.single().displayName)
+        assertEquals("Maxima", ports.outputs.single().displayName)
     }
 }

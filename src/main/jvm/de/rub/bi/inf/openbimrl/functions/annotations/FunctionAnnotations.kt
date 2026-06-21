@@ -16,11 +16,16 @@ annotation class OpenBIMRLFunction(
 annotation class FunctionInput(
     val position: Int,
     val collectionType: KClass<*> = Any::class,
-    val nullable: Boolean = true
+    val nullable: Boolean = true,
+    val name: String = "",
 )
 
 @Target(AnnotationTarget.FIELD)
-annotation class FunctionOutput(val position: Int, val collectionType: KClass<*> = Any::class)
+annotation class FunctionOutput(
+    val position: Int,
+    val collectionType: KClass<*> = Any::class,
+    val name: String = "",
+)
 
 @Target(AnnotationTarget.CLASS)
 annotation class FunctionPort(

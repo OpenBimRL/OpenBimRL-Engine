@@ -67,20 +67,20 @@ fun findFunctionPortDefinitions(`class`: Class<*>): FunctionPortDefinitions {
 
 private fun Field.toInputPortInfo(): FunctionPortInfo {
     val annotation = getAnnotation(FunctionInput::class.java)
-    val displayName = if (Collection::class.java.isAssignableFrom(type)) {
-        annotation.collectionType.simpleName!!
-    } else {
-        type.simpleName
+    val displayName = when {
+        annotation.name.isNotBlank() -> annotation.name
+        Collection::class.java.isAssignableFrom(type) -> annotation.collectionType.simpleName!!
+        else -> type.simpleName
     }
     return FunctionPortInfo(annotation.position, displayName)
 }
 
 private fun Field.toOutputPortInfo(): FunctionPortInfo {
     val annotation = getAnnotation(FunctionOutput::class.java)
-    val displayName = if (Collection::class.java.isAssignableFrom(type)) {
-        annotation.collectionType.simpleName!!
-    } else {
-        type.simpleName
+    val displayName = when {
+        annotation.name.isNotBlank() -> annotation.name
+        Collection::class.java.isAssignableFrom(type) -> annotation.collectionType.simpleName!!
+        else -> type.simpleName
     }
     return FunctionPortInfo(annotation.position, displayName)
 }

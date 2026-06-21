@@ -13,7 +13,7 @@ class FunctionPortDiscoveryTest {
     fun `uses field annotations when present`() {
         val ports = findFunctionPortDefinitions(CreatePlane::class.java)
 
-        assertEquals(listOf("Point3d", "Vector3d", "Vector3d"), ports.inputs.map { it.displayName })
+        assertEquals(listOf("Point", "Axis U", "Axis V"), ports.inputs.map { it.displayName })
         assertEquals(listOf("Plane"), ports.outputs.map { it.displayName })
     }
 

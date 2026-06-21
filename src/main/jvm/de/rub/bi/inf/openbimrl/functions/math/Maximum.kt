@@ -9,10 +9,10 @@ import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction
 @OpenBIMRLFunction(description = "Finds the maximum value in a list of values.")
 class Maximum(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
 
-    @FunctionInput(0, collectionType = Double::class)
+    @FunctionInput(0, name = "Values", collectionType = Double::class)
     lateinit var values: Collection<Double>
 
-    @FunctionOutput(0)
+    @FunctionOutput(0, name = "Maxima")
     var maxima: Double? = null
 
     override fun execute() {
