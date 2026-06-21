@@ -89,11 +89,24 @@ class CalculateDijkstraSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodePr
         clearGeometryBuffer()
         fillGeometryBuffer(arrayOf(*passages.toTypedArray(), *obstacles.toTypedArray()))
 
+        val walkable = isWalkable(layout, bounds, obstacles, passages)
+        val movementCost = if (obstaclePaddingDouble == 0.0) {
+            movementCostNative(
+                layout = layout,
+                starts = startHexCoordinates,
+                isWalkable = walkable,
+                obstaclePointers = this.obstacles,
+                passagePointers = passageWays,
+            )
+        } else {
+            movementCost(layout, obstacles, passages)
+        }
+
         val path = dijkstra<HexCoordinates>(
             from = startHexCoordinates,
             neighbors = ::neighbors,
-            isWalkable = isWalkable(layout, bounds, obstacles, passages),
-            distance = movementCost(layout, obstacles, passages)
+            isWalkable = walkable,
+            distance = movementCost
         )
 
         val colorInterpolator = Oklab.interpolator {

@@ -36,8 +36,20 @@ public interface FunctionsLibrary extends Library {
     NativeLong request_ifc_object_json_size(Pointer p);
     void ifc_object_to_json(Pointer buffer);
 
-    NativeLong request_geometry_polygon(IfcPointer ifcPointer);
+    NativeLong request_geometry_polygon(Pointer ifcPointer);
     void copy_geometry_polygon(Pointer buffer);
+
+    void calculate_path_edge_costs(
+            double[] pointsXY,
+            int pointCount,
+            int[] edgePointIndices,
+            int edgeCount,
+            Pointer[] passagePointers,
+            int passageCount,
+            Pointer[] obstaclePointers,
+            int obstacleCount,
+            double[] outputCosts
+    );
 
     interface set_output_array extends Callback {
         Pointer invoke(int at, NativeLong size);

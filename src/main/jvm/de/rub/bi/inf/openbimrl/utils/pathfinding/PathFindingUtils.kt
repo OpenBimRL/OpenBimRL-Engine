@@ -2,14 +2,18 @@ package de.rub.bi.inf.openbimrl.utils.pathfinding
 
 import de.rub.bi.inf.extensions.intersects
 import de.rub.bi.inf.extensions.toPoint2D
+import de.rub.bi.inf.nativelib.FunctionsNative
 import de.rub.bi.inf.nativelib.IfcPointer
+import de.rub.bi.inf.openbimrl.utils.math.neighbors
 import io.github.offlinebrain.khexagon.coordinates.HexCoordinates
 import io.github.offlinebrain.khexagon.math.Layout
 import io.github.offlinebrain.khexagon.math.hexToPixel
+import com.sun.jna.Pointer
 import java.awt.Rectangle
 import java.awt.geom.Line2D
 import java.awt.geom.Path2D
 import java.awt.geom.Point2D
+import java.util.ArrayDeque
 import java.util.*
 import java.util.stream.Stream
 
@@ -89,6 +93,99 @@ fun movementCost(
 //        ThreeDTester.removeShape(line)
 
         return@lambda returnValue
+    }
+}
+
+fun movementCostNative(
+    layout: Layout,
+    starts: List<HexCoordinates>,
+    isWalkable: (HexCoordinates) -> Boolean,
+    obstaclePointers: Collection<IfcPointer>,
+    passagePointers: Collection<IfcPointer>,
+): (HexCoordinates, HexCoordinates) -> Double {
+    val nativeLib = FunctionsNative.getInstance()
+
+    val queue = ArrayDeque<HexCoordinates>()
+    val reachable = LinkedHashSet<HexCoordinates>()
+    starts.forEach {
+        if (isWalkable(it)) {
+            queue.add(it)
+            reachable.add(it)
+        }
+    }
+
+    while (queue.isNotEmpty()) {
+        val current = queue.removeFirst()
+        neighbors(current).forEach { next ->
+            if (reachable.contains(next)) return@forEach
+            if (!isWalkable(next)) return@forEach
+            reachable.add(next)
+            queue.add(next)
+        }
+    }
+
+    val nodes = reachable.toList()
+    val nodeIndex = nodes.withIndex().associate { it.value to it.index }
+    val pointsXY = DoubleArray(nodes.size * 2)
+    nodes.forEachIndexed { index, node ->
+        val p = hexToPixel(layout, node)
+        pointsXY[index * 2] = p.x.toDouble()
+        pointsXY[index * 2 + 1] = p.y.toDouble()
+    }
+
+    val packedEdges = LinkedHashSet<Long>()
+    nodes.forEach { node ->
+        val a = nodeIndex[node] ?: return@forEach
+        neighbors(node).forEach { neighbor ->
+            val b = nodeIndex[neighbor] ?: return@forEach
+            val min = minOf(a, b).toLong()
+            val max = maxOf(a, b).toLong()
+            packedEdges.add((min shl 32) or max)
+        }
+    }
+
+    val edgePointIndices = IntArray(packedEdges.size * 2)
+    val edges = ArrayList<Pair<Int, Int>>(packedEdges.size)
+    packedEdges.forEachIndexed { edgeIndex, packed ->
+        val a = (packed ushr 32).toInt()
+        val b = (packed and 0xffffffffL).toInt()
+        edges.add(a to b)
+        edgePointIndices[edgeIndex * 2] = a
+        edgePointIndices[edgeIndex * 2 + 1] = b
+    }
+
+    val outputCosts = DoubleArray(edges.size)
+    val passageArray = passagePointers.map { it as Pointer }.toTypedArray()
+    val obstacleArray = obstaclePointers.map { it as Pointer }.toTypedArray()
+    if (edges.isNotEmpty()) {
+        nativeLib.calculate_path_edge_costs(
+            pointsXY,
+            nodes.size,
+            edgePointIndices,
+            edges.size,
+            passageArray,
+            passageArray.size,
+            obstacleArray,
+            obstacleArray.size,
+            outputCosts
+        )
+    }
+
+    val costs = HashMap<Pair<HexCoordinates, HexCoordinates>, Double>(edges.size * 2)
+    edges.forEachIndexed { edgeIdx, (aIdx, bIdx) ->
+        val a = nodes[aIdx]
+        val b = nodes[bIdx]
+        val value = outputCosts[edgeIdx]
+        costs[a to b] = value
+        costs[b to a] = value
+    }
+
+    return { a, b ->
+        if (a == b) 0.0 else costs[a to b] ?: run {
+            val pa = hexToPixel(layout, a).toPoint2D()
+            val pb = hexToPixel(layout, b).toPoint2D()
+            pa.distance(pb)
+        }
     }
 }
 
