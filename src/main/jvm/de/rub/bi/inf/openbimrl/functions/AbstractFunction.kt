@@ -97,11 +97,36 @@ abstract class AbstractFunction(@JvmField protected var nodeProxy: NodeProxy) {
     }
 
     protected fun <T> getInputAsTypedCollection(pos: Int, type: Class<T>): Collection<T> {
-        @Suppress("UNCHECKED_CAST") return getInputAsCollection(pos).filter { type.isInstance(it) } as List<T>
+        val input = getInputAsCollection(pos)
+        if (isNumericCollectionType(type)) {
+            @Suppress("UNCHECKED_CAST")
+            return input.map { coerceToDouble(it) } as Collection<T>
+        }
+        @Suppress("UNCHECKED_CAST")
+        return input.filter { type.isInstance(it) } as List<T>
     }
 
     protected inline fun <reified T> getInputAsTypedCollection(pos: Int): Collection<T> {
-        return getInputAsCollection(pos).filterIsInstance<T>()
+        return getInputAsTypedCollection(pos, T::class.java)
+    }
+
+    private fun isNumericCollectionType(type: Class<*>): Boolean =
+        type == Double::class.java || type == java.lang.Double.TYPE
+
+    private fun coerceToDouble(value: Any?): Double {
+        if (value == null) {
+            throw InvalidFunctionInputException("Cannot convert null to Double")
+        }
+        if (value is Collection<*>) {
+            throw InvalidFunctionInputException("Expected numeric value but got nested collection")
+        }
+        if (value is Double) return value
+        if (value is Number) return value.toDouble()
+        return try {
+            value.toString().toDouble()
+        } catch (e: NumberFormatException) {
+            throw InvalidFunctionInputException("Cannot convert input of type ${value.javaClass.name} to Double", e)
+        }
     }
 
     protected fun setResult(pos: Int, result: Any?) {

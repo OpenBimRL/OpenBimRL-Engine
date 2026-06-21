@@ -4,14 +4,32 @@ CXX ?= clang++
 OPENBIMRL_ENABLE_ROCM_OFFLOAD ?= OFF
 OPENBIMRL_ROCM_OFFLOAD_ARCH ?=
 
+CMAKE_DIR := build/cmake
+CMAKE_SOURCE := src/main/cpp
+CMAKE_LISTS := $(CMAKE_SOURCE)/CMakeLists.txt
+CMAKE_CACHE := $(CMAKE_DIR)/CMakeCache.txt
+CMAKE_CONFIG_STAMP := $(CMAKE_DIR)/.openbimrl_cmake_config
+NATIVE_LIB := $(CMAKE_DIR)/libOpenBIMRL_Native.so
+RESOURCE_LIB := src/main/resources/lib.so
+
+.PHONY: install build clean _prepare_cmake
+
 install: build
-	mv build/cmake/libOpenBIMRL_Native.so src/main/resources/lib.so
+	@mkdir -p src/main/resources
+	@if [ ! -f "$(RESOURCE_LIB)" ] || ! cmp -s "$(NATIVE_LIB)" "$(RESOURCE_LIB)"; then \
+		echo "Updating $(RESOURCE_LIB) ..."; \
+		cp "$(NATIVE_LIB)" "$(RESOURCE_LIB)"; \
+	else \
+		echo "Native library unchanged, skipping resource copy."; \
+	fi
 
 build: _prepare_cmake
-	export CXX="$(CXX)"; export CC="$(CC)"; cmake --build build/cmake/ -j $(shell nproc --all) -t OpenBIMRL_Native --config Release
+	@export CXX="$(CXX)"; export CC="$(CC)"; \
+	cmake --build "$(CMAKE_DIR)" -j $$(nproc --all) -t OpenBIMRL_Native --config Release
 
 _prepare_cmake:
-	@ROCM_ARCH="$(OPENBIMRL_ROCM_OFFLOAD_ARCH)"; \
+	@mkdir -p "$(CMAKE_DIR)"; \
+	ROCM_ARCH="$(OPENBIMRL_ROCM_OFFLOAD_ARCH)"; \
 	C_COMPILER="$(CC)"; \
 	CXX_COMPILER="$(CXX)"; \
 	if [ "$(OPENBIMRL_ENABLE_ROCM_OFFLOAD)" = "ON" ] && [ -z "$$ROCM_ARCH" ]; then \
@@ -35,12 +53,19 @@ _prepare_cmake:
 			echo "WARNING: ROCm offloading is ON but /opt/rocm/llvm/bin/clang(++) was not found. Using CC/CXX from environment."; \
 		fi; \
 	fi; \
-	rm -f build/cmake/CMakeCache.txt; \
-	cmake -B build/cmake/ -S src/main/cpp \
-		-DCMAKE_C_COMPILER=$$C_COMPILER \
-		-DCMAKE_CXX_COMPILER=$$CXX_COMPILER \
-		-DOPENBIMRL_ENABLE_ROCM_OFFLOAD=$(OPENBIMRL_ENABLE_ROCM_OFFLOAD) \
-		-DOPENBIMRL_ROCM_OFFLOAD_ARCH=$$ROCM_ARCH
+	CMAKE_LISTS_HASH=$$(sha256sum "$(CMAKE_LISTS)" | awk '{print $$1}'); \
+	CONFIG_KEY="$(OPENBIMRL_ENABLE_ROCM_OFFLOAD)|$$ROCM_ARCH|$$C_COMPILER|$$CXX_COMPILER|$$CMAKE_LISTS_HASH"; \
+	if [ -f "$(CMAKE_CACHE)" ] && [ -f "$(CMAKE_CONFIG_STAMP)" ] && [ "$$(cat "$(CMAKE_CONFIG_STAMP)")" = "$$CONFIG_KEY" ]; then \
+		echo "Using existing CMake cache in $(CMAKE_DIR)"; \
+	else \
+		echo "Configuring CMake in $(CMAKE_DIR) ..."; \
+		cmake -B "$(CMAKE_DIR)" -S "$(CMAKE_SOURCE)" \
+			-DCMAKE_C_COMPILER=$$C_COMPILER \
+			-DCMAKE_CXX_COMPILER=$$CXX_COMPILER \
+			-DOPENBIMRL_ENABLE_ROCM_OFFLOAD=$(OPENBIMRL_ENABLE_ROCM_OFFLOAD) \
+			-DOPENBIMRL_ROCM_OFFLOAD_ARCH=$$ROCM_ARCH; \
+		printf '%s' "$$CONFIG_KEY" > "$(CMAKE_CONFIG_STAMP)"; \
+	fi
 
 clean:
 	rm -rf build/cmake
