@@ -24,7 +24,11 @@ public class PrecalculationContext {
         nodes = new ArrayList<NodeType>();
         edges = new ArrayList<EdgeType>();
 
-        for (Object entry : precalculations.getNodeOrEdge()) {
+        if (precalculations == null) {
+            return;
+        }
+
+        for (Object entry : precalculations.getNodeOrGroupOrEdge()) {
 
             if (entry instanceof NodeType) {
                 nodes.add((NodeType) entry);

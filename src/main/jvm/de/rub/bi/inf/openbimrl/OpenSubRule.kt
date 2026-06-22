@@ -41,7 +41,7 @@ class OpenSubRule(
                 }
 
                 // implied else
-                interpret(modelSubCheck.getRules()) -> {
+                interpretSubCheckRules(modelSubCheck.getRuleOrRules()) -> {
                     super.checkedStatus = CheckedStatus.SUCCESS
                     super.checkingProtocol.add("This rule executed successfully.")
                 }
@@ -79,6 +79,11 @@ class OpenSubRule(
         val rules = subCheck.getApplicability().getRules()
 
         return interpretRules(rules)
+    }
+
+    private fun interpretSubCheckRules(ruleOrRules: List<Any>): Boolean {
+        if (ruleOrRules.isEmpty()) return false
+        return ruleOrRules.all { interpret(it) }
     }
 
     private fun interpret(rulesOrFilterOrRule: Any): Boolean {

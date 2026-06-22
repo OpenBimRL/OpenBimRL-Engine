@@ -1,6 +1,6 @@
 # OpenBimRL Engine
 
-> **Current Version:** 2022.11.1 <br>
+> **Current Version:** 2023.07.1 <br>
 > **Publication Date:** 01.11.2022 <br>
 > **Updated Date:** 01.11.2022 <br>
 > **Original Autors:** Marcel Stepien, André Vonthron <br>

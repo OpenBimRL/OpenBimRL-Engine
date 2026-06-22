@@ -49,11 +49,11 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: 'RUB-Informatik-im-Bauwesen/OpenBimRL'
-        ref: '9699b39bce25546b8dc8c235c90c3f7525570d6c'
+        ref: '83bd65f'
         path: deps
 
     - name: install API dependency
-      run: cd deps && mvn install && cd .. && rm -rf deps
+      run: cd deps && mvn -Dproject.build.sourceEncoding=ISO-8859-1 compiler:compile jar:jar install:install -DgroupId=inf.bi.rub.de -DartifactId=OpenBIMRL-API -Dversion=2023.07.1 -Dpackaging=jar && cd .. && rm -rf deps
 
     - name: change version
       run: mvn versions:set -DnewVersion=$(date +"%Y").$(date +"%m").$(date +"%d") versions:commit

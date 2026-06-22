@@ -110,7 +110,7 @@
         <dependency>
             <groupId>inf.bi.rub.de</groupId>
             <artifactId>OpenBIMRL-API</artifactId>
-            <version>2022.11.1</version>
+            <version>2023.07.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/io.github.offlinebrain/khexagon-jvm -->

@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN bash -c "source /usr/local/sdkman/bin/sdkman-init.sh && sdk install maven"
 
 RUN git clone https://github.com/RUB-Informatik-im-Bauwesen/OpenBimRL.git api
-RUN cd api && git checkout 9699b39 && mvn install
+RUN cd api && git checkout 83bd65f && mvn -Dproject.build.sourceEncoding=ISO-8859-1 compiler:compile jar:jar install:install -DgroupId=inf.bi.rub.de -DartifactId=OpenBIMRL-API -Dversion=2023.07.1 -Dpackaging=jar
 RUN rm -rf api
 
 ENV ROCM_PATH=/opt/rocm

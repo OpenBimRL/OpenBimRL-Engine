@@ -19,7 +19,7 @@ RUN apt update && apt install -yq make cmake git \
 
 WORKDIR /app
 RUN git clone --quiet https://github.com/RUB-Informatik-im-Bauwesen/OpenBimRL.git /build/api
-RUN cd /build/api && git checkout 9699b39 && mvn install --quiet
+RUN cd /build/api && git checkout 83bd65f && mvn -Dproject.build.sourceEncoding=ISO-8859-1 compiler:compile jar:jar install:install -DgroupId=inf.bi.rub.de -DartifactId=OpenBIMRL-API -Dversion=2023.07.1 -Dpackaging=jar --quiet
 
 RUN git clone --quiet https://github.com/RUB-Informatik-im-Bauwesen/Maven-Bounding-Volume-Hierarchy.git /build/bvh
 RUN cd /build/bvh && mvn install --quiet
