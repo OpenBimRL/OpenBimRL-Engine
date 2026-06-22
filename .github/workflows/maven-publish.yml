@@ -53,13 +53,19 @@ jobs:
     - name: install API dependency
       run: cd deps && mvn -Dproject.build.sourceEncoding=ISO-8859-1 compiler:compile jar:jar install:install -DgroupId=inf.bi.rub.de -DartifactId=OpenBIMRL-API -Dversion=2023.07.1 -Dpackaging=jar && cd .. && rm -rf deps
 
+    - name: fetch and install BVH dependency
+      run: |
+        git clone --quiet https://github.com/RUB-Informatik-im-Bauwesen/Maven-Bounding-Volume-Hierarchy.git deps-bvh
+        mvn -f deps-bvh/pom.xml install
+        rm -rf deps-bvh
+
     - name: change version
       run: mvn versions:set -DnewVersion=$(date +"%Y").$(date +"%m").$(date +"%d") versions:commit
 
     - name: Install LLVM and Clang
       uses: KyleMayes/install-llvm-action@v2.0.9
       with:
-        version: "17.0.6"
+        version: "20.1.8" # close to ROCm LLVM (20.0.0)
         env: true # why does this not work???
 
     - name: Build with Maven
