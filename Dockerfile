@@ -13,7 +13,7 @@ RUN apt update && apt install -yq make cmake git \
     xfonts-scalable libocct-data-exchange-dev libocct-draw-dev libocct-foundation-dev libocct-modeling-algorithms-dev \
     libocct-modeling-data-dev libocct-ocaf-dev libocct-visualization-dev \
     # other dependencies:
-    libmpfr-dev libboost-all-dev libhdf5-dev libgmp-dev \
+    libmpfr-dev libboost-all-dev libhdf5-dev libgmp-dev libxml2-dev \
     && ln -sf /opt/rocm/llvm/bin/clang /usr/local/bin/clang \
     && ln -sf /opt/rocm/llvm/bin/clang++ /usr/local/bin/clang++
 
