@@ -17,12 +17,14 @@ public class PrecalculationContext {
 
     private ArrayList<NodeType> nodes = null;
     private ArrayList<EdgeType> edges = null;
+    private ArrayList<GroupType> groups = null;
 
     public PrecalculationContext(PrecalculationsType precalculations) {
         this.precalculations = precalculations;
 
         nodes = new ArrayList<NodeType>();
         edges = new ArrayList<EdgeType>();
+        groups = new ArrayList<GroupType>();
 
         if (precalculations == null) {
             return;
@@ -32,10 +34,11 @@ public class PrecalculationContext {
 
             if (entry instanceof NodeType) {
                 nodes.add((NodeType) entry);
-            }
-
-            if (entry instanceof EdgeType) {
+            } else if (entry instanceof EdgeType) {
                 edges.add((EdgeType) entry);
+            } else if (entry instanceof GroupType) {
+                // Groups are descriptive containers for the creator tool; execution uses flat nodes/edges.
+                groups.add((GroupType) entry);
             }
         }
 
@@ -77,6 +80,10 @@ public class PrecalculationContext {
 
     public ArrayList<NodeType> getGraphNodes() {
         return nodes;
+    }
+
+    public ArrayList<GroupType> getGroups() {
+        return groups;
     }
 
     public List<NodeType> getGraphSortedNodes() {
