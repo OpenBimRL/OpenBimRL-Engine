@@ -21,6 +21,26 @@ ensure_label() {
   gh label create "$name" --description "$description" --color "5319E7" --force >/dev/null 2>&1 || true
 }
 
+find_existing_issue() {
+  local label="$1"
+  gh issue list --label "$label" --state all --limit 1 | awk 'NR==1 { print $1; exit }'
+}
+
+create_issue() {
+  local title="$1"
+  local body_file="$2"
+  local label="$3"
+  local issue_url issue_num
+
+  issue_url="$(gh issue create --title "$title" --body-file "$body_file" --label "rfc" --label "$label")"
+  issue_num="${issue_url##*/}"
+  if [[ ! "$issue_num" =~ ^[0-9]+$ ]]; then
+    echo "Failed to parse issue number from: $issue_url" >&2
+    exit 1
+  fi
+  echo "$issue_num"
+}
+
 rfc_number_from_path() {
   local path="$1"
   local base
@@ -86,13 +106,13 @@ sync_rfc_file() {
   ensure_label "rfc" "RFC tracking issue"
   ensure_label "$label" "RFC ${num}"
 
-  issue_num="$(gh issue list --label "$label" --state all --limit 1 --json number --jq '.[0].number // empty')"
+  issue_num="$(find_existing_issue "$label")"
 
   if [[ -n "$issue_num" ]]; then
     gh issue edit "$issue_num" --title "$title" --body-file "$body_file" >/dev/null
     echo "Updated issue #${issue_num} for ${file}"
   else
-    issue_num="$(gh issue create --title "$title" --body-file "$body_file" --label "rfc" --label "$label" --json number --jq '.number')"
+    issue_num="$(create_issue "$title" "$body_file" "$label")"
     echo "Created issue #${issue_num} for ${file}"
   fi
 
