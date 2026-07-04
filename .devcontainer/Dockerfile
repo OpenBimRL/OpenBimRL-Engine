@@ -2,14 +2,12 @@
 
 FROM rocm/dev-ubuntu-22.04:7.1.1 AS rocm-llvm
 
-FROM ubuntu:22.04 AS ifcos-build
+FROM debian:bookworm-slim AS ifcos-build
 
 ARG IFCOPENSHELL_GIT_TAG=eafa158ca0cd5ba2ca22b5e588b0375cab2efbce
 
-COPY --from=rocm-llvm /opt/rocm-7.1.1/ /opt/rocm/
-
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        ca-certificates git cmake ninja-build \
+        ca-certificates git cmake ninja-build g++ \
         libboost-all-dev \
         libocct-foundation-dev libocct-modeling-algorithms-dev libocct-modeling-data-dev \
         libocct-ocaf-dev libocct-visualization-dev libocct-data-exchange-dev \
@@ -21,8 +19,6 @@ RUN git clone https://github.com/IfcOpenShell/IfcOpenShell.git /src \
     && git checkout "${IFCOPENSHELL_GIT_TAG}"
 
 RUN cmake -G Ninja -S /src/cmake -B /build \
-        -DCMAKE_C_COMPILER=/opt/rocm/llvm/bin/clang \
-        -DCMAKE_CXX_COMPILER=/opt/rocm/llvm/bin/clang++ \
         -DCMAKE_INSTALL_PREFIX=/opt/ifcopenshell \
         -DCMAKE_BUILD_TYPE=Release \
         -DOCC_INCLUDE_DIR=/usr/include/opencascade \

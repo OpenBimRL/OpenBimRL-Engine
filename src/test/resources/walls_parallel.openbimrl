@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BIMRule schemaVersion="0.1" xmlns="http://inf.bi.rub.de/OpenBimRL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://inf.bi.rub.de/OpenBimRL OpenBimRL.xsd">
+  <Precalculations>
+    <Node id="wall-a-guid" function="input.textInput">
+      <Outputs><Output name="String" value="3O2Fr$t4X7Zf8NOew3FLOH"/></Outputs>
+    </Node>
+    <Node id="wall-b-guid" function="input.textInput">
+      <Outputs><Output name="String" value="4O2Fr$t4X7Zf8NOew3FLOH"/></Outputs>
+    </Node>
+    <Node id="wall-a" function="ifc.getElementById" alias="Wall A">
+      <Inputs><Input name="GUID"/></Inputs>
+      <Outputs><Output name="IfcElement"/></Outputs>
+    </Node>
+    <Node id="wall-b" function="ifc.getElementById" alias="Wall B">
+      <Inputs><Input name="GUID"/></Inputs>
+      <Outputs><Output name="IfcElement"/></Outputs>
+    </Node>
+    <Node id="plane-a" function="ifc.convertToPlane" alias="Wall A face">
+      <Inputs><Input name="IfcElement"/></Inputs>
+      <Outputs><Output name="Plane"/><Output name="Source"/></Outputs>
+    </Node>
+    <Node id="plane-b" function="ifc.convertToPlane" alias="Wall B face">
+      <Inputs><Input name="IfcElement"/></Inputs>
+      <Outputs><Output name="Plane"/><Output name="Source"/></Outputs>
+    </Node>
+    <Node id="wall-metric" function="math.planePlaneMetric" alias="Wall spacing">
+      <Inputs><Input name="Plane A"/><Input name="Plane B"/></Inputs>
+      <Outputs><Output name="Distance"/><Output name="IsParallel"/></Outputs>
+    </Node>
+    <Node id="viz-wall-a" function="visualize.planes" alias="Visualize wall A">
+      <Inputs><Input name="planes"/><Input name="halfExtent" value="2"/></Inputs>
+    </Node>
+    <Node id="viz-wall-b" function="visualize.planes" alias="Visualize wall B">
+      <Inputs><Input name="planes"/><Input name="halfExtent" value="2"/></Inputs>
+    </Node>
+    <Edge id="e1" source="wall-a-guid" sourceHandle="0" target="wall-a" targetHandle="0"/>
+    <Edge id="e2" source="wall-b-guid" sourceHandle="0" target="wall-b" targetHandle="0"/>
+    <Edge id="e3" source="wall-a" sourceHandle="0" target="plane-a" targetHandle="0"/>
+    <Edge id="e4" source="wall-b" sourceHandle="0" target="plane-b" targetHandle="0"/>
+    <Edge id="e5" source="plane-a" sourceHandle="0" target="wall-metric" targetHandle="0"/>
+    <Edge id="e6" source="plane-b" sourceHandle="0" target="wall-metric" targetHandle="1"/>
+    <Edge id="e7" source="plane-a" sourceHandle="0" target="viz-wall-a" targetHandle="0"/>
+    <Edge id="e8" source="plane-b" sourceHandle="0" target="viz-wall-b" targetHandle="0"/>
+  </Precalculations>
+  <ModelCheck name="walls_parallel.openbimrl">
+    <RuleIdentifiers>
+      <RuleIdentifier label="WallSpacing" source="wall-metric" sourceHandle="0"/>
+      <RuleIdentifier label="WallsParallel" source="wall-metric" sourceHandle="1"/>
+    </RuleIdentifiers>
+    <ModelSubChecks>
+      <ModelSubCheck name="Parallel walls with spacing">
+        <Rules operator="and">
+          <Rule operator="equals" operand1="WallsParallel" operand2="true"/>
+          <Rule operator="greaterthan" operand1="WallSpacing" operand2="0"/>
+        </Rules>
+      </ModelSubCheck>
+    </ModelSubChecks>
+    <ResultSets/>
+  </ModelCheck>
+</BIMRule>

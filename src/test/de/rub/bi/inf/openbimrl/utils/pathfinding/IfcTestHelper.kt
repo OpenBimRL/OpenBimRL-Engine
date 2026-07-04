@@ -27,6 +27,26 @@ object IfcTestHelper {
             .toFile()
             .absolutePath
 
+    fun railsParallelGaugeIfcPath(): String =
+        Paths.get("src", "test", "resources", "rails_parallel_gauge.ifc")
+            .toFile()
+            .absolutePath
+
+    fun wallsParallelIfcPath(): String =
+        Paths.get("src", "test", "resources", "walls_parallel.ifc")
+            .toFile()
+            .absolutePath
+
+    fun railsParallelGaugeOpenBimRLPath(): String =
+        Paths.get("src", "test", "resources", "rails_parallel_gauge.openbimrl")
+            .toFile()
+            .absolutePath
+
+    fun wallsParallelOpenBimRLPath(): String =
+        Paths.get("src", "test", "resources", "walls_parallel.openbimrl")
+            .toFile()
+            .absolutePath
+
     fun loadNativeLibrary() {
         FunctionsNative.create("lib.so")
     }

@@ -7,9 +7,14 @@ import com.github.ajalt.colormath.transform.interpolator
 import de.rub.bi.inf.extensions.lower
 import de.rub.bi.inf.extensions.upper
 import de.rub.bi.inf.nativelib.IfcPointer
+import de.rub.bi.inf.openbimrl.utils.math.Plane
+import de.rub.bi.inf.openbimrl.utils.math.Straight
 import de.rub.bi.inf.openbimrl.utils.math.lerp
+import de.rub.bi.inf.openbimrl.utils.math.normalized
+import de.rub.bi.inf.openbimrl.utils.math.planeNormal
 import javax.media.j3d.BoundingBox
 import javax.vecmath.Point3d
+import javax.vecmath.Vector3d
 import kotlin.math.min
 
 internal data class SphereInstance(
@@ -31,18 +36,30 @@ internal data class BoxInstance(
     val sizeZ: Double,
 )
 
+internal data class LineSegmentInstance(
+    val x1: Float,
+    val y1: Float,
+    val z1: Float,
+    val x2: Float,
+    val y2: Float,
+    val z2: Float,
+)
+
 /**
  * Accumulates check visuals and encodes them as a binary GLB (glTF 2.0).
- * Positions are stored in Three.js / viewer space (Z negated from IFC/engine space).
- * The glTF document is built with [kmp.gltf.model] and packed into GLB.
+ *
+ * Input geometry from IFC uses Z-up world coordinates (x, y, z).
+ * Internally this matches native bounding boxes: engine (x, z, y).
+ * GLB output uses Three.js Y-up viewer space: (engine.x, engine.y, -engine.z).
  */
 class GltfVisualComposer {
 
     private val sphereInstances = mutableListOf<SphereInstance>()
     private val boxInstances = mutableListOf<BoxInstance>()
+    private val lineInstances = mutableListOf<LineSegmentInstance>()
 
     val isEmpty: Boolean
-        get() = sphereInstances.isEmpty() && boxInstances.isEmpty()
+        get() = sphereInstances.isEmpty() && boxInstances.isEmpty() && lineInstances.isEmpty()
 
     fun addDistanceHeatmap(
         points: Collection<Point3d>,
@@ -109,6 +126,97 @@ class GltfVisualComposer {
         }
     }
 
+    fun addStraights(
+        straights: Collection<Straight>,
+        segmentLength: Double = 10.0,
+        referencePointSize: Double = DEFAULT_SPHERE_RADIUS * 0.6,
+        color: RGB = SRGB.from255(0, 128, 255, 255),
+    ) {
+        if (straights.isEmpty()) return
+        val srgb = color.toSRGB()
+        straights.forEach { straight ->
+            val center = ifcPointToEngine(straight.point)
+            val direction = normalized(ifcVectorToEngine(straight.direction))
+            val halfOffset = Vector3d(direction).apply { scale(segmentLength * 0.5) }
+
+            val start = Point3d(center).apply { sub(halfOffset) }
+            val end = Point3d(center).apply { add(halfOffset) }
+
+            addLineSegment(start, end)
+            addSphere(center, referencePointSize, srgb)
+        }
+    }
+
+    fun addPlanes(
+        planes: Collection<Plane>,
+        halfExtent: Double = 3.0,
+        referencePointSize: Double = DEFAULT_SPHERE_RADIUS * 0.6,
+        color: RGB = SRGB.from255(255, 64, 192, 255),
+    ) {
+        if (planes.isEmpty()) return
+        val srgb = color.toSRGB()
+        planes.forEach { plane ->
+            val origin = ifcPointToEngine(plane.point)
+            val axisU = normalized(ifcVectorToEngine(plane.axisU))
+            val axisV = normalized(ifcVectorToEngine(plane.axisV))
+            val u = Vector3d(axisU).apply { scale(halfExtent) }
+            val v = Vector3d(axisV).apply { scale(halfExtent) }
+
+            val corners = arrayOf(
+                planeCorner(origin, u, v, -1.0, -1.0),
+                planeCorner(origin, u, v, 1.0, -1.0),
+                planeCorner(origin, u, v, 1.0, 1.0),
+                planeCorner(origin, u, v, -1.0, 1.0),
+            )
+
+            for (index in corners.indices) {
+                addLineSegment(corners[index], corners[(index + 1) % corners.size])
+            }
+
+            val normal = planeNormal(Plane(origin, axisU, axisV))
+            val normalEnd = Point3d(origin).apply {
+                add(Vector3d(normal).apply { scale(halfExtent * 0.05) })
+            }
+            addLineSegment(origin, normalEnd)
+            addSphere(origin, referencePointSize, srgb)
+        }
+    }
+
+    /** IFC Z-up (x, y, z) → engine convention used by native bounding boxes (x, z, y). */
+    private fun ifcPointToEngine(point: Point3d): Point3d =
+        Point3d(point.x, point.z, point.y)
+
+    private fun ifcVectorToEngine(vector: Vector3d): Vector3d =
+        Vector3d(vector.x, vector.z, vector.y)
+
+    private fun planeCorner(
+        origin: Point3d,
+        axisU: Vector3d,
+        axisV: Vector3d,
+        uSign: Double,
+        vSign: Double,
+    ): Point3d {
+        val uOffset = Vector3d(axisU).apply { scale(uSign) }
+        val vOffset = Vector3d(axisV).apply { scale(vSign) }
+        return Point3d(origin).apply {
+            add(uOffset)
+            add(vOffset)
+        }
+    }
+
+    private fun addLineSegment(start: Point3d, end: Point3d) {
+        lineInstances.add(
+            LineSegmentInstance(
+                x1 = start.x.toFloat(),
+                y1 = start.y.toFloat(),
+                z1 = (-start.z).toFloat(),
+                x2 = end.x.toFloat(),
+                y2 = end.y.toFloat(),
+                z2 = (-end.z).toFloat(),
+            ),
+        )
+    }
+
     private fun addSphere(point: Point3d, radius: Double, color: RGB) {
         sphereInstances.add(
             SphereInstance(
@@ -125,7 +233,7 @@ class GltfVisualComposer {
 
     fun toGlb(): ByteArray? {
         if (isEmpty) return null
-        return GltfGlbEncoder.encode(sphereInstances, boxInstances)
+        return GltfGlbEncoder.encode(sphereInstances, boxInstances, lineInstances)
     }
 
     companion object {

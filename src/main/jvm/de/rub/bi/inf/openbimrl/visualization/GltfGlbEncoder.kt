@@ -47,7 +47,11 @@ internal object GlbWriter {
 
 internal object GltfGlbEncoder {
 
-    fun encode(spheres: List<SphereInstance>, boxes: List<BoxInstance>): ByteArray {
+    fun encode(
+        spheres: List<SphereInstance>,
+        boxes: List<BoxInstance>,
+        lines: List<LineSegmentInstance> = emptyList(),
+    ): ByteArray {
         val assembly = GltfAssembly()
 
         if (spheres.isNotEmpty()) {
@@ -155,36 +159,25 @@ internal object GltfGlbEncoder {
         }
 
         boxes.forEachIndexed { i, box ->
-            val (verts, lines) = buildBoxMesh(box)
-            val posBv = assembly.addFloatBufferView(verts, BufferView.Target.ARRAY_BUFFER)
-            val idxBv = assembly.addIndexBufferView(lines)
-            val posAcc = assembly.addAccessor(
-                bufferView = posBv,
-                componentType = Accessor.ComponentType.FLOAT,
-                type = Accessor.Type.VEC3,
-                count = 8,
-                min = vec3Min(verts),
-                max = vec3Max(verts),
-            )
-            val idxAcc = assembly.addAccessor(
-                bufferView = idxBv,
-                componentType = Accessor.ComponentType.UNSIGNED_SHORT,
-                type = Accessor.Type.SCALAR,
-                count = lines.size,
-            )
-            assembly.meshes.add(
-                Mesh(
-                    name = "box$i",
-                    primitives = listOf(
-                        Mesh.Primitive(
-                            attributes = mapOf("POSITION" to posAcc),
-                            indices = idxAcc,
-                            mode = Mesh.Primitive.Mode.LINES,
-                        ),
-                    ),
-                ),
-            )
-            assembly.nodes.add(Node(name = "box$i", mesh = assembly.meshes.lastIndex))
+            val (verts, lineIndices) = buildBoxMesh(box)
+            addLineMesh(assembly, "box$i", verts, lineIndices)
+        }
+
+        if (lines.isNotEmpty()) {
+            val vertices = FloatArray(lines.size * 6)
+            val indices = ShortArray(lines.size * 2)
+            lines.forEachIndexed { index, line ->
+                val base = index * 6
+                vertices[base] = line.x1
+                vertices[base + 1] = line.y1
+                vertices[base + 2] = line.z1
+                vertices[base + 3] = line.x2
+                vertices[base + 4] = line.y2
+                vertices[base + 5] = line.z2
+                indices[index * 2] = (index * 2).toShort()
+                indices[index * 2 + 1] = (index * 2 + 1).toShort()
+            }
+            addLineMesh(assembly, "geometryLines", vertices, indices)
         }
 
         val gltf = Gltf(
@@ -268,6 +261,43 @@ internal object GltfGlbEncoder {
             )
             return index
         }
+    }
+
+    private fun addLineMesh(
+        assembly: GltfAssembly,
+        name: String,
+        vertices: FloatArray,
+        indices: ShortArray,
+    ) {
+        val posBv = assembly.addFloatBufferView(vertices, BufferView.Target.ARRAY_BUFFER)
+        val idxBv = assembly.addIndexBufferView(indices)
+        val posAcc = assembly.addAccessor(
+            bufferView = posBv,
+            componentType = Accessor.ComponentType.FLOAT,
+            type = Accessor.Type.VEC3,
+            count = vertices.size / 3,
+            min = vec3Min(vertices),
+            max = vec3Max(vertices),
+        )
+        val idxAcc = assembly.addAccessor(
+            bufferView = idxBv,
+            componentType = Accessor.ComponentType.UNSIGNED_SHORT,
+            type = Accessor.Type.SCALAR,
+            count = indices.size,
+        )
+        assembly.meshes.add(
+            Mesh(
+                name = name,
+                primitives = listOf(
+                    Mesh.Primitive(
+                        attributes = mapOf("POSITION" to posAcc),
+                        indices = idxAcc,
+                        mode = Mesh.Primitive.Mode.LINES,
+                    ),
+                ),
+            ),
+        )
+        assembly.nodes.add(Node(name = name, mesh = assembly.meshes.lastIndex))
     }
 
     private fun vec3Min(data: FloatArray): List<Float> {

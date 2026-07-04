@@ -29,6 +29,8 @@ public interface FunctionsLibrary extends Library {
 
     void getBoundingBox();
 
+    void getElementFrame();
+
     void calculatingBuildingBounds();
 
     void test();
