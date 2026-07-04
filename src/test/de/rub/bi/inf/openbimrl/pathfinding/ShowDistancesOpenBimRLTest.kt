@@ -3,6 +3,7 @@ package de.rub.bi.inf.openbimrl.pathfinding
 import de.rub.bi.inf.logger.RuleLogger
 import de.rub.bi.inf.model.AbstractRuleDefinition
 import de.rub.bi.inf.model.RuleBase
+import de.rub.bi.inf.openbimrl.OpenRule
 import de.rub.bi.inf.openbimrl.utils.OpenBimRLReader
 import de.rub.bi.inf.openbimrl.utils.pathfinding.IfcTestHelper
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -14,13 +15,10 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import java.io.File
+import javax.vecmath.Point3d
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ShowDistancesOpenBimRLTest {
-
-    companion object {
-        private const val DISTANCE_NODE_ID = "81d1cb18-d268-8548-6a44-42f1204882a6"
-    }
 
     @BeforeAll
     fun setUp() {
@@ -33,6 +31,9 @@ class ShowDistancesOpenBimRLTest {
         RuleBase.getInstance().resetAllRules()
         OpenBimRLReader(listOf(File(IfcTestHelper.showDistancesOpenBimRLPath())))
     }
+
+    private fun openRule(): OpenRule =
+        RuleBase.getInstance().rules[0] as OpenRule
 
     @Test
     fun `show distances graph completes on pathfinding minimal model`() {
@@ -56,15 +57,38 @@ class ShowDistancesOpenBimRLTest {
     }
 
     @Test
-    fun `show distances graph produces distance visuals`() {
+    fun `show distances graph outputs points and distances arrays`() {
         val logger = RuleLogger()
-        RuleBase.getInstance().rules[0].check(logger)
+        openRule().check(logger)
 
-        val distanceNodeLog = logger.getLogs().entries.firstOrNull { it.key.contains("calculateDistancesFromElement") }
+        val distanceNodeLog = logger.getLogs().entries.firstOrNull {
+            it.key.contains("calculateDistancesFromElement")
+        }
         assertNotNull(distanceNodeLog, "Expected calculateDistancesFromElement node in execution log")
 
-        val visuals = logger.getGraphicalOutputs()[DISTANCE_NODE_ID]
-        assertNotNull(visuals)
-        assertTrue(visuals!!.isNotEmpty(), "Expected at least one distance visual sphere")
+        assertTrue(distanceNodeLog!!.value.outputs.size >= 2)
+        val points = distanceNodeLog.value.outputs[0] as? Collection<*>
+        val distances = distanceNodeLog.value.outputs[1] as? Collection<*>
+        assertNotNull(points)
+        assertNotNull(distances)
+        assertTrue(points!!.isNotEmpty(), "Expected at least one distance point")
+        assertEquals(points.size, distances!!.size, "Points and distances must be parallel arrays")
+        assertTrue(points.first() is Point3d)
+        assertTrue(distances.first() is Double)
+    }
+
+    @Test
+    fun `show distances graph produces GLB via visualize distanceHeatmap node`() {
+        val rule = openRule()
+        rule.check(RuleLogger())
+
+        val glb = rule.getVisualGlb()
+        assertNotNull(glb)
+        assertTrue(glb!!.size > 12, "Expected non-empty GLB payload")
+
+        assertEquals('g'.code.toByte(), glb[0])
+        assertEquals('l'.code.toByte(), glb[1])
+        assertEquals('T'.code.toByte(), glb[2])
+        assertEquals('F'.code.toByte(), glb[3])
     }
 }

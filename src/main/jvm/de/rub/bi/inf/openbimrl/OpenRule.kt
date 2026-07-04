@@ -5,8 +5,9 @@ import de.rub.bi.inf.model.AbstractRuleDefinition
 import de.rub.bi.inf.model.ResultObjectGroup
 import de.rub.bi.inf.model.RuleSet
 import de.rub.bi.inf.nativelib.IfcPointer
-import de.rub.bi.inf.openbimrl.functions.DisplayableFunction
+import de.rub.bi.inf.openbimrl.functions.VisualizingFunction
 import de.rub.bi.inf.openbimrl.utils.FilterInterpreter
+import de.rub.bi.inf.openbimrl.visualization.GltfVisualComposer
 
 /**
  * Defines the entry-point for execution of an OpenBimRL file, containing precalculations and rules. The check-method
@@ -20,6 +21,9 @@ class OpenRule(modelCheck: ModelCheckType, precalculations: PrecalculationsType?
     private val modelCheck: ModelCheckType
     private var precalculationContext: PrecalculationContext? = null
     private val ruleIDtoValueMap: MutableMap<String, Any?> = HashMap()
+    private var lastVisualGlb: ByteArray? = null
+
+    fun getVisualGlb(): ByteArray? = lastVisualGlb
 
     init {
         this.name = modelCheck.getName()
@@ -95,6 +99,7 @@ class OpenRule(modelCheck: ModelCheckType, precalculations: PrecalculationsType?
         this.resultObjects = ArrayList()
         this.checkedStatus = CheckedStatus.UNCHECKED
         this.checkingProtocol = ArrayList()
+        this.lastVisualGlb = null
 
         //Step 1: Build Precalculation
         this.handlePrecalculations(logger)
@@ -115,14 +120,16 @@ class OpenRule(modelCheck: ModelCheckType, precalculations: PrecalculationsType?
     }
 
     private fun handlePrecalculations(logger: RuleLogger) {
+        val composer = GltfVisualComposer()
         precalculationContext?.graphSortedNodes?.forEach { node ->
             //System.out.println(node.getId()+" (FunctionName): " + node.getFunction());
 
             // precalculationContext can safely be assumed to have a value since this point can't be reached if it's null
             val nodeProxy = precalculationContext!!.getNodeProxy(node)
 
-            if (nodeProxy.function is DisplayableFunction)
-                nodeProxy.function.setLogger(logger)
+            if (nodeProxy.function is VisualizingFunction) {
+                nodeProxy.function.setComposer(composer)
+            }
 
             try {
                 nodeProxy.execute()
@@ -145,6 +152,7 @@ class OpenRule(modelCheck: ModelCheckType, precalculations: PrecalculationsType?
                 }
             }
         }
+        lastVisualGlb = composer.toGlb()
     }
 
     /**

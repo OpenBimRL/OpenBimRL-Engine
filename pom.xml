@@ -14,7 +14,9 @@
 
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
-        <kotlin.version>2.0.21</kotlin.version>
+        <kotlin.version>2.3.10</kotlin.version>
+        <!-- Avoid flaky daemon startup in dev containers (OOM / RMI connect failures). -->
+        <kotlin.compiler.daemon>false</kotlin.compiler.daemon>
     </properties>
 
     <repositories>
@@ -22,6 +24,10 @@
             <id>ImageJ Public Repository</id>
             <name>ImageJ Public Repository</name>
             <url>https://maven.imagej.net/content/repositories/public/</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 
@@ -125,6 +131,19 @@
             <groupId>com.github.ajalt.colormath</groupId>
             <artifactId>colormath-jvm</artifactId>
             <version>3.6.0</version>
+        </dependency>
+
+        <!-- https://codeberg.org/Iljo/kmp-gltf-model -->
+        <dependency>
+            <groupId>org.codeberg.iljo.kmp-gltf-model</groupId>
+            <artifactId>kmp-gltf-model-jvm</artifactId>
+            <version>v0.2.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetbrains.kotlinx</groupId>
+            <artifactId>kotlinx-serialization-json-jvm</artifactId>
+            <version>1.10.0</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/io.arrow-kt/arrow-core -->

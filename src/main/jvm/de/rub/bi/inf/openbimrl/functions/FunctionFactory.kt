@@ -49,6 +49,7 @@ class FunctionFactory private constructor() {
             "de.rub.bi.inf.openbimrl.functions.input",
             "de.rub.bi.inf.openbimrl.functions.list",
             "de.rub.bi.inf.openbimrl.functions.math",
+            "de.rub.bi.inf.openbimrl.functions.visualize",
         )
 
         @JvmStatic

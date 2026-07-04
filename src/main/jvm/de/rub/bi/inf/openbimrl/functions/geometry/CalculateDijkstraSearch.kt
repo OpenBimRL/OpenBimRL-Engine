@@ -1,22 +1,17 @@
 package de.rub.bi.inf.openbimrl.functions.geometry
 
-import arrow.core.Either
-import com.github.ajalt.colormath.model.Oklab
-import com.github.ajalt.colormath.model.RGB
-import com.github.ajalt.colormath.model.SRGB
-import com.github.ajalt.colormath.transform.interpolator
 import de.rub.bi.inf.extensions.lower
 import de.rub.bi.inf.extensions.toPoint3d
 import de.rub.bi.inf.extensions.toRect
 import de.rub.bi.inf.extensions.upper
 import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.NodeProxy
-import de.rub.bi.inf.openbimrl.functions.DisplayableFunction
+import de.rub.bi.inf.openbimrl.functions.AbstractFunction
 import de.rub.bi.inf.openbimrl.functions.annotations.FunctionInput
+import de.rub.bi.inf.openbimrl.functions.annotations.FunctionOutput
 import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction
 import de.rub.bi.inf.openbimrl.utils.InvalidFunctionInputException
 import de.rub.bi.inf.openbimrl.utils.addPaddingToObstacles
-import de.rub.bi.inf.openbimrl.utils.math.lerp
 import de.rub.bi.inf.openbimrl.utils.math.neighbors
 import de.rub.bi.inf.openbimrl.utils.pathfinding.*
 import io.github.offlinebrain.khexagon.coordinates.HexCoordinates
@@ -25,12 +20,11 @@ import io.github.offlinebrain.khexagon.math.Point
 import io.github.offlinebrain.khexagon.math.hexToPixel
 import io.github.offlinebrain.khexagon.math.pixelToHex
 import javax.media.j3d.BoundingBox
-import javax.media.j3d.BoundingSphere
+import javax.vecmath.Point3d
 import kotlin.math.max
-import kotlin.math.min
 
 @OpenBIMRLFunction(name = "calculateDistancesFromElement")
-class CalculateDijkstraSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodeProxy) {
+class CalculateDijkstraSearch(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
 
     @FunctionInput(0, IfcPointer::class)
     lateinit var start: Collection<IfcPointer>
@@ -50,15 +44,13 @@ class CalculateDijkstraSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodePr
     @FunctionInput(5, nullable = true)
     var obstaclePadding: String? = null
 
-    @FunctionInput(6, nullable = true)
-    var maxDistance: String? = null
+    @FunctionOutput(0, name = "Points", collectionType = Point3d::class)
+    var points: List<Point3d>? = null
 
-    /**
-     * start: [IfcPointer], bounds: [BoundingBox], obstacles: [List], passage ways [List], layout [Layout],
-     * maxDistance (optional) [Double]
-     */
+    @FunctionOutput(1, name = "Distances", collectionType = Double::class)
+    var distances: List<Double>? = null
+
     override fun execute() {
-
         val startGeometry = geometryFromPointers(start)
         val bounds = buildingBoundingBox.toRect()
         val passages = geometryFromPointers(passageWays)
@@ -67,18 +59,8 @@ class CalculateDijkstraSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodePr
                 return@let it?.toDouble() ?: 0.0
             } catch (e: NumberFormatException) {
                 throw InvalidFunctionInputException("Error in function ${this.javaClass.getAnnotation(OpenBIMRLFunction::class.java).name}! Could not convert $it to double.")
-
             }
         }
-        val maxDistance = this.maxDistance.let {
-            try {
-                it?.toDouble() ?: 100.0
-            } catch (e: NumberFormatException) {
-                throw InvalidFunctionInputException("Error in function ${this.javaClass.getAnnotation(OpenBIMRLFunction::class.java).name}! Could not convert $it to double.")
-            }
-
-        }
-
         val obstacles = addPaddingToObstacles(geometryFromPointers(this.obstacles), obstaclePaddingDouble)
 
         if (startGeometry.isEmpty()) return
@@ -106,32 +88,17 @@ class CalculateDijkstraSearch(nodeProxy: NodeProxy) : DisplayableFunction(nodePr
             from = startHexCoordinates,
             neighbors = ::neighbors,
             isWalkable = walkable,
-            distance = movementCost
+            distance = movementCost,
         )
 
-        val colorInterpolator = Oklab.interpolator {
-            stop(RGB("0F0"))
-            stop(RGB("FF0"))
-            stop(RGB("F00"))
+        val elevationY = max(buildingBoundingBox.lower().y, buildingBoundingBox.upper().y)
+        val pointList = ArrayList<Point3d>(path.size)
+        val distanceList = ArrayList<Double>(path.size)
+        path.forEach { (hex, distance) ->
+            pointList.add(hexToPixel(layout, hex).toPoint3d(elevationY))
+            distanceList.add(distance)
         }
-
-        logGraphically(path.let {
-            it.keys.map { key ->
-                val interpolation = min(lerp(min(it[key]!!, maxDistance), .0, maxDistance, .0, 1.0), 1.0)
-                val color =
-                    (if (it[key]!! == Double.POSITIVE_INFINITY) SRGB(203, 203, 203) else colorInterpolator.interpolate(
-                        interpolation
-                    ).toSRGB()).toHex()
-                Pair(
-                    BoundingSphere(
-                        hexToPixel(layout, key).toPoint3d(
-                            max(
-                                buildingBoundingBox.lower().y, buildingBoundingBox.upper().y
-                            )
-                        ), .25
-                    ), mapOf("color" to Either.Right(color))
-                )
-            }
-        })
+        points = pointList
+        distances = distanceList
     }
 }

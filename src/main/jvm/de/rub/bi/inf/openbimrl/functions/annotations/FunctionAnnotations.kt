@@ -8,6 +8,7 @@ annotation class OpenBIMRLFunction(
     val description: String = "",
     val packageName: String = "",
     val type: String = "functionType",
+    val isVisualizer: Boolean = false,
     val inputs: Array<FunctionPort> = [],
     val outputs: Array<FunctionPort> = [],
 )
