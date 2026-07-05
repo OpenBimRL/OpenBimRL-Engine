@@ -1,6 +1,8 @@
 package de.rub.bi.inf.openbimrl.utils.math
 
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import javax.vecmath.Point3d
 import javax.vecmath.Vector3d
@@ -81,5 +83,50 @@ class DistanceTest {
         assertEquals(2.0, distanceBetween(line, Straight(Point3d(0.0, 2.0, 0.0), Vector3d(1.0, 0.0, 0.0))), 1e-9)
         assertEquals(2.0, distanceBetween(Straight(Point3d(0.0, 0.0, 2.0), Vector3d(1.0, 0.0, 0.0)), plane), 1e-9)
         assertEquals(5.0, distanceBetween(plane, horizontalPlane(Point3d(0.0, 0.0, 5.0))), 1e-9)
+    }
+
+    @Test
+    fun `straightStraightMetric parallel separated`() {
+        val first = Straight(Point3d(0.0, 0.0, 0.0), Vector3d(1.0, 0.0, 0.0))
+        val second = Straight(Point3d(0.0, 1.435, 0.0), Vector3d(1.0, 0.0, 0.0))
+        val metric = straightStraightMetric(first, second)
+        assertTrue(metric.isParallel)
+        assertEquals(1.435, metric.distance, 1e-9)
+    }
+
+    @Test
+    fun `straightStraightMetric coincident parallel`() {
+        val first = Straight(Point3d(0.0, 0.0, 0.0), Vector3d(1.0, 0.0, 0.0))
+        val second = Straight(Point3d(5.0, 0.0, 0.0), Vector3d(1.0, 0.0, 0.0))
+        val metric = straightStraightMetric(first, second)
+        assertTrue(metric.isParallel)
+        assertEquals(0.0, metric.distance, 1e-9)
+    }
+
+    @Test
+    fun `straightStraightMetric intersecting skew`() {
+        val first = Straight(Point3d(0.0, 0.0, 0.0), Vector3d(1.0, 0.0, 0.0))
+        val second = Straight(Point3d(0.0, 0.0, 1.0), Vector3d(0.0, 1.0, 0.0))
+        val metric = straightStraightMetric(first, second)
+        assertFalse(metric.isParallel)
+        assertEquals(0.0, metric.distance, 1e-9)
+    }
+
+    @Test
+    fun `planePlaneMetric parallel separated`() {
+        val first = horizontalPlane()
+        val second = horizontalPlane(Point3d(0.0, 0.0, 3.0))
+        val metric = planePlaneMetric(first, second)
+        assertTrue(metric.isParallel)
+        assertEquals(3.0, metric.distance, 1e-9)
+    }
+
+    @Test
+    fun `planePlaneMetric intersecting`() {
+        val first = Plane(Point3d(0.0, 0.0, 0.0), Vector3d(0.0, 1.0, 0.0), Vector3d(0.0, 0.0, 1.0))
+        val second = Plane(Point3d(0.0, 0.0, 0.0), Vector3d(1.0, 0.0, 0.0), Vector3d(0.0, 0.0, 1.0))
+        val metric = planePlaneMetric(first, second)
+        assertFalse(metric.isParallel)
+        assertEquals(0.0, metric.distance, 1e-9)
     }
 }

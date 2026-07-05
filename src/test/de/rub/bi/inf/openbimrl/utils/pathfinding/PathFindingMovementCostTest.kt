@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import java.nio.file.Paths
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class PathFindingMovementCostTest {
@@ -30,9 +29,7 @@ class PathFindingMovementCostTest {
     fun setUp() {
         IfcTestHelper.loadNativeLibrary()
 
-        val ifcPath = Paths.get("src", "test", "resources", "pathfinding_minimal.ifc")
-            .toFile()
-            .absolutePath
+        val ifcPath = IfcTestHelper.pathfindingMinimalIfcPath()
 
         assertTrue(
             IfcTestHelper.loadIfc(ifcPath),

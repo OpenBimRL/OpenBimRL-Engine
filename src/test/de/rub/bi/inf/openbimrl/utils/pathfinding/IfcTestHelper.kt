@@ -8,10 +8,44 @@ import de.rub.bi.inf.nativelib.FunctionsNative
 import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.utils.boundingBoxFromMemory
 import de.rub.bi.inf.openbimrl.functions.NativeFunction
+import java.nio.file.Paths
 import javax.media.j3d.BoundingBox
 import javax.vecmath.Point3d
 
 object IfcTestHelper {
+
+    const val DOOR_1_GUID = "0PathTest000000000022"
+    const val DOOR_2_GUID = "0PathTest000000000026"
+
+    fun pathfindingMinimalIfcPath(): String =
+        Paths.get("src", "test", "resources", "pathfinding_minimal.ifc")
+            .toFile()
+            .absolutePath
+
+    fun showDistancesOpenBimRLPath(): String =
+        Paths.get("src", "test", "resources", "show_distances.openbimrl")
+            .toFile()
+            .absolutePath
+
+    fun railsParallelGaugeIfcPath(): String =
+        Paths.get("src", "test", "resources", "rails_parallel_gauge.ifc")
+            .toFile()
+            .absolutePath
+
+    fun wallsParallelIfcPath(): String =
+        Paths.get("src", "test", "resources", "walls_parallel.ifc")
+            .toFile()
+            .absolutePath
+
+    fun railsParallelGaugeOpenBimRLPath(): String =
+        Paths.get("src", "test", "resources", "rails_parallel_gauge.openbimrl")
+            .toFile()
+            .absolutePath
+
+    fun wallsParallelOpenBimRLPath(): String =
+        Paths.get("src", "test", "resources", "walls_parallel.openbimrl")
+            .toFile()
+            .absolutePath
 
     fun loadNativeLibrary() {
         FunctionsNative.create("lib.so")
@@ -19,6 +53,9 @@ object IfcTestHelper {
 
     fun loadIfc(absolutePath: String): Boolean =
         FunctionsNative.getInstance().initIfc(absolutePath)
+
+    fun loadPathfindingMinimalIfc(): Boolean =
+        loadIfc(pathfindingMinimalIfcPath())
 
     fun filterByElement(ifcType: String): List<IfcPointer> {
         var buffer: Memory? = null
@@ -73,5 +110,29 @@ object IfcTestHelper {
         FunctionsNative.getInstance().calculatingBuildingBounds()
 
         return boundingBoxFromMemory(NativeFunction.MemoryStructure(0, 6 * 8L, buffer!!))
+    }
+
+    fun getElementByGuid(guid: String): IfcPointer? {
+        var result: Pointer? = null
+
+        FunctionsNative.getInstance().init_function(
+            { null },
+            { 0.0 },
+            { 0 },
+            { at -> if (at == 0) guid else null },
+            { at, pointer ->
+                if (at == 0 && pointer != null && pointer != Pointer.NULL) {
+                    result = pointer
+                }
+            },
+            { _, _ -> },
+            { _, _ -> },
+            { _, _ -> },
+            { _, _ -> Pointer.NULL },
+        )
+
+        FunctionsNative.getInstance().filterByGUID()
+
+        return result?.let { IfcPointer(it) }
     }
 }

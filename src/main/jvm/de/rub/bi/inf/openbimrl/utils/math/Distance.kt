@@ -9,6 +9,37 @@ import kotlin.math.sqrt
 
 private const val EPSILON = 1e-9
 
+data class GeometryMetric(val distance: Double, val isParallel: Boolean)
+
+fun areDirectionsParallel(first: Vector3d, second: Vector3d): Boolean {
+    val cross = Vector3d().apply { cross(normalized(first), normalized(second)) }
+    return cross.lengthSquared() <= EPSILON * EPSILON
+}
+
+fun straightStraightMetric(first: Straight, second: Straight): GeometryMetric {
+    val isParallel = areDirectionsParallel(first.direction, second.direction)
+    val distance = if (isParallel) {
+        pointStraightDistance(second.point, first)
+    } else {
+        0.0
+    }
+    return GeometryMetric(distance, isParallel)
+}
+
+fun planePlaneMetric(first: Plane, second: Plane): GeometryMetric {
+    val normalA = planeNormal(first)
+    val normalB = planeNormal(second)
+    val isParallel = areDirectionsParallel(normalA, normalB)
+    val distance = if (isParallel) {
+        val alignedNormal = if (normalA.dot(normalB) < 0.0) Vector3d(normalB).apply { negate() } else normalB
+        val offset = Vector3d().apply { sub(second.point, first.point) }
+        abs(normalA.dot(offset))
+    } else {
+        0.0
+    }
+    return GeometryMetric(distance, isParallel)
+}
+
 fun pointPointDistance(first: Point3d, second: Point3d): Double = first.distance(second)
 
 fun pointStraightDistance(point: Point3d, straight: Straight): Double {

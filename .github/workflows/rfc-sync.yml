@@ -1,0 +1,42 @@
+name: Sync RFC Issues
+
+on:
+  push:
+    branches:
+      - master
+      - dev
+    paths:
+      - 'rfc/**'
+      - '.github/workflows/rfc-sync.yml'
+      - '.github/scripts/sync-rfc-issues.sh'
+  workflow_dispatch:
+    inputs:
+      sync_all:
+        description: Sync all RFC files (not only changed on this push)
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  sync-rfc-issues:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Sync RFC markdown to GitHub issues
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BEFORE_SHA: ${{ github.event.before }}
+          CURRENT_SHA: ${{ github.sha }}
+          SYNC_ALL: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.sync_all || 'false' }}
+        run: bash .github/scripts/sync-rfc-issues.sh

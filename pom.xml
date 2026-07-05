@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>inf.bi.rub.de</groupId>
     <artifactId>openbimrl-engine</artifactId>
-    <version>2026.06.22</version>
+    <version>2026.07.05</version>
 
     <packaging>jar</packaging>
 
@@ -14,7 +14,10 @@
 
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
-        <kotlin.version>2.0.21</kotlin.version>
+        <kotlin.version>2.3.10</kotlin.version>
+        <!-- Avoid flaky daemon startup in dev containers (OOM / RMI connect failures). -->
+        <kotlin.compiler.daemon>false</kotlin.compiler.daemon>
+        <skip.native>false</skip.native>
     </properties>
 
     <repositories>
@@ -22,6 +25,10 @@
             <id>ImageJ Public Repository</id>
             <name>ImageJ Public Repository</name>
             <url>https://maven.imagej.net/content/repositories/public/</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 
@@ -127,6 +134,19 @@
             <version>3.6.0</version>
         </dependency>
 
+        <!-- https://codeberg.org/Iljo/kmp-gltf-model -->
+        <dependency>
+            <groupId>org.codeberg.iljo.kmp-gltf-model</groupId>
+            <artifactId>kmp-gltf-model-jvm</artifactId>
+            <version>v0.2.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetbrains.kotlinx</groupId>
+            <artifactId>kotlinx-serialization-json-jvm</artifactId>
+            <version>1.10.0</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/io.arrow-kt/arrow-core -->
         <dependency>
             <groupId>io.arrow-kt</groupId>
@@ -210,15 +230,22 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.1.0</version>
-                <configuration>
-                    <executable>make</executable>
-                </configuration>
                 <executions>
                     <execution>
+                        <id>build-native</id>
                         <phase>generate-resources</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
+                        <configuration>
+                            <executable>bash</executable>
+                            <arguments>
+                                <argument>${project.basedir}/scripts/build-native.sh</argument>
+                            </arguments>
+                            <environmentVariables>
+                                <SKIP_NATIVE>${skip.native}</SKIP_NATIVE>
+                            </environmentVariables>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

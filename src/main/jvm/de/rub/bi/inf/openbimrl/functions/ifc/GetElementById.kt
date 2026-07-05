@@ -8,7 +8,8 @@ import de.rub.bi.inf.openbimrl.functions.annotations.FunctionPort
 import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction
 
 @OpenBIMRLFunction(
-    description = "Retrieves the IFC entity of a specific id from the model.",
+    name = "getElementById",
+    description = "Retrieves an IFC element by its GlobalId (GUID).",
     inputs = [
         FunctionPort(0, "GUID", String::class),
     ],
@@ -17,12 +18,13 @@ import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction
     ],
 )
 class GetElementById(nodeProxy: NodeProxy) : NativeFunction(nodeProxy) {
-    override fun executeNative() {
-        nativeLib.filterByGUID()
-    }
+    override fun executeNative() = nativeLib.filterByGUID()
 
     override fun handlePointerOutput(at: Int, pointer: Pointer?) {
-        if (pointer == null) return
-        super.handlePointerOutput(at, IfcPointer(pointer))
+        if (at != 0) return
+        setResult(
+            0,
+            if (pointer == null || pointer == Pointer.NULL) null else IfcPointer(pointer),
+        )
     }
 }
