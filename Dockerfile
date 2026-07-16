@@ -18,6 +18,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libocct-foundation-dev libocct-modeling-algorithms-dev libocct-modeling-data-dev \
         libocct-ocaf-dev libocct-visualization-dev libocct-data-exchange-dev \
         libhdf5-dev libeigen3-dev libgmp-dev libmpfr-dev libxml2-dev \
+        libgl1-mesa-dev libx11-dev libxext-dev libxi-dev libxmu-dev libxt-dev \
+        libtbb-dev tcl-dev tk-dev occt-misc \
     && if [ "${TARGETARCH}" = "arm64" ]; then \
         apt-get install -y --no-install-recommends clang libomp-dev \
         && rm -rf /opt/rocm; \
