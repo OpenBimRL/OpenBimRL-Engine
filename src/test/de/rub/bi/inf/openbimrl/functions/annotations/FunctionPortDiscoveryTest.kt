@@ -29,7 +29,7 @@ class FunctionPortDiscoveryTest {
         val ports = findFunctionPortDefinitions(CalculateDijkstraSearch::class.java)
 
         assertEquals(
-            listOf("Start", "BuildingBoundingBox", "Obstacles", "PassageWays", "Layout", "ObstaclePadding", "MaxDistance"),
+            listOf("Start", "BuildingBoundingBox", "Obstacles", "PassageWays", "Layout", "ObstaclePadding"),
             ports.inputs.map { it.displayName },
         )
     }
