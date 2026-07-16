@@ -10,8 +10,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assumptions.assumeTrue
 import javax.vecmath.Point3d
 import javax.vecmath.Vector3d
-import java.nio.file.Paths
-
 class ElementApproximationServiceTest {
 
     companion object {
@@ -33,11 +31,6 @@ class ElementApproximationServiceTest {
             }
         }
     }
-
-    private fun cppTestResource(fileName: String): String =
-        Paths.get("src", "main", "cpp", "test", "resources", fileName)
-            .toFile()
-            .absolutePath
 
     @Test
     fun `manual straight metric matches expected gauge`() {
@@ -76,7 +69,7 @@ class ElementApproximationServiceTest {
     @Test
     fun `rail placement approximation yields standard gauge`() {
         assumeTrue(nativeAvailable, "Native library unavailable in this environment")
-        assumeTrue(IfcTestHelper.loadIfc(cppTestResource("rails_parallel_gauge.ifc")))
+        assumeTrue(IfcTestHelper.loadIfc(IfcTestHelper.railsParallelGaugeIfcPath()))
 
         val leftRail = IfcTestHelper.getElementByGuid(LEFT_RAIL_GUID)
         val rightRail = IfcTestHelper.getElementByGuid(RIGHT_RAIL_GUID)
@@ -97,7 +90,7 @@ class ElementApproximationServiceTest {
     @Test
     fun `wall approximation yields parallel spacing`() {
         assumeTrue(nativeAvailable, "Native library unavailable in this environment")
-        assumeTrue(IfcTestHelper.loadIfc(cppTestResource("walls_parallel.ifc")))
+        assumeTrue(IfcTestHelper.loadIfc(IfcTestHelper.wallsParallelIfcPath()))
 
         val wallA = IfcTestHelper.getElementByGuid(WALL_A_GUID)
         val wallB = IfcTestHelper.getElementByGuid(WALL_B_GUID)
