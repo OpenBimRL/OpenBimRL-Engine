@@ -9,6 +9,10 @@ FROM ubuntu:22.04 AS ifcos-build
 ARG IFCOPENSHELL_GIT_TAG
 ARG TARGETARCH
 
+# Avoid interactive tzdata prompts during apt (CI / docker build has no TTY).
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=UTC
+
 # Build IfcOpenShell with the same compiler family as OpenBIMRL_Native (clang, not g++).
 COPY --from=rocm-llvm /opt/rocm-7.1.1/ /opt/rocm/
 
@@ -68,22 +72,26 @@ ARG TARGETARCH
 ARG ENABLE_ROCM_OFFLOAD=OFF
 ARG ROCM_OFFLOAD_ARCH=
 
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=UTC
+
 COPY --from=rocm-llvm /opt/rocm-7.1.1/ /opt/rocm/
 COPY --from=ifcos-build /opt/ifcopenshell /opt/ifcopenshell
 
-RUN apt update && apt install -yq make cmake ninja-build ccache git libeigen3-dev \
+RUN apt-get update && apt-get install -y --no-install-recommends make cmake ninja-build ccache git libeigen3-dev \
     xfonts-scalable libocct-data-exchange-dev libocct-draw-dev libocct-foundation-dev libocct-modeling-algorithms-dev \
     libocct-modeling-data-dev libocct-ocaf-dev libocct-visualization-dev \
     libmpfr-dev libboost-all-dev libhdf5-dev libgmp-dev libxml2-dev \
     && if [ "$TARGETARCH" = "arm64" ]; then \
-        apt install -yq clang libomp-dev \
+        apt-get install -y --no-install-recommends clang libomp-dev \
         && rm -rf /opt/rocm \
         && ln -sf /usr/bin/clang /usr/local/bin/clang \
         && ln -sf /usr/bin/clang++ /usr/local/bin/clang++ ; \
     else \
         ln -sf /opt/rocm/llvm/bin/clang /usr/local/bin/clang \
         && ln -sf /opt/rocm/llvm/bin/clang++ /usr/local/bin/clang++ ; \
-    fi
+    fi \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 RUN git clone --quiet https://github.com/RUB-Informatik-im-Bauwesen/OpenBimRL.git /build/api
