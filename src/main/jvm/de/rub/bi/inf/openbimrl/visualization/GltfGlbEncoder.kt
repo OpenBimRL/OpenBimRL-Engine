@@ -51,6 +51,9 @@ internal object GltfGlbEncoder {
         spheres: List<SphereInstance>,
         boxes: List<BoxInstance>,
         lines: List<LineSegmentInstance> = emptyList(),
+        originX: Double = 0.0,
+        originY: Double = 0.0,
+        originZ: Double = 0.0,
     ): ByteArray {
         val assembly = GltfAssembly()
 
@@ -102,12 +105,12 @@ internal object GltfGlbEncoder {
             val scales = FloatArray(spheres.size * 3)
             val colors = FloatArray(spheres.size * 3)
             spheres.forEachIndexed { i, s ->
-                translations[i * 3] = s.x
-                translations[i * 3 + 1] = s.y
-                translations[i * 3 + 2] = s.z
-                scales[i * 3] = s.scale
-                scales[i * 3 + 1] = s.scale
-                scales[i * 3 + 2] = s.scale
+                translations[i * 3] = s.x.toFloat()
+                translations[i * 3 + 1] = s.y.toFloat()
+                translations[i * 3 + 2] = s.z.toFloat()
+                scales[i * 3] = s.scale.toFloat()
+                scales[i * 3 + 1] = s.scale.toFloat()
+                scales[i * 3 + 2] = s.scale.toFloat()
                 colors[i * 3] = s.r
                 colors[i * 3 + 1] = s.g
                 colors[i * 3 + 2] = s.b
@@ -168,16 +171,42 @@ internal object GltfGlbEncoder {
             val indices = ShortArray(lines.size * 2)
             lines.forEachIndexed { index, line ->
                 val base = index * 6
-                vertices[base] = line.x1
-                vertices[base + 1] = line.y1
-                vertices[base + 2] = line.z1
-                vertices[base + 3] = line.x2
-                vertices[base + 4] = line.y2
-                vertices[base + 5] = line.z2
+                vertices[base] = line.x1.toFloat()
+                vertices[base + 1] = line.y1.toFloat()
+                vertices[base + 2] = line.z1.toFloat()
+                vertices[base + 3] = line.x2.toFloat()
+                vertices[base + 4] = line.y2.toFloat()
+                vertices[base + 5] = line.z2.toFloat()
                 indices[index * 2] = (index * 2).toShort()
                 indices[index * 2 + 1] = (index * 2 + 1).toShort()
             }
             addLineMesh(assembly, "geometryLines", vertices, indices)
+        }
+
+        val contentNodeIndices = assembly.nodes.indices.toSet()
+        val needsOriginRoot =
+            originX != 0.0 || originY != 0.0 || originZ != 0.0
+        if (needsOriginRoot && contentNodeIndices.isNotEmpty()) {
+            val rootIndex = assembly.nodes.size
+            assembly.nodes.add(
+                Node(
+                    name = "crsOrigin",
+                    children = contentNodeIndices,
+                    translation = listOf(originX.toFloat(), originY.toFloat(), originZ.toFloat()),
+                ),
+            )
+            val gltf = Gltf(
+                asset = Asset(version = "2.0", generator = "OpenBimRL-Engine"),
+                extensionsUsed = if (spheres.isNotEmpty()) setOf("EXT_mesh_gpu_instancing") else emptySet(),
+                buffers = listOf(Buffer(byteLength = assembly.binSize)),
+                bufferViews = assembly.bufferViews,
+                accessors = assembly.accessors,
+                meshes = assembly.meshes,
+                nodes = assembly.nodes,
+                scene = 0,
+                scenes = listOf(Scene(nodes = setOf(rootIndex))),
+            )
+            return GlbWriter.encode(gltf, assembly.binBytes())
         }
 
         val gltf = Gltf(
@@ -368,9 +397,9 @@ internal object GltfGlbEncoder {
         val hx = (box.sizeX * 0.5).toFloat()
         val hy = (box.sizeY * 0.5).toFloat()
         val hz = (box.sizeZ * 0.5).toFloat()
-        val cx = box.centerX
-        val cy = box.centerY
-        val cz = box.centerZ
+        val cx = box.centerX.toFloat()
+        val cy = box.centerY.toFloat()
+        val cz = box.centerZ.toFloat()
         val corners = floatArrayOf(
             cx - hx, cy - hy, cz - hz,
             cx + hx, cy - hy, cz - hz,

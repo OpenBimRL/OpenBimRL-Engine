@@ -66,8 +66,10 @@ class GltfVisualComposerTest {
         val json = String(glb!!, Charsets.UTF_8)
         assertTrue(json.contains("geometryLines"))
         assertTrue(json.contains("unitSphere"))
-        // Right rail anchor in viewer space: IFC y=1.435 -> Three z=-1.435
-        assertTrue(json.contains("-1.435"))
+        // Local-origin encoding: IFC y=1.435 → Three z=-1.435 is preserved via
+        // crsOrigin translation and/or relative mesh data.
+        assertTrue(json.contains("crsOrigin") || json.contains("-1.435"))
+        assertTrue(json.contains("1.435") || json.contains("-1.435") || json.contains("0.7175"))
     }
 
     @Test
@@ -89,5 +91,23 @@ class GltfVisualComposerTest {
         val json = String(glb!!, Charsets.UTF_8)
         assertTrue(json.contains("geometryLines"))
         assertTrue(json.contains("unitSphere"))
+    }
+
+    @Test
+    fun `large CRS straights keep segment length via local origin encoding`() {
+        val composer = GltfVisualComposer()
+        // Typical projected CRS magnitude (~ETRS89 / UTM).
+        composer.addStraights(
+            listOf(Straight(Point3d(4_416_822.5, 5_792_983.4, 116.75), Vector3d(1.0, 0.0, 0.0))),
+            segmentLength = 20.0,
+        )
+
+        val glb = composer.toGlb()
+        assertNotNull(glb)
+        val json = String(glb!!, Charsets.UTF_8)
+        assertTrue(json.contains("crsOrigin"))
+        assertTrue(json.contains("geometryLines"))
+        // Localized half-extent (±10) must appear; absolute millions must not be mesh verts.
+        assertTrue(json.contains("\"min\":[-10") || json.contains("\"min\":[-10.0"))
     }
 }

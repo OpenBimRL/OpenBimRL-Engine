@@ -17,32 +17,35 @@ import javax.vecmath.Point3d
 import javax.vecmath.Vector3d
 import kotlin.math.min
 
+/**
+ * Absolute Three.js Y-up position (double). Quantized to float only after subtracting [origin].
+ */
 internal data class SphereInstance(
-    val x: Float,
-    val y: Float,
-    val z: Float,
-    val scale: Float,
+    val x: Double,
+    val y: Double,
+    val z: Double,
+    val scale: Double,
     val r: Float,
     val g: Float,
     val b: Float,
 )
 
 internal data class BoxInstance(
-    val centerX: Float,
-    val centerY: Float,
-    val centerZ: Float,
+    val centerX: Double,
+    val centerY: Double,
+    val centerZ: Double,
     val sizeX: Double,
     val sizeY: Double,
     val sizeZ: Double,
 )
 
 internal data class LineSegmentInstance(
-    val x1: Float,
-    val y1: Float,
-    val z1: Float,
-    val x2: Float,
-    val y2: Float,
-    val z2: Float,
+    val x1: Double,
+    val y1: Double,
+    val z1: Double,
+    val x2: Double,
+    val y2: Double,
+    val z2: Double,
 )
 
 /**
@@ -51,6 +54,10 @@ internal data class LineSegmentInstance(
  * Input geometry from IFC uses Z-up world coordinates (x, y, z).
  * Internally this matches native bounding boxes: engine (x, z, y).
  * GLB output uses Three.js Y-up viewer space: (engine.x, engine.y, -engine.z).
+ *
+ * Large CRS coordinates are stored in double until encode time, then written
+ * relative to a local origin so float32 meshes stay precise (avoids collapsed
+ * line segments and flicker far from the world origin).
  */
 class GltfVisualComposer {
 
@@ -100,11 +107,12 @@ class GltfVisualComposer {
         bounds.forEach { box ->
             val lower = box.lower()
             val upper = box.upper()
+            // Native bbox is already engine XZY; only negate Z for Three.js.
             boxInstances.add(
                 BoxInstance(
-                    centerX = (lower.x + upper.x).toFloat() * 0.5f,
-                    centerY = (lower.y + upper.y).toFloat() * 0.5f,
-                    centerZ = (-(lower.z + upper.z) * 0.5).toFloat(),
+                    centerX = (lower.x + upper.x) * 0.5,
+                    centerY = (lower.y + upper.y) * 0.5,
+                    centerZ = -(lower.z + upper.z) * 0.5,
                     sizeX = kotlin.math.abs(upper.x - lower.x) + padding * 2,
                     sizeY = kotlin.math.abs(upper.y - lower.y) + padding * 2,
                     sizeZ = kotlin.math.abs(upper.z - lower.z) + padding * 2,
@@ -217,12 +225,12 @@ class GltfVisualComposer {
     private fun addLineSegment(start: Point3d, end: Point3d) {
         lineInstances.add(
             LineSegmentInstance(
-                x1 = start.x.toFloat(),
-                y1 = start.y.toFloat(),
-                z1 = (-start.z).toFloat(),
-                x2 = end.x.toFloat(),
-                y2 = end.y.toFloat(),
-                z2 = (-end.z).toFloat(),
+                x1 = start.x,
+                y1 = start.y,
+                z1 = -start.z,
+                x2 = end.x,
+                y2 = end.y,
+                z2 = -end.z,
             ),
         )
     }
@@ -230,10 +238,10 @@ class GltfVisualComposer {
     private fun addSphere(point: Point3d, radius: Double, color: RGB) {
         sphereInstances.add(
             SphereInstance(
-                x = point.x.toFloat(),
-                y = point.y.toFloat(),
-                z = (-point.z).toFloat(),
-                scale = radius.toFloat(),
+                x = point.x,
+                y = point.y,
+                z = -point.z,
+                scale = radius,
                 r = color.r,
                 g = color.g,
                 b = color.b,
@@ -243,8 +251,69 @@ class GltfVisualComposer {
 
     fun toGlb(): ByteArray? {
         if (isEmpty) return null
-        return GltfGlbEncoder.encode(sphereInstances, boxInstances, lineInstances)
+        val origin = computeLocalOrigin()
+        return GltfGlbEncoder.encode(
+            localizeSpheres(origin),
+            localizeBoxes(origin),
+            localizeLines(origin),
+            originX = origin[0],
+            originY = origin[1],
+            originZ = origin[2],
+        )
     }
+
+    private fun computeLocalOrigin(): DoubleArray {
+        var sx = 0.0
+        var sy = 0.0
+        var sz = 0.0
+        var count = 0
+        sphereInstances.forEach {
+            sx += it.x
+            sy += it.y
+            sz += it.z
+            count++
+        }
+        boxInstances.forEach {
+            sx += it.centerX
+            sy += it.centerY
+            sz += it.centerZ
+            count++
+        }
+        lineInstances.forEach {
+            sx += (it.x1 + it.x2) * 0.5
+            sy += (it.y1 + it.y2) * 0.5
+            sz += (it.z1 + it.z2) * 0.5
+            count++
+        }
+        if (count == 0) return doubleArrayOf(0.0, 0.0, 0.0)
+        return doubleArrayOf(sx / count, sy / count, sz / count)
+    }
+
+    private fun localizeSpheres(origin: DoubleArray): List<SphereInstance> =
+        sphereInstances.map {
+            it.copy(x = it.x - origin[0], y = it.y - origin[1], z = it.z - origin[2])
+        }
+
+    private fun localizeBoxes(origin: DoubleArray): List<BoxInstance> =
+        boxInstances.map {
+            it.copy(
+                centerX = it.centerX - origin[0],
+                centerY = it.centerY - origin[1],
+                centerZ = it.centerZ - origin[2],
+            )
+        }
+
+    private fun localizeLines(origin: DoubleArray): List<LineSegmentInstance> =
+        lineInstances.map {
+            LineSegmentInstance(
+                x1 = it.x1 - origin[0],
+                y1 = it.y1 - origin[1],
+                z1 = it.z1 - origin[2],
+                x2 = it.x2 - origin[0],
+                y2 = it.y2 - origin[1],
+                z2 = it.z2 - origin[2],
+            )
+        }
 
     companion object {
         private const val DEFAULT_SPHERE_RADIUS = 0.25
