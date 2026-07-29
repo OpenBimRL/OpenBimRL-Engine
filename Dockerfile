@@ -2,9 +2,13 @@
 
 ARG IFCOPENSHELL_GIT_TAG=eafa158ca0cd5ba2ca22b5e588b0375cab2efbce
 
-FROM rocm/dev-ubuntu-22.04:7.1.1 AS rocm-llvm
+FROM rocm/dev-ubuntu-24.04:7.1.1 AS rocm-llvm
 
-FROM ubuntu:22.04 AS ifcos-build
+# Build IfcOpenShell on the same Ubuntu 24.04 / OCCT 7.6 generation as the
+# runtime image. Building on 22.04 links Boost 1.74 / OCCT 7.5 while Noble has
+# Boost 1.83 / OCCT 7.6 — native load then fails with missing sonames or
+# undefined OCCT symbols (e.g. BOPAlgo_MakerVolume::Perform).
+FROM rocm/dev-ubuntu-24.04:7.1.1 AS ifcos-build
 
 ARG IFCOPENSHELL_GIT_TAG
 ARG TARGETARCH
@@ -13,9 +17,7 @@ ARG TARGETARCH
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
 
-# Build IfcOpenShell with the same compiler family as OpenBIMRL_Native (clang, not g++).
-COPY --from=rocm-llvm /opt/rocm-7.1.1/ /opt/rocm/
-
+# ROCm clang is already present in this image at /opt/rocm.
 RUN apt-get update && apt-get install -y --no-install-recommends \
         ca-certificates git cmake ninja-build \
         libboost-all-dev \
@@ -26,7 +28,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libtbb-dev tcl-dev tk-dev occt-misc \
     && if [ "${TARGETARCH}" = "arm64" ]; then \
         apt-get install -y --no-install-recommends clang libomp-dev \
-        && rm -rf /opt/rocm; \
+        && rm -rf /opt/rocm /opt/rocm-7.1.1; \
        fi \
     && rm -rf /var/lib/apt/lists/*
 

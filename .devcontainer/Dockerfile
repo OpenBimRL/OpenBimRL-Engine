@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM rocm/dev-ubuntu-22.04:7.1.1 AS rocm-llvm
+FROM rocm/dev-ubuntu-24.04:7.1.1 AS rocm-llvm
 
 FROM debian:bookworm-slim AS ifcos-build
 
