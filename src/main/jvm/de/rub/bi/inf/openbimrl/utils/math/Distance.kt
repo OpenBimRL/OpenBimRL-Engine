@@ -40,6 +40,35 @@ fun planePlaneMetric(first: Plane, second: Plane): GeometryMetric {
     return GeometryMetric(distance, isParallel)
 }
 
+/**
+ * Debug helper: a straight that visualizes how plane-plane distance is measured.
+ * - Parallel planes: centered between the planes along the signed separation (normal of [first]).
+ * - Non-parallel planes: through [first.point] along the intersection direction (nA × nB).
+ */
+fun planePlaneDebugStraight(first: Plane, second: Plane): Straight {
+    val normalA = planeNormal(first)
+    val normalB = planeNormal(second)
+    val cross = Vector3d().apply { cross(normalA, normalB) }
+
+    if (cross.length() > EPSILON) {
+        return Straight(Point3d(first.point), cross)
+    }
+
+    val offset = Vector3d().apply { sub(second.point, first.point) }
+    val signedSeparation = normalA.dot(offset)
+    val alongNormal = Vector3d(normalA).apply { scale(signedSeparation) }
+    // Midpoint between the two plane references projected along the measuring normal,
+    // so visualize.straights draws the gap between faces rather than at one origin.
+    val midpoint = Point3d(first.point).apply {
+        add(Vector3d(normalA).apply { scale(signedSeparation * 0.5) })
+    }
+    return if (alongNormal.lengthSquared() > EPSILON * EPSILON) {
+        Straight(midpoint, alongNormal)
+    } else {
+        Straight(midpoint, Vector3d(normalA))
+    }
+}
+
 fun pointPointDistance(first: Point3d, second: Point3d): Double = first.distance(second)
 
 fun pointStraightDistance(point: Point3d, straight: Straight): Double {

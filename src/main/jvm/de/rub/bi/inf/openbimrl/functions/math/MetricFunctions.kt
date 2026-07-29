@@ -7,6 +7,7 @@ import de.rub.bi.inf.openbimrl.functions.annotations.FunctionOutput
 import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction
 import de.rub.bi.inf.openbimrl.utils.math.Plane
 import de.rub.bi.inf.openbimrl.utils.math.Straight
+import de.rub.bi.inf.openbimrl.utils.math.planePlaneDebugStraight
 import de.rub.bi.inf.openbimrl.utils.math.planePlaneMetric
 import de.rub.bi.inf.openbimrl.utils.math.straightStraightMetric
 
@@ -36,7 +37,7 @@ class StraightStraightMetric(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy)
 
 @OpenBIMRLFunction(
     name = "planePlaneMetric",
-    description = "Distance and parallelism between two planes. IsParallel distinguishes coincident from intersecting planes when distance is zero.",
+    description = "Distance and parallelism between two planes. IsParallel distinguishes coincident from intersecting planes when distance is zero. Straight is a debug axis (separation normal or intersection line) for visualization.",
 )
 class PlanePlaneMetric(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
     @FunctionInput(0, name = "Plane A")
@@ -51,9 +52,13 @@ class PlanePlaneMetric(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
     @FunctionOutput(1, name = "IsParallel")
     var isParallel: Boolean? = null
 
+    @FunctionOutput(2, name = "Straight")
+    var straight: Straight? = null
+
     override fun execute() {
         val metric = planePlaneMetric(planeA, planeB)
         distance = metric.distance
         isParallel = metric.isParallel
+        straight = planePlaneDebugStraight(planeA, planeB)
     }
 }

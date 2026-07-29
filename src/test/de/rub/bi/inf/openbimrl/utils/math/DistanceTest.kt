@@ -129,4 +129,29 @@ class DistanceTest {
         assertFalse(metric.isParallel)
         assertEquals(0.0, metric.distance, 1e-9)
     }
+
+    @Test
+    fun `planePlaneDebugStraight follows separation for parallel planes`() {
+        val first = horizontalPlane()
+        val second = horizontalPlane(Point3d(1.0, 2.0, 4.0))
+        val straight = planePlaneDebugStraight(first, second)
+        // Centered halfway along the measuring normal (Z), not at the first origin.
+        assertEquals(0.0, straight.point.x, 1e-9)
+        assertEquals(0.0, straight.point.y, 1e-9)
+        assertEquals(2.0, straight.point.z, 1e-9)
+        assertEquals(0.0, straight.direction.x, 1e-9)
+        assertEquals(0.0, straight.direction.y, 1e-9)
+        assertEquals(4.0, straight.direction.z, 1e-9)
+    }
+
+    @Test
+    fun `planePlaneDebugStraight follows intersection for non-parallel planes`() {
+        val first = Plane(Point3d(0.0, 0.0, 0.0), Vector3d(0.0, 1.0, 0.0), Vector3d(0.0, 0.0, 1.0))
+        val second = Plane(Point3d(0.0, 0.0, 0.0), Vector3d(1.0, 0.0, 0.0), Vector3d(0.0, 0.0, 1.0))
+        val straight = planePlaneDebugStraight(first, second)
+        // nA = (1,0,0), nB = (0,1,0) → intersection // (0,0,1)
+        assertEquals(0.0, straight.direction.x, 1e-9)
+        assertEquals(0.0, straight.direction.y, 1e-9)
+        assertTrue(kotlin.math.abs(straight.direction.z) > 1e-9)
+    }
 }

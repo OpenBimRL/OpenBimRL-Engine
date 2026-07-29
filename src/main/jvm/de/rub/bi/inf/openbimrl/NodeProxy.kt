@@ -46,16 +46,19 @@ class NodeProxy(val node: NodeType) {
     fun setOutputEdge(edge: EdgeProxy, pos: Int) = setEdge(outputEdges, edge, pos)
 
     fun getInputEdges(pos: Int) = getEdges(inputEdges, pos)
-    fun getInputEdges() = inputEdges?.values?.reduce { acc, edgeProxies ->
-        acc?.addAll(edgeProxies ?: emptyList())
-        acc
-    } ?: emptyList()
+    fun getInputEdges(): List<EdgeProxy> =
+        inputEdges?.values?.filterNotNull()?.flatten() ?: emptyList()
 
     fun getOutputEdges(pos: Int) = getEdges(outputEdges, pos)
-    fun getOutputEdges() = outputEdges?.values?.reduce { acc, edgeProxies ->
-        acc?.addAll(edgeProxies ?: emptyList())
-        acc
-    } ?: emptyList()
+    /**
+     * All outgoing edges across output handles.
+     *
+     * Must ignore null handle slots: a [reduce] starting on a null handle-0 list
+     * used to return an empty collection, which broke topological sort whenever the
+     * only wired output was handle 1+ (e.g. planePlaneMetric Straight → visualize).
+     */
+    fun getOutputEdges(): List<EdgeProxy> =
+        outputEdges?.values?.filterNotNull()?.flatten() ?: emptyList()
 
     fun getInputEdge(pos: Int) = getInputEdges(pos)?.getOrNull(0)
     fun getOutputEdge(pos: Int) = getOutputEdges(pos)?.getOrNull(0)

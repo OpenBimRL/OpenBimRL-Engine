@@ -5,9 +5,11 @@ import de.rub.bi.inf.extensions.upper
 import de.rub.bi.inf.nativelib.IfcPointer
 import de.rub.bi.inf.openbimrl.utils.math.Plane
 import de.rub.bi.inf.openbimrl.utils.math.Straight
+import de.rub.bi.inf.openbimrl.utils.math.normalized
 import javax.media.j3d.BoundingBox
 import javax.vecmath.Point3d
 import javax.vecmath.Vector3d
+import kotlin.math.abs
 
 private data class BboxAxes(
     val center: Point3d,
@@ -17,6 +19,8 @@ private data class BboxAxes(
 )
 
 object ElementApproximationService {
+    private const val AXIS_EPSILON = 1e-6
+
     fun toStraight(element: IfcPointer): ApproximationResult<Straight> {
         frameApproximation(element)?.let { (frame, source) ->
             return ApproximationResult(
@@ -28,30 +32,35 @@ object ElementApproximationService {
         val (center, bbox) = bboxApproximation(element)
         val axes = axesFromBoundingBox(bbox, center)
         return ApproximationResult(
-            Straight(Point3d(axes.center), Vector3d(axes.longest)),
+            Straight(enginePointToIfc(axes.center), engineVectorToIfc(axes.longest)),
             ApproximationSource.BBOX,
         )
     }
 
     fun toPlane(element: IfcPointer): ApproximationResult<Plane> {
-        frameApproximation(element)?.let { (frame, source) ->
+        val frameResult = frameApproximation(element)
+        if (frameResult != null && shouldTrustFrameForPlane(frameResult.first)) {
+            val frame = frameResult.first
             return ApproximationResult(
                 Plane(
                     Point3d(frame.point),
                     Vector3d(frame.axisX),
                     Vector3d(frame.axisZ),
                 ),
-                source,
+                frameResult.second,
             )
         }
 
+        // World-default ObjectPlacement (Axis/RefDirection unset) often does not match
+        // Brep solids: prefer the AABB face whose normal is the thinnest extent.
         val (center, bbox) = bboxApproximation(element)
         val axes = axesFromBoundingBox(bbox, center)
-        val normal = Vector3d(axes.shortest)
-        val axisU = Vector3d(axes.longest)
-        val axisV = Vector3d(axes.mid)
         return ApproximationResult(
-            Plane(Point3d(axes.center), axisU, axisV),
+            Plane(
+                enginePointToIfc(axes.center),
+                engineVectorToIfc(axes.longest),
+                engineVectorToIfc(axes.mid),
+            ),
             ApproximationSource.BBOX,
         )
     }
@@ -62,8 +71,36 @@ object ElementApproximationService {
         }
 
         val (center, _) = bboxApproximation(element)
-        return ApproximationResult(Point3d(center), ApproximationSource.BBOX)
+        return ApproximationResult(enginePointToIfc(center), ApproximationSource.BBOX)
     }
+
+    private fun shouldTrustFrameForPlane(frame: NativeElementFrame): Boolean {
+        if (frame.source == ApproximationSource.REPRESENTATION) return true
+        // Oriented placements are authoritative; identity world axes are not (common for Breps).
+        return !isWorldAlignedIdentityFrame(frame)
+    }
+
+    private fun isWorldAlignedIdentityFrame(frame: NativeElementFrame): Boolean {
+        val x = normalized(frame.axisX)
+        val z = normalized(frame.axisZ)
+        val xIsWorldX = near(abs(x.x), 1.0) && nearZero(x.y) && nearZero(x.z)
+        val zIsWorldZ = near(abs(z.z), 1.0) && nearZero(z.x) && nearZero(z.y)
+        return xIsWorldX && zIsWorldZ
+    }
+
+    private fun near(a: Double, b: Double): Boolean = abs(a - b) <= AXIS_EPSILON
+
+    private fun nearZero(a: Double): Boolean = abs(a) <= AXIS_EPSILON
+
+    /**
+     * Native bounding boxes are stored as engine XZY (IFC x,z,y).
+     * Plane/Straight math and visualizers expect IFC XYZ (Z-up).
+     */
+    private fun enginePointToIfc(point: Point3d): Point3d =
+        Point3d(point.x, point.z, point.y)
+
+    private fun engineVectorToIfc(vector: Vector3d): Vector3d =
+        Vector3d(vector.x, vector.z, vector.y)
 
     private fun frameApproximation(
         element: IfcPointer,

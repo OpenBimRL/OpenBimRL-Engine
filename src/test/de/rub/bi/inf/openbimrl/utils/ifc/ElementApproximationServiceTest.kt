@@ -100,9 +100,11 @@ class ElementApproximationServiceTest {
         val planeA = ElementApproximationService.toPlane(wallA)
         val planeB = ElementApproximationService.toPlane(wallB)
 
+        // World-aligned placements fall back to BBOX face normals; oriented frames stay as-is.
         assertTrue(
             planeA.source == ApproximationSource.PLACEMENT ||
-                planeA.source == ApproximationSource.REPRESENTATION,
+                planeA.source == ApproximationSource.REPRESENTATION ||
+                planeA.source == ApproximationSource.BBOX,
         )
 
         val metric = planePlaneMetric(planeA.value, planeB.value)

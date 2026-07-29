@@ -136,8 +136,18 @@ class GltfVisualComposer {
         val srgb = color.toSRGB()
         straights.forEach { straight ->
             val center = ifcPointToEngine(straight.point)
-            val direction = normalized(ifcVectorToEngine(straight.direction))
-            val halfOffset = Vector3d(direction).apply { scale(segmentLength * 0.5) }
+            val rawDirection = ifcVectorToEngine(straight.direction)
+            val directionLength = rawDirection.length()
+            val direction = normalized(rawDirection)
+            // planePlaneDebugStraight encodes separation in |direction|; an oversized
+            // SegmentLength would dominate the camera frustum and hide the gap.
+            val effectiveLength =
+                if (directionLength > 1.0 + 1e-6 && segmentLength > directionLength * 4.0) {
+                    directionLength * 2.0
+                } else {
+                    segmentLength
+                }
+            val halfOffset = Vector3d(direction).apply { scale(effectiveLength * 0.5) }
 
             val start = Point3d(center).apply { sub(halfOffset) }
             val end = Point3d(center).apply { add(halfOffset) }
