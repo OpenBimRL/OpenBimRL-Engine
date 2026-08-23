@@ -85,3 +85,5 @@ jobs:
           push: true
           platforms: linux/amd64
           tags: ${{ steps.tags.outputs.list }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

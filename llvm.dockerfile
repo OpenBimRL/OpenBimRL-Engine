@@ -1,16 +1,7 @@
-# syntax=docker/dockerfile:1
-
-# Default / CPU Engine image: system LLVM clang + libomp (no ROCm / CUDA).
-# Build graph: IfcOpenShell (prebuilt) → Bazel //:console_app_deploy.jar → slim JRE.
-# Supported platform: linux/amd64 only.
-#
-#   docker build -f llvm.dockerfile -t openbimrl-engine:llvm .
-
 ARG IFCOPENSHELL_GIT_TAG=eafa158ca0cd5ba2ca22b5e588b0375cab2efbce
 ARG BAZELISK_VERSION=1.29.0
 
-# Build IfcOpenShell on Ubuntu 24.04 / OCCT 7.6 (same generation as the runtime
-# image). Building on older distros links Boost/OCCT sonames that Noble cannot load.
+# Build IfcOpenShell on Ubuntu 24.04 / OCCT 7.6
 FROM ubuntu:24.04 AS ifcos-build
 
 ARG IFCOPENSHELL_GIT_TAG
@@ -66,6 +57,8 @@ ARG BAZELISK_VERSION
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
+ENV JAVA_HOME=/opt/java/openjdk
+ENV PATH=${JAVA_HOME}/bin:${PATH}
 ENV OPENBIMRL_USE_PREBUILT_IFCOPENSHELL=ON
 ENV OPENBIMRL_IFCOPENSHELL_PREFIX=/opt/ifcopenshell
 
@@ -93,7 +86,7 @@ COPY . .
 RUN test -f src/main/cpp/MODULE.bazel \
     || { echo "ERROR: src/main/cpp submodule missing; checkout Native before docker build" >&2; exit 1; }
 
-RUN bazel build //:console_app_deploy.jar \
+RUN bazel build --config=docker //:console_app_deploy.jar \
     && mkdir -p /out \
     && cp -f bazel-bin/console_app_deploy.jar /out/app.jar
 

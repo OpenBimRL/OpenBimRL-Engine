@@ -14,7 +14,8 @@ C-ABI native library are produced as classpath resource
 - Optional CUDA toolkit (`nvcc` / CUDA LLVM) — scaffolding for `--config=cuda_offload`
   (NVIDIA offload is WIP; see below)
 - OpenCASCADE / Eigen / OpenMP packages (already in the image)
-- Java **21** runtime (Bazel downloads `remotejdk_21`; needed for `kmp-gltf-model`).
+- Java **21** runtime (local `JAVA_HOME` on host/CI; Bazel `--java_runtime_version=21`
+  downloads `remotejdk_21` unless `--config=docker` in the Engine dockerfiles).
   Sources still compile to Java 17 bytecode.
 
 ## Commands
@@ -172,25 +173,24 @@ Requires the Native submodule (`src/main/cpp`). linux/amd64 only.
 | File | Role |
 |------|------|
 | `llvm.dockerfile` | Default CPU image — system clang + libomp, no ROCm/CUDA |
-| `rocm.dockerfile` | AMD GPU — ROCm LLVM, always `--config=rocm_offload` |
-| `nvcc.dockerfile` | NVIDIA — CUDA toolkit + optional `--config=cuda_offload` (WIP) |
+| `rocm.dockerfile` | AMD GPU — JVM at build time; native `.so` at container start (ROCm offload) |
+| `nvcc.dockerfile` | NVIDIA — JVM at build time; native `.so` at container start (CUDA offload, WIP) |
 
 ```bash
 # CPU / default
 docker build -f llvm.dockerfile -t openbimrl-engine:llvm .
 
-# AMD offload (arch optional; empty → CMake rocminfo if a GPU is visible)
+# AMD offload — native compiled at container start; set arch at run time
 docker build -f rocm.dockerfile -t openbimrl-engine:rocm .
-docker build -f rocm.dockerfile -t openbimrl-engine:rocm \
-  --build-arg ROCM_OFFLOAD_ARCH=gfx1100 .
+docker run --device=/dev/kfd --device=/dev/dri --group-add video \
+  -e OPENBIMRL_ROCM_OFFLOAD_ARCH=gfx1100 \
+  openbimrl-engine:rocm …
 
-# NVIDIA (CUDA toolkit; offload opt-in / WIP; arch optional like ROCm)
+# NVIDIA — native compiled at container start; set arch at run time (WIP)
 docker build -f nvcc.dockerfile -t openbimrl-engine:nvcc .
-docker build -f nvcc.dockerfile -t openbimrl-engine:nvcc \
-  --build-arg ENABLE_CUDA_OFFLOAD=ON .
-docker build -f nvcc.dockerfile -t openbimrl-engine:nvcc \
-  --build-arg ENABLE_CUDA_OFFLOAD=ON \
-  --build-arg CUDA_OFFLOAD_ARCH=sm_89 .
+docker run --gpus all \
+  -e OPENBIMRL_CUDA_OFFLOAD_ARCH=sm_89 \
+  openbimrl-engine:nvcc …
 ```
 
 ghcr.io publish (`.github/workflows/build_and_test.yaml`) builds all three images

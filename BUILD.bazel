@@ -45,36 +45,47 @@ cp -f "$${src}" "$@"
 # JVM / Kotlin library (JNA — FunctionsNative + native .so resource)
 # ---------------------------------------------------------------------------
 
+ENGINE_JVM_SRCS = glob(
+    [
+        "src/main/jvm/**/*.kt",
+        "src/main/jvm/**/*.java",
+    ],
+)
+
+ENGINE_JVM_DEPS = [
+    "@bvh_src//:bvh",
+    "@openbimrl_api_src//:openbimrl_api",
+    "@maven//:com_github_ajalt_colormath_colormath_jvm",
+    "@maven//:com_google_code_gson_gson",
+    "@maven//:commons_io_commons_io",
+    "@maven//:io_arrow_kt_arrow_core_jvm",
+    "@maven//:io_github_offlinebrain_khexagon_jvm",
+    "@maven//:java3d_j3d_core",
+    "@maven//:javax_vecmath_vecmath",
+    "@maven//:javax_xml_bind_activation",
+    "@maven//:javax_xml_bind_jaxb_api",
+    "@maven//:net_java_dev_jna_jna",
+    "@maven//:org_codeberg_iljo_kmp_gltf_model_kmp_gltf_model_jvm",
+    "@maven//:org_glassfish_jaxb_jaxb_runtime",
+    "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
+    "@maven//:org_jetbrains_kotlinx_kotlinx_serialization_json_jvm",
+    "@maven//:org_reflections_reflections",
+]
+
+# JVM-only (no embedded .so). ROCm docker image compiles native at container start.
+kt_jvm_library(
+    name = "engine_lib_jvm",
+    srcs = ENGINE_JVM_SRCS,
+    deps = ENGINE_JVM_DEPS,
+)
+
 kt_jvm_library(
     name = "engine_lib",
-    srcs = glob(
-        [
-            "src/main/jvm/**/*.kt",
-            "src/main/jvm/**/*.java",
-        ],
-    ),
+    srcs = ENGINE_JVM_SRCS,
     resources = [
         ":native_lib_so",
     ],
-    deps = [
-        "@bvh_src//:bvh",
-        "@openbimrl_api_src//:openbimrl_api",
-        "@maven//:com_github_ajalt_colormath_colormath_jvm",
-        "@maven//:com_google_code_gson_gson",
-        "@maven//:commons_io_commons_io",
-        "@maven//:io_arrow_kt_arrow_core_jvm",
-        "@maven//:io_github_offlinebrain_khexagon_jvm",
-        "@maven//:java3d_j3d_core",
-        "@maven//:javax_vecmath_vecmath",
-        "@maven//:javax_xml_bind_activation",
-        "@maven//:javax_xml_bind_jaxb_api",
-        "@maven//:net_java_dev_jna_jna",
-        "@maven//:org_codeberg_iljo_kmp_gltf_model_kmp_gltf_model_jvm",
-        "@maven//:org_glassfish_jaxb_jaxb_runtime",
-        "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
-        "@maven//:org_jetbrains_kotlinx_kotlinx_serialization_json_jvm",
-        "@maven//:org_reflections_reflections",
-    ],
+    deps = ENGINE_JVM_DEPS,
 )
 
 kt_jvm_binary(
@@ -88,6 +99,13 @@ java_binary(
     name = "console_app",
     main_class = "de.rub.bi.inf.openbimrl.ConsoleApplicationKt",
     runtime_deps = [":engine_lib"],
+)
+
+# JVM-only fat jar (no native). ROCm image bundles .so at container start.
+java_binary(
+    name = "console_jvm_app",
+    main_class = "de.rub.bi.inf.openbimrl.ConsoleApplicationKt",
+    runtime_deps = [":engine_lib_jvm"],
 )
 
 # Alias used by docs / smoke checks

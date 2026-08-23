@@ -19,6 +19,15 @@ bazel_dep(name = "rules_java", version = "9.3.0")
 bazel_dep(name = "bazel_skylib", version = "1.8.2")
 bazel_dep(name = "platforms", version = "1.0.0")
 
+# Temurin in Docker (--config=docker) uses local_jdk; expose the repo from
+# rules_java's toolchains extension (not visible to the root module by default).
+java_toolchains = use_extension("@rules_java//java:extensions.bzl", "toolchains")
+use_repo(java_toolchains, "local_jdk")
+register_toolchains(
+    "@local_jdk//:runtime_toolchain_definition",
+    "@local_jdk//:bootstrap_runtime_toolchain_definition",
+)
+
 # Native CMake library (rules_foreign_cc + nlohmann/json) — see src/main/cpp/MODULE.bazel.
 bazel_dep(name = "openbimrl_native", version = "0.1.0")
 local_path_override(
