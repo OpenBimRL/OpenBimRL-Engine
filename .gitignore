@@ -11,3 +11,9 @@
 /*.iml
 *.so
 *.ifc
+# Bazel
+/bazel-*
+/.bazelrc.user
+
+# Do not vendor OpenBIMRL-API / BVH jars (built from source via MODULE.bazel)
+/third_party/*.jar

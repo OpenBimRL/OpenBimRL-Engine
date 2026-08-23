@@ -1,7 +1,12 @@
-Dockerfile
+*.dockerfile
 build/
 target/
 .vscode/
 .idea/
 .github/
 .devcontainer/
+rfc/
+bazel-*
+.m2-dry-run/
+.git/
+**/.git

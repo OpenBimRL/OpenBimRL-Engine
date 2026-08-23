@@ -9,7 +9,7 @@ import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
     try {
-        FunctionsNative.create("lib.so")
+        FunctionsNative.create()
     } catch (_: Exception) {
         println("Could not load native lib! Aborting...")
         exitProcess(42)

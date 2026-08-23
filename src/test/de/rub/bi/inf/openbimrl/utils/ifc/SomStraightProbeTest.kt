@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Assumptions.assumeTrue
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
-import java.nio.file.Paths
 import kotlin.math.abs
 import kotlin.math.hypot
 
@@ -35,8 +34,7 @@ class SomStraightProbeTest {
     @Test
     fun `beam placement frame matches bbox center in world CRS`() {
         assumeTrue(nativeAvailable, "Native library unavailable")
-        val ifcFile =
-            Paths.get("src", "test", "resources", "300_IB_BW_EÜ Brückentor_SOM.ifc").toFile()
+        val ifcFile = java.io.File(IfcTestHelper.testResourcePath("300_IB_BW_EÜ Brückentor_SOM.ifc"))
         assumeTrue(ifcFile.isFile, "SOM IFC not present (local-only fixture)")
         assumeTrue(IfcTestHelper.loadIfc(ifcFile.absolutePath))
 

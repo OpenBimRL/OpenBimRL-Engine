@@ -17,38 +17,49 @@ object IfcTestHelper {
     const val DOOR_1_GUID = "0PathTest000000000022"
     const val DOOR_2_GUID = "0PathTest000000000026"
 
+    /**
+     * Resolve `src/test/resources/...` for Maven (project cwd) and Bazel (runfiles / env).
+     */
+    fun testResourcePath(vararg relativeUnderResources: String): String {
+        val rel = Paths.get("src", "test", "resources", *relativeUnderResources)
+        val candidates = mutableListOf(rel.toFile())
+        System.getenv("OPENBIMRL_ENGINE_ROOT")?.let { root ->
+            candidates += Paths.get(root).resolve(rel).toFile()
+        }
+        System.getenv("TEST_SRCDIR")?.let { srcdir ->
+            val workspace = System.getenv("TEST_WORKSPACE") ?: "_main"
+            candidates += Paths.get(srcdir, workspace).resolve(rel).toFile()
+            candidates += Paths.get(srcdir).resolve(rel).toFile()
+        }
+        System.getenv("JAVA_RUNFILES")?.let { runfiles ->
+            val workspace = System.getenv("TEST_WORKSPACE") ?: "_main"
+            candidates += Paths.get(runfiles, workspace).resolve(rel).toFile()
+            candidates += Paths.get(runfiles).resolve(rel).toFile()
+        }
+        return candidates.firstOrNull { it.isFile }?.absolutePath
+            ?: rel.toFile().absolutePath
+    }
+
     fun pathfindingMinimalIfcPath(): String =
-        Paths.get("src", "test", "resources", "pathfinding_minimal.ifc")
-            .toFile()
-            .absolutePath
+        testResourcePath("pathfinding_minimal.ifc")
 
     fun showDistancesOpenBimRLPath(): String =
-        Paths.get("src", "test", "resources", "show_distances.openbimrl")
-            .toFile()
-            .absolutePath
+        testResourcePath("show_distances.openbimrl")
 
     fun railsParallelGaugeIfcPath(): String =
-        Paths.get("src", "test", "resources", "rails_parallel_gauge.ifc")
-            .toFile()
-            .absolutePath
+        testResourcePath("rails_parallel_gauge.ifc")
 
     fun wallsParallelIfcPath(): String =
-        Paths.get("src", "test", "resources", "walls_parallel.ifc")
-            .toFile()
-            .absolutePath
+        testResourcePath("walls_parallel.ifc")
 
     fun railsParallelGaugeOpenBimRLPath(): String =
-        Paths.get("src", "test", "resources", "rails_parallel_gauge.openbimrl")
-            .toFile()
-            .absolutePath
+        testResourcePath("rails_parallel_gauge.openbimrl")
 
     fun wallsParallelOpenBimRLPath(): String =
-        Paths.get("src", "test", "resources", "walls_parallel.openbimrl")
-            .toFile()
-            .absolutePath
+        testResourcePath("walls_parallel.openbimrl")
 
     fun loadNativeLibrary() {
-        FunctionsNative.create("lib.so")
+        FunctionsNative.create()
     }
 
     fun loadIfc(absolutePath: String): Boolean =

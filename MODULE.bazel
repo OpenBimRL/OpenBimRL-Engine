@@ -1,0 +1,105 @@
+"""OpenBimRL-Engine Bazel module (RFC-2 Track A).
+
+Builds Kotlin/JVM and embeds the JNA C-ABI native library
+(libOpenBimRL-Engine-Native-x86_64.so) from the openbimrl_native module
+(git submodule at src/main/cpp).
+JNI / jni-bind is Track B and intentionally out of scope here.
+"""
+
+module(
+    name = "openbimrl_engine",
+    version = "2026.08.23",
+)
+
+bazel_dep(name = "rules_kotlin", version = "2.3.20")
+# 7.1+ is required for MavenPublisher with rules_java 9 / Bazel 9
+# (6.9's MavenPublisherTest uses bare java_test and fails analysis).
+bazel_dep(name = "rules_jvm_external", version = "7.1")
+bazel_dep(name = "rules_java", version = "9.3.0")
+bazel_dep(name = "bazel_skylib", version = "1.8.2")
+bazel_dep(name = "platforms", version = "1.0.0")
+
+# Native CMake library (rules_foreign_cc + nlohmann/json) — see src/main/cpp/MODULE.bazel.
+bazel_dep(name = "openbimrl_native", version = "0.1.0")
+local_path_override(
+    module_name = "openbimrl_native",
+    path = "src/main/cpp",
+)
+
+maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
+maven.install(
+    artifacts = [
+        # JVM deps for Engine (formerly listed in the removed Maven pom.xml).
+        "commons-io:commons-io:2.17.0",
+        "org.reflections:reflections:0.10.2",
+        "net.java.dev.jna:jna:5.15.0",
+        "com.google.code.gson:gson:2.11.0",
+        "javax.xml.bind:activation:1.0.2",
+        "javax.xml.bind:jaxb-api:2.3.1",
+        "org.glassfish.jaxb:jaxb-runtime:2.3.1",
+        "java3d:j3d-core:1.3.1",
+        "javax.vecmath:vecmath:1.5.2",
+        "io.github.offlinebrain:khexagon-jvm:0.2.0",
+        "com.github.ajalt.colormath:colormath-jvm:3.6.0",
+        # Resolved via jitpack (same as Maven _remote.repositories).
+        "org.codeberg.iljo.kmp-gltf-model:kmp-gltf-model-jvm:v0.2.0",
+        "org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.10.0",
+        "io.arrow-kt:arrow-core-jvm:1.2.4",
+        "org.jetbrains.kotlin:kotlin-stdlib:2.3.10",
+        "org.jetbrains.kotlin:kotlin-test-junit:2.3.10",
+        # Tests (pom used junit-jupiter:RELEASE — pin a current Jupiter).
+        "org.junit.jupiter:junit-jupiter-api:5.11.4",
+        "org.junit.jupiter:junit-jupiter-engine:5.11.4",
+        "org.junit.jupiter:junit-jupiter-params:5.11.4",
+        "org.junit.platform:junit-platform-console:1.11.4",
+        "org.junit.platform:junit-platform-launcher:1.11.4",
+    ],
+    repositories = [
+        # Prefer Central + Google mirror (Docker/CI often see Connection reset on
+        # a single Maven Central endpoint during coursier resolution).
+        "https://repo1.maven.org/maven2",
+        "https://maven-central.storage-download.googleapis.com/maven2",
+        "https://repo.maven.apache.org/maven2",
+        "https://maven.imagej.net/content/repositories/public/",
+        "https://jitpack.io",
+    ],
+    resolve_timeout = 1200,
+)
+use_repo(maven, "maven")
+
+# ---------------------------------------------------------------------------
+# Private / non-Central JVM libs — build from pinned GitHub source archives
+# (replaces vendored jars under third_party/). Same OpenBimRL commit as
+# scripts/dev-start.sh / CI local install.
+#
+# Bzlmod only: `use_repo_rule` + http_archive here is the supported pattern
+# (https://bazel.build/external/overview). Do NOT add WORKSPACE / WORKSPACE.bazel
+# or legacy workspace() macros — Bazel 9 disables the WORKSPACE system
+# (--noenable_workspace in .bazelrc).
+# ---------------------------------------------------------------------------
+
+http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "openbimrl_api_src",
+    build_file = "//third_party:openbimrl_api.BUILD",
+    # JAXB-generated .java files are ISO-8859-1; JavaBuilder/JDK defaults to UTF-8.
+    patch_cmds = [
+        "find src -name '*.java' -exec sh -c 'iconv -f ISO-8859-1 -t UTF-8 \"$1\" > \"$1.tmp\" && mv \"$1.tmp\" \"$1\"' _ {} \\;",
+    ],
+    sha256 = "a0840a0b85ef66feeb4ead1460ef8800e107c02396d66429b2490db342ca27fa",
+    strip_prefix = "OpenBimRL-83bd65f52803d7e86a464b592899c6709888c47a",
+    urls = [
+        "https://github.com/RUB-Informatik-im-Bauwesen/OpenBimRL/archive/83bd65f52803d7e86a464b592899c6709888c47a.tar.gz",
+    ],
+)
+
+http_archive(
+    name = "bvh_src",
+    build_file = "//third_party:bvh.BUILD",
+    sha256 = "dd25ec993d71e41e790c9a6a2212dc0af5d2533eb5c7e94c1566e3dbb0e32451",
+    strip_prefix = "Maven-Bounding-Volume-Hierarchy-d92129c5af88743e19b9ab801f69e3fb72baf46d",
+    urls = [
+        "https://github.com/RUB-Informatik-im-Bauwesen/Maven-Bounding-Volume-Hierarchy/archive/d92129c5af88743e19b9ab801f69e3fb72baf46d.tar.gz",
+    ],
+)

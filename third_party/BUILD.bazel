@@ -1,0 +1,6 @@
+"""Helper BUILD fragments for pinned upstream http_archives (see MODULE.bazel)."""
+
+exports_files([
+    "bvh.BUILD",
+    "openbimrl_api.BUILD",
+])

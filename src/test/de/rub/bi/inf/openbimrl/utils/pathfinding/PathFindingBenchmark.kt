@@ -9,7 +9,6 @@ import io.github.offlinebrain.khexagon.math.Point
 import io.github.offlinebrain.khexagon.math.pixelToHex
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.TestReporter
-import java.nio.file.Paths
 import kotlin.system.measureNanoTime
 
 data class PathfindingBenchmarkResult(
@@ -30,7 +29,7 @@ data class PathfindingBenchmarkResult(
 object PathFindingBenchmark {
 
     fun run(fileName: String, doorCount: Int, warmupRuns: Int = 3, measuredRuns: Int = 10): PathfindingBenchmarkResult {
-        val ifcPath = Paths.get("src", "test", "resources", fileName).toFile().absolutePath
+        val ifcPath = IfcTestHelper.testResourcePath(fileName)
         assertTrue(IfcTestHelper.loadIfc(ifcPath), "Failed to load $fileName")
 
         val walls = IfcTestHelper.filterByElement("IfcWall")

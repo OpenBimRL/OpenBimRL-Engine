@@ -19,11 +19,14 @@ OpenBimRL documents for defining precalculations and in extension perform rule c
 
 **Dependencies:**
 - [OpenBimRL-API](https://github.com/RUB-Informatik-im-Bauwesen/OpenBimRL)
-- [IFCOpenShell](https://github.com/IfcOpenShell/IfcOpenShell) (has to be installed on a system level. Binaries can be found in the official docker container which this container build also relies on)
+- [IFCOpenShell](https://github.com/IfcOpenShell/IfcOpenShell) (prebuilt at `/opt/ifcopenshell` in the DevContainer image)
 
-More dependencies are provided in the _pom.xml_ and automatically included via maven.
+**Build:** Bazel is primary — see [BUILD.md](BUILD.md) for `bazel build` / `bazel test` /
+GitHub Packages publish / Docker (`llvm.dockerfile`, `rocm.dockerfile`, `nvcc.dockerfile`).
+There is no Engine `pom.xml`; Maven consumers (e.g. Engine-REST) use the published GitHub Packages artifact.
+JNI migration is a separate track.
 
 ### Minimum Example
 
 An example execution of this engine is provided in _ConsoleApplication.kt_ and can be used to perform rule checking out of the
-box. Results will be printed in the terminal. 
+box. Results will be printed in the terminal.

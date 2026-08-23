@@ -1,0 +1,68 @@
+# OpenBimRL-Engine Track A (Bazel) — Linux amd64 / DevContainer defaults
+
+common --enable_bzlmod
+common --noenable_workspace
+
+# Default Maven GAV version for //:openbimrl_engine_maven (matches MODULE.bazel).
+# CI overrides with --define OPENBIMRL_ENGINE_VERSION=YYYY.MM.DD
+common --define=OPENBIMRL_ENGINE_VERSION=2026.08.23
+
+# Compile for Java 17 bytecode; run on Java 21 (DevContainer default,
+# required by kmp-gltf-model class file version 65).
+build --java_language_version=17
+build --java_runtime_version=21
+build --tool_java_language_version=17
+build --tool_java_runtime_version=21
+
+# Kotlin toolchain registered in //:kotlin_toolchain
+build --extra_toolchains=//:kotlin_toolchain
+test --extra_toolchains=//:kotlin_toolchain
+
+# Native cmake (rules_foreign_cc) needs host OpenCASCADE / IfcOpenShell / system LLVM
+build --modify_execution_info=CppLink=+no-remote,CMake=+no-remote
+
+# Force system LLVM clang for host / repo C++ (ROCm clang may be first on PATH
+# in the GPU DevContainer). Offload configs override CC/CXX only inside
+# @openbimrl_native//:openbimrl_native via --config=rocm_offload / cuda_offload.
+build --action_env=CC=/usr/bin/clang
+build --action_env=CXX=/usr/bin/clang++
+build --host_action_env=CC=/usr/bin/clang
+build --host_action_env=CXX=/usr/bin/clang++
+build --repo_env=CC=/usr/bin/clang
+build --repo_env=CXX=/usr/bin/clang++
+
+# Opt-in ROCm OpenMP GPU offload for the native cmake target.
+# Requires /opt/rocm/llvm and an arch (env or rocminfo auto-detect).
+# Example:
+#   OPENBIMRL_ROCM_OFFLOAD_ARCH=gfx1100 bazel build //:native_lib_so --config=rocm_offload
+build:rocm_offload --define=OPENBIMRL_ENABLE_ROCM_OFFLOAD=ON
+
+# Opt-in NVIDIA CUDA OpenMP offload (WIP — see BUILD.md / nvcc.dockerfile).
+# Requires CUDA toolkit (nvcc). Arch optional (env or nvidia-smi), e.g. sm_89.
+# Example:
+#   bazel build //:native_lib_so --config=cuda_offload
+#   OPENBIMRL_CUDA_OFFLOAD_ARCH=sm_89 bazel build //:native_lib_so --config=cuda_offload
+build:cuda_offload --define=OPENBIMRL_ENABLE_CUDA_OFFLOAD=ON
+
+# Headless AWT for geometry / Java3D tests (mirrors Surefire argLine)
+test --test_env=JAVA_TOOL_OPTIONS=-Djava.awt.headless=true
+test --test_output=errors
+test --test_summary=detailed
+
+# Faster local iteration
+build --curses=yes
+
+# Pass through host paths / offload toggles used by native cmake / IfcOpenShell
+build --action_env=HOME
+build --action_env=OPENBIMRL_IFCOPENSHELL_PREFIX
+build --action_env=OPENBIMRL_USE_PREBUILT_IFCOPENSHELL
+build --action_env=OPENBIMRL_ENABLE_ROCM_OFFLOAD
+build --action_env=OPENBIMRL_ROCM_OFFLOAD_ARCH
+build --action_env=OPENBIMRL_ENABLE_CUDA_OFFLOAD
+build --action_env=OPENBIMRL_CUDA_OFFLOAD_ARCH
+build --action_env=CUDA_HOME
+test --action_env=HOME
+test --action_env=OPENBIMRL_IFCOPENSHELL_PREFIX
+test --test_env=OPENBIMRL_IFCOPENSHELL_PREFIX
+# Runtime deps of the native .so (shared IfcOpenShell); also embedded via RUNPATH when possible
+test --test_env=LD_LIBRARY_PATH=/opt/ifcopenshell/lib

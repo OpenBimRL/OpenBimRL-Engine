@@ -1,5 +1,8 @@
 # syntax=docker/dockerfile:1
 
+# Engine-local DevContainer (legacy). Prefer monorepo Dockerfile.dev for
+# day-to-day work. System clang for defaults; ROCm LLVM for offload.
+
 FROM rocm/dev-ubuntu-24.04:7.1.1 AS rocm-llvm
 
 FROM debian:bookworm-slim AS ifcos-build
@@ -7,7 +10,8 @@ FROM debian:bookworm-slim AS ifcos-build
 ARG IFCOPENSHELL_GIT_TAG=eafa158ca0cd5ba2ca22b5e588b0375cab2efbce
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        ca-certificates git cmake ninja-build g++ \
+        ca-certificates git cmake ninja-build \
+        clang libomp-dev \
         libboost-all-dev \
         libocct-foundation-dev libocct-modeling-algorithms-dev libocct-modeling-data-dev \
         libocct-ocaf-dev libocct-visualization-dev libocct-data-exchange-dev \
@@ -19,6 +23,8 @@ RUN git clone https://github.com/IfcOpenShell/IfcOpenShell.git /src \
     && git checkout "${IFCOPENSHELL_GIT_TAG}"
 
 RUN cmake -G Ninja -S /src/cmake -B /build \
+        -DCMAKE_C_COMPILER=/usr/bin/clang \
+        -DCMAKE_CXX_COMPILER=/usr/bin/clang++ \
         -DCMAKE_INSTALL_PREFIX=/opt/ifcopenshell \
         -DCMAKE_BUILD_TYPE=Release \
         -DOCC_INCLUDE_DIR=/usr/include/opencascade \
@@ -47,12 +53,13 @@ COPY --from=rocm-llvm /opt/rocm-7.1.1/ /opt/rocm/
 COPY --from=ifcos-build /opt/ifcopenshell /opt/ifcopenshell
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    clang libomp-dev libomp5 \
     xfonts-scalable libocct-data-exchange-dev libocct-draw-dev \
     libocct-foundation-dev libocct-modeling-algorithms-dev libocct-modeling-data-dev libocct-ocaf-dev \
     libocct-visualization-dev libboost-all-dev libhdf5-dev libmpfr-dev libgmp3-dev libxml2-dev \
     cmake ninja-build ccache libeigen3-dev make \
-    && ln -sf /opt/rocm/llvm/bin/clang /usr/local/bin/clang \
-    && ln -sf /opt/rocm/llvm/bin/clang++ /usr/local/bin/clang++ \
+    && ln -sf /opt/rocm/llvm/bin/clang /usr/local/bin/rocm-clang \
+    && ln -sf /opt/rocm/llvm/bin/clang++ /usr/local/bin/rocm-clang++ \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -64,7 +71,7 @@ RUN rm -rf api
 
 ENV ROCM_PATH=/opt/rocm
 ENV PATH=${ROCM_PATH}/llvm/bin:${PATH}
-ENV CC=${ROCM_PATH}/llvm/bin/clang
-ENV CXX=${ROCM_PATH}/llvm/bin/clang++
+ENV CC=/usr/bin/rocm-clang
+ENV CXX=/usr/bin/rocm-clang++
 ENV OPENBIMRL_USE_PREBUILT_IFCOPENSHELL=ON
 ENV OPENBIMRL_IFCOPENSHELL_PREFIX=/opt/ifcopenshell

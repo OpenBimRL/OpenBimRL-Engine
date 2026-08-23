@@ -1,9 +1,9 @@
 permissions:
   packages: write
+  contents: read
 
-name: Build and publish a Docker image to ghcr.io
+name: Build and publish Docker images to ghcr.io
 on:
-  # publish on pushes to the main branch (image tagged as "latest")
   push:
     branches:
       - main
@@ -13,24 +13,59 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
-  docker_publish_X86:
-    runs-on: "ubuntu-24.04"
+  docker_publish:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # CPU / default LLVM image also gets :latest and the bare dated tag.
+          - name: llvm
+            file: llvm.dockerfile
+            is_default: true
+          - name: rocm
+            file: rocm.dockerfile
+            is_default: false
+          - name: nvcc
+            file: nvcc.dockerfile
+            is_default: false
 
     steps:
       - uses: actions/checkout@v7
         with:
-          submodules: 'true'
+          submodules: "true"
 
-      - name: change version
-        run: mvn versions:set -DnewVersion=$(date +"%Y").$(date +"%m").$(date +"%d") versions:commit
-
-      - name: Read Maven package version
-        id: maven_version
-        run: echo "PACKAGE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_OUTPUT"
+      - name: Set image version
+        id: version
+        run: echo "value=$(date -u +%Y).$(date -u +%m).$(date -u +%d)" >> "$GITHUB_OUTPUT"
 
       - name: downcase REPO
         run: |
-          echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
+          echo "REPO=${GITHUB_REPOSITORY,,}" >> "${GITHUB_ENV}"
+
+      - name: Compose image tags
+        id: tags
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
+          VARIANT: ${{ matrix.name }}
+          IS_DEFAULT: ${{ matrix.is_default }}
+        run: |
+          set -euo pipefail
+          base="${REGISTRY}/${REPO}"
+          {
+            echo "${base}:${VARIANT}"
+            echo "${base}:${VERSION}-${VARIANT}"
+            if [[ "${IS_DEFAULT}" == "true" ]]; then
+              echo "${base}:latest"
+              echo "${base}:${VERSION}"
+            fi
+          } | tee tags.txt
+          # Multiline output for build-push-action
+          {
+            echo "list<<EOF"
+            cat tags.txt
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
@@ -42,66 +77,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v6
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.REPO }}
-
-      - name: Build and push Docker image
+      - name: Build and push ${{ matrix.name }}
         uses: docker/build-push-action@v7
         with:
           context: .
+          file: ${{ matrix.file }}
           push: true
           platforms: linux/amd64
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.REPO }}:${{ steps.maven_version.outputs.PACKAGE_VERSION }}
-            ${{ env.REGISTRY }}/${{ env.REPO }}:latest
-          build-args: |
-            GITHUB_ACTOR=${{ github.actor }}
-            GITHUB_ACCESS_TOKEN=${{ secrets.GITHUB_TOKEN }}
-
-  docker_publish_ARM:
-    runs-on: "ubuntu-24.04-arm"
-
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          submodules: 'true'
-
-      - name: Read Maven package version
-        id: maven_version
-        run: echo "PACKAGE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_OUTPUT"
-
-      - name: downcase REPO
-        run: |
-          echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
-
-      - name: Log in to the Container registry
-        uses: docker/login-action@v4
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v6
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.REPO }}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          push: true
-          platforms: linux/arm64
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.REPO }}:${{ steps.maven_version.outputs.PACKAGE_VERSION }}
-            ${{ env.REGISTRY }}/${{ env.REPO }}:latest
-          build-args: |
-            GITHUB_ACTOR=${{ github.actor }}
-            GITHUB_ACCESS_TOKEN=${{ secrets.GITHUB_TOKEN }}
+          tags: ${{ steps.tags.outputs.list }}

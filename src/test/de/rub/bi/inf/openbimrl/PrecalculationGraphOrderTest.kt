@@ -2,6 +2,7 @@ package de.rub.bi.inf.openbimrl
 
 import de.rub.bi.inf.openbimrl.utils.pathfinding.IfcTestHelper
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import javax.xml.bind.JAXBElement
 
@@ -10,6 +11,15 @@ import javax.xml.bind.JAXBElement
  * otherwise visualizers for planePlaneMetric.Straight (handle 2) can run before the metric.
  */
 class PrecalculationGraphOrderTest {
+
+    companion object {
+        @BeforeAll
+        @JvmStatic
+        fun loadNative() {
+            // Graph construction instantiates NativeFunction subclasses which touch JNA.
+            IfcTestHelper.loadNativeLibrary()
+        }
+    }
 
     @Test
     fun `wall metric straight visualizer runs after planePlaneMetric`() {
