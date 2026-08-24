@@ -18,7 +18,7 @@ OpenBimRL documents for defining precalculations and in extension perform rule c
 ### Requirements
 
 **Dependencies:**
-- [OpenBimRL-API](https://github.com/RUB-Informatik-im-Bauwesen/OpenBimRL)
+- [OpenBimRL-Schema](https://github.com/OpenBimRL/OpenBimRL-Schema) (`de.rub.bi.inf.openbimrl:schema`)
 - [IFCOpenShell](https://github.com/IfcOpenShell/IfcOpenShell) (prebuilt at `/opt/ifcopenshell` in the DevContainer image)
 
 **Build:** Bazel is primary — see [BUILD.md](BUILD.md) for `bazel build` / `bazel test` /

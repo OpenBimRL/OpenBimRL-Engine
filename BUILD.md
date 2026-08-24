@@ -96,7 +96,11 @@ OPENBIMRL_CUDA_OFFLOAD_ARCH=sm_89 \
 | `OPENBIMRL_CUDA_OFFLOAD_ARCH` | Target `sm_*` (optional; empty → CMake `nvidia-smi`) |
 | Host `CC`/`CXX` in `.bazelrc` | `/usr/bin/clang` / `clang++` (libomp); offload configs override native cmake only |
 
-Monorepo helper: `./scripts/dev-start.sh --gpu` / `--gpu-arch gfx1100` passes the ROCm config.
+From the monorepo root:
+
+```bash
+OPENBIMRL_ROCM_OFFLOAD_ARCH=gfx1100 bazel build //:rest --config=rocm_offload
+```
 
 ## Native library notes
 
@@ -117,15 +121,15 @@ Monorepo helper: `./scripts/dev-start.sh --gpu` / `--gpu-arch gfx1100` passes th
 
 ## Private / non-Central JVM deps
 
-`OpenBIMRL-API` and `BVH` are built from pinned GitHub source archives in
-`MODULE.bazel` via Bzlmod `use_repo_rule` + `http_archive` (`@openbimrl_api_src`,
-`@bvh_src`). Overlay BUILD files live under `third_party/`. All other deps use
-`rules_jvm_external`. Those private jars are **bundled** into the published
-Maven artifact (they are not published as separate packages).
+`OpenBimRL schema` (`@openbimrl_api_src`) and `BVH` are built from pinned GitHub
+source archives in `MODULE.bazel` via Bzlmod `use_repo_rule` + `http_archive`
+(`@openbimrl_api_src`, `@bvh_src`). Overlay BUILD files live under `third_party/`.
+All other deps use `rules_jvm_external`. Those private jars are **bundled** into
+the published Maven artifact (they are not published as separate packages).
 
 ## Publish to GitHub Packages (Maven)
 
-Coordinates: `inf.bi.rub.de:openbimrl-engine:<version>`  
+Coordinates: `de.rub.bi.inf.openbimrl.engine:core:<version>`  
 Repo URL: `https://maven.pkg.github.com/OpenBimRL/OpenBimRL-Engine`
 
 Uses `kt_jvm_export` + Bazel `//:openbimrl_engine_maven.publish`

@@ -1,5 +1,5 @@
 # Build, test, and publish OpenBimRL-Engine to GitHub Packages (Maven).
-# Artifact: inf.bi.rub.de:openbimrl-engine:YYYY.MM.DD
+# Artifact: de.rub.bi.inf.openbimrl.engine:core:YYYY.MM.DD
 # (classpath includes JNA libOpenBimRL-Engine-Native-x86_64.so)
 #
 # Path: bazel test → bazel run //:openbimrl_engine_maven.publish
@@ -56,13 +56,13 @@ jobs:
         clang++ --version
 
     - name: Set up JDK 21
-      uses: actions/setup-java@v5
+      uses: actions/setup-java@v5.7.0
       with:
         java-version: "21"
-        distribution: temurin
+        distribution: jetbrains
 
     - name: Install Bazelisk
-      uses: bazel-contrib/setup-bazel@0.15.0
+      uses: bazel-contrib/setup-bazel@0.19.0
 
     # Staging install under RUNNER_TEMP (ephemeral job disk), then copy to
     # OPENBIMRL_IFCOPENSHELL_PREFIX (/opt/ifcopenshell). Not Actions cache.

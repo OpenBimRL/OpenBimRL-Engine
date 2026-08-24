@@ -117,10 +117,10 @@ alias(
 # ---------------------------------------------------------------------------
 # Maven artifact (GitHub Packages) — GAV for REST consumers
 #
-# Coordinates: inf.bi.rub.de:openbimrl-engine:$(OPENBIMRL_ENGINE_VERSION)
+# Coordinates: de.rub.bi.inf.openbimrl.engine:core:$(OPENBIMRL_ENGINE_VERSION)
 # Default version is set in .bazelrc; CI overrides with YYYY.MM.DD.
 #
-# Private deps (OpenBIMRL-API, BVH) are bundled into the published jar.
+# Private deps (OpenBIMRL schema / BVH) are bundled into the published jar.
 # Maven Central deps are listed in the generated POM.
 # classpath resource libOpenBimRL-Engine-Native-x86_64.so (JNA) from :engine_lib.
 #
@@ -136,7 +136,7 @@ alias(
 
 kt_jvm_export(
     name = "openbimrl_engine_maven",
-    maven_coordinates = "inf.bi.rub.de:openbimrl-engine:$(OPENBIMRL_ENGINE_VERSION)",
+    maven_coordinates = "de.rub.bi.inf.openbimrl.engine:core:$(OPENBIMRL_ENGINE_VERSION)",
     tags = [
         "no-javadocs",
         "no-remote",
