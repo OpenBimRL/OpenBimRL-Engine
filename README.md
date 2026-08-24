@@ -23,7 +23,8 @@ OpenBimRL documents for defining precalculations and in extension perform rule c
 
 **Build:** Bazel is primary — see [BUILD.md](BUILD.md) for `bazel build` / `bazel test` /
 GitHub Packages publish / Docker (`llvm.dockerfile`, `rocm.dockerfile`, `nvcc.dockerfile`).
-There is no Engine `pom.xml`; Maven consumers (e.g. Engine-REST) use the published GitHub Packages artifact.
+There is no Engine `pom.xml`. Maven consumers (e.g. Engine-REST) use the published
+GitHub Packages artifact [`de.rub.bi.inf.openbimrl.engine:core`](https://github.com/OpenBimRL/OpenBimRL-Engine/packages/3211132).
 JNI migration is a separate track.
 
 ### Minimum Example

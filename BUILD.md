@@ -6,7 +6,7 @@ C-ABI native library are produced as classpath resource
 
 ## Prerequisites (DevContainer)
 
-- Bazelisk (`bazel`) — installed in monorepo `Dockerfile.dev`
+- Bazelisk (`bazel`) — installed in the DevContainer `Dockerfile.dev`
 - Prebuilt IfcOpenShell at `/opt/ifcopenshell` (`OPENBIMRL_IFCOPENSHELL_PREFIX`)
 - System LLVM clang (`/usr/bin/clang`, `/usr/bin/clang++`) + libomp — default for
   host tools and native cmake (same toolchain as `llvm.dockerfile`)
@@ -96,10 +96,8 @@ OPENBIMRL_CUDA_OFFLOAD_ARCH=sm_89 \
 | `OPENBIMRL_CUDA_OFFLOAD_ARCH` | Target `sm_*` (optional; empty → CMake `nvidia-smi`) |
 | Host `CC`/`CXX` in `.bazelrc` | `/usr/bin/clang` / `clang++` (libomp); offload configs override native cmake only |
 
-From the monorepo root:
-
 ```bash
-OPENBIMRL_ROCM_OFFLOAD_ARCH=gfx1100 bazel build //:rest --config=rocm_offload
+OPENBIMRL_ROCM_OFFLOAD_ARCH=gfx1100 bazel build //:engine_lib --config=rocm_offload
 ```
 
 ## Native library notes
@@ -166,8 +164,9 @@ On push to `main` / `master`:
 
 **Permissions:** `contents: read`, `packages: write` (uses `GITHUB_TOKEN`).
 
-OpenBimRL-Engine-REST stays on Maven and consumes this package; it is **not**
-migrated to Bazel.
+OpenBimRL-Engine-REST stays on Maven and consumes the published GitHub Packages
+artifact `de.rub.bi.inf.openbimrl.engine:core` (and the Engine Docker image for
+native IfcOpenShell / OCCT).
 
 ## Docker images
 
@@ -206,7 +205,7 @@ on push to `main`/`master` (linux/amd64):
 | `:rocm`, `:<YYYY.MM.DD>-rocm` | `rocm.dockerfile` |
 | `:nvcc`, `:<YYYY.MM.DD>-nvcc` | `nvcc.dockerfile` |
 
-Monorepo `Dockerfile.dev` remains the ROCm-equipped DevContainer (system clang for
+The DevContainer `Dockerfile.dev` remains the ROCm-equipped image (system clang for
 Bazel defaults + ROCm on PATH for `--gpu` / `rocm_offload`).
 
 ## Out of scope (Track B)
