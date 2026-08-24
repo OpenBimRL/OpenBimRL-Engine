@@ -116,6 +116,11 @@ OPENBIMRL_ROCM_OFFLOAD_ARCH=gfx1100 bazel build //:engine_lib --config=rocm_offl
 - Default compilers are `/usr/bin/clang` and `/usr/bin/clang++` in the Native
   module BUILD (`generate_crosstool_file = False`); `--config=rocm_offload`
   selects `/opt/rocm/llvm`; `--config=cuda_offload` keeps host clang + CUDA env.
+- `OpenBIMRL_Native` links `-static-libstdc++ -static-libgcc` by default
+  (`OPENBIMRL_STATIC_LIBSTDCXX=ON`): C++ runtime symbols ship inside the JNA
+  `.so` so published jars are not tied to the host `libstdc++.so.6` version.
+  IfcOpenShell / OCCT remain dynamic (Engine runtime image / `LD_LIBRARY_PATH`).
+  Does not remove the need for a compatible **glibc** or **libomp** on the host.
 
 ## Private / non-Central JVM deps
 
@@ -164,9 +169,9 @@ On push to `main` / `master`:
 
 **Permissions:** `contents: read`, `packages: write` (uses `GITHUB_TOKEN`).
 
-OpenBimRL-Engine-REST stays on Maven and consumes the published GitHub Packages
-artifact `de.rub.bi.inf.openbimrl.engine:core` (and the Engine Docker image for
-native IfcOpenShell / OCCT).
+OpenBimRL-Engine-REST is built with Bazel in its own repository and consumes
+the published GitHub Packages artifact `de.rub.bi.inf.openbimrl.engine:core`
+(and the Engine Docker image for native IfcOpenShell / OCCT).
 
 ## Docker images
 
