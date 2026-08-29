@@ -145,7 +145,7 @@ Repo URL: `https://maven.pkg.github.com/OpenBimRL/OpenBimRL-Engine`
 Uses `kt_jvm_export` + Bazel `//:openbimrl_engine_maven.publish`
 (`rules_jvm_external` 7.1+ MavenPublisher; requires `rules_java` 9 / Bazel 9).
 
-Default version is `2026.08.23` (`.bazelrc` / `MODULE.bazel`). CI uses
+Default version is `2026.08.29` (`.bazelrc` / `MODULE.bazel`). CI uses
 `YYYY.MM.DD` via `--define OPENBIMRL_ENGINE_VERSION=...`.
 
 ```bash

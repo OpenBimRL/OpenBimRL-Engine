@@ -5,7 +5,7 @@ common --noenable_workspace
 
 # Default Maven GAV version for //:openbimrl_engine_maven (matches MODULE.bazel).
 # CI overrides with --define OPENBIMRL_ENGINE_VERSION=YYYY.MM.DD
-common --define=OPENBIMRL_ENGINE_VERSION=2026.08.23
+common --define=OPENBIMRL_ENGINE_VERSION=2026.08.29
 
 # Compile for Java 17 bytecode; run on Java 21 (DevContainer default,
 # required by kmp-gltf-model class file version 65).

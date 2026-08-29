@@ -6,15 +6,15 @@ from the openbimrl_native module (git submodule at src/main/cpp).
 
 module(
     name = "openbimrl_engine",
-    version = "2026.08.23",
+    version = "2026.08.29",
 )
 
-bazel_dep(name = "rules_kotlin", version = "2.3.20")
+bazel_dep(name = "rules_kotlin", version = "2.4.10")
 # 7.1+ is required for MavenPublisher with rules_java 9 / Bazel 9
 # (6.9's MavenPublisherTest uses bare java_test and fails analysis).
 bazel_dep(name = "rules_jvm_external", version = "7.1")
-bazel_dep(name = "rules_java", version = "9.3.0")
-bazel_dep(name = "bazel_skylib", version = "1.8.2")
+bazel_dep(name = "rules_java", version = "9.8.0")
+bazel_dep(name = "bazel_skylib", version = "1.9.2")
 bazel_dep(name = "platforms", version = "1.0.0")
 
 # Temurin in Docker (--config=docker) uses local_jdk; expose the repo from
