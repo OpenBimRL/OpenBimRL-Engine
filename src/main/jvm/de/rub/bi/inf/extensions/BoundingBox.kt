@@ -17,7 +17,7 @@ fun BoundingBox.toRect(): Path2D {
     rect.lineTo(lower.x, upper.z)
     rect.lineTo(upper.x, upper.z)
     rect.lineTo(upper.x, lower.z)
-    //rect.closePath()
+    rect.closePath()
     return rect
 }
 

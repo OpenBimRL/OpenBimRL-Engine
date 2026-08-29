@@ -2,13 +2,12 @@ package de.rub.bi.inf.openbimrl.utils.pathfinding
 
 import de.rub.bi.inf.extensions.intersects
 import de.rub.bi.inf.extensions.toPoint2D
-import de.rub.bi.inf.nativelib.FunctionsNative
 import de.rub.bi.inf.nativelib.IfcPointer
+import de.rub.bi.inf.nativelib.NativeEngine
 import de.rub.bi.inf.openbimrl.utils.math.neighbors
 import io.github.offlinebrain.khexagon.coordinates.HexCoordinates
 import io.github.offlinebrain.khexagon.math.Layout
 import io.github.offlinebrain.khexagon.math.hexToPixel
-import com.sun.jna.Pointer
 import java.awt.Rectangle
 import java.awt.geom.Line2D
 import java.awt.geom.Path2D
@@ -103,7 +102,7 @@ fun movementCostNative(
     obstaclePointers: Collection<IfcPointer>,
     passagePointers: Collection<IfcPointer>,
 ): (HexCoordinates, HexCoordinates) -> Double {
-    val nativeLib = FunctionsNative.getInstance()
+    val nativeLib = NativeEngine
 
     val queue = ArrayDeque<HexCoordinates>()
     val reachable = LinkedHashSet<HexCoordinates>()
@@ -155,20 +154,19 @@ fun movementCostNative(
     }
 
     val outputCosts = DoubleArray(edges.size)
-    val passageArray = passagePointers.map { it as Pointer }.toTypedArray()
-    val obstacleArray = obstaclePointers.map { it as Pointer }.toTypedArray()
+    val passageList = passagePointers.toList()
+    val obstacleList = obstaclePointers.toList()
+    val passageHandles = LongArray(passageList.size) { passageList[it].handle }
+    val obstacleHandles = LongArray(obstacleList.size) { obstacleList[it].handle }
     if (edges.isNotEmpty()) {
-        nativeLib.calculate_path_edge_costs(
+        nativeLib.calculatePathEdgeCosts(
             pointsXY,
             nodes.size,
             edgePointIndices,
             edges.size,
-            passageArray,
-            passageArray.size,
-            obstacleArray,
-            obstacleArray.size,
-            outputCosts
-        )
+            passageHandles,
+            obstacleHandles,
+        ).copyInto(outputCosts)
     }
 
     val costs = HashMap<Pair<HexCoordinates, HexCoordinates>, Double>(edges.size * 2)

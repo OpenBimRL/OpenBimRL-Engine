@@ -2,7 +2,6 @@ package de.rub.bi.inf.openbimrl.functions.annotations
 
 import de.rub.bi.inf.openbimrl.functions.AbstractFunction
 import java.lang.reflect.Field
-import java.util.Collection
 
 data class FunctionFields(val inputs: Set<Field>, val outputs: Set<Field>)
 

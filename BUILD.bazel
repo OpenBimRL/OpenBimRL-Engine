@@ -13,7 +13,7 @@ define_kt_toolchain(
 )
 
 # ---------------------------------------------------------------------------
-# Native (JNA C ABI) — from @openbimrl_native → libOpenBimRL-Engine-Native-x86_64.so
+# Native (JNI) — from @openbimrl_native → libopenbimrl_jni.so
 # ---------------------------------------------------------------------------
 
 alias(
@@ -21,17 +21,30 @@ alias(
     actual = "@openbimrl_native//:openbimrl_native",
 )
 
-# JNA classpath resource (see FunctionsNative.NATIVE_LIBRARY_RESOURCE).
-# Stable arch-qualified name (no version): Maven GAV carries engine version.
+# Baked into EngineInfo.version (see openbimrl_engine_version.properties).
+genrule(
+    name = "engine_version_properties",
+    outs = ["openbimrl_engine_version.properties"],
+    cmd = """
+set -euo pipefail
+version="$(OPENBIMRL_ENGINE_VERSION)"
+if [[ -z "$${version}" ]]; then
+  version="dev"
+fi
+printf 'version=%s\\n' "$${version}" > '$@'
+""",
+)
+
+# JNI classpath resource (see NativeEngine.NATIVE_LIBRARY_RESOURCE).
 genrule(
     name = "native_lib_so",
     srcs = ["@openbimrl_native//:openbimrl_native"],
-    outs = ["libOpenBimRL-Engine-Native-x86_64.so"],
+    outs = ["libopenbimrl_jni.so"],
     cmd = """
 set -euo pipefail
-src=$$(echo "$(locations @openbimrl_native//:openbimrl_native)" | tr ' ' '\\n' | grep -E 'libOpenBIMRL_Native\\.so$$' | head -1)
+src=$$(echo "$(locations @openbimrl_native//:openbimrl_native)" | tr ' ' '\\n' | grep -E 'libopenbimrl_jni\\.so$$' | head -1)
 if [[ -z "$${src}" || ! -f "$${src}" ]]; then
-  echo "ERROR: libOpenBIMRL_Native.so not found in: $(locations @openbimrl_native//:openbimrl_native)" >&2
+  echo "ERROR: libopenbimrl_jni.so not found in: $(locations @openbimrl_native//:openbimrl_native)" >&2
   exit 1
 fi
 cp -f "$${src}" "$@"
@@ -42,7 +55,7 @@ cp -f "$${src}" "$@"
 )
 
 # ---------------------------------------------------------------------------
-# JVM / Kotlin library (JNA — FunctionsNative + native .so resource)
+# JVM / Kotlin library (JNI — NativeEngine + native .so resource)
 # ---------------------------------------------------------------------------
 
 ENGINE_JVM_SRCS = glob(
@@ -56,15 +69,13 @@ ENGINE_JVM_DEPS = [
     "@bvh_src//:bvh",
     "@openbimrl_api_src//:openbimrl_api",
     "@maven//:com_github_ajalt_colormath_colormath_jvm",
-    "@maven//:com_google_code_gson_gson",
     "@maven//:commons_io_commons_io",
     "@maven//:io_arrow_kt_arrow_core_jvm",
     "@maven//:io_github_offlinebrain_khexagon_jvm",
     "@maven//:java3d_j3d_core",
     "@maven//:javax_vecmath_vecmath",
-    "@maven//:javax_xml_bind_activation",
     "@maven//:javax_xml_bind_jaxb_api",
-    "@maven//:net_java_dev_jna_jna",
+    "@maven//:javax_xml_bind_activation",
     "@maven//:org_codeberg_iljo_kmp_gltf_model_kmp_gltf_model_jvm",
     "@maven//:org_glassfish_jaxb_jaxb_runtime",
     "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
@@ -76,6 +87,9 @@ ENGINE_JVM_DEPS = [
 kt_jvm_library(
     name = "engine_lib_jvm",
     srcs = ENGINE_JVM_SRCS,
+    resources = [
+        ":engine_version_properties",
+    ],
     deps = ENGINE_JVM_DEPS,
 )
 
@@ -83,6 +97,7 @@ kt_jvm_library(
     name = "engine_lib",
     srcs = ENGINE_JVM_SRCS,
     resources = [
+        ":engine_version_properties",
         ":native_lib_so",
     ],
     deps = ENGINE_JVM_DEPS,
@@ -122,7 +137,7 @@ alias(
 #
 # Private deps (OpenBIMRL schema / BVH) are bundled into the published jar.
 # Maven Central deps are listed in the generated POM.
-# classpath resource libOpenBimRL-Engine-Native-x86_64.so (JNA) from :engine_lib.
+# classpath resource libopenbimrl_jni.so from :engine_lib.
 #
 # Build only (produces *-project.jar + *-pom.xml):
 #   bazel build //:openbimrl_engine_maven --define OPENBIMRL_ENGINE_VERSION=YYYY.MM.DD
@@ -179,21 +194,139 @@ kt_jvm_library(
 
 java_test(
     name = "engine_tests",
-    size = "large",
+    size = "medium",
     args = [
         "--disable-banner",
         "--details=tree",
         "--select-class=de.rub.bi.inf.openbimrl.PrecalculationGraphOrderTest",
-        "--select-class=de.rub.bi.inf.openbimrl.parallel.ParallelChecksOpenBimRLTest",
-        "--select-class=de.rub.bi.inf.openbimrl.pathfinding.ShowDistancesOpenBimRLTest",
-        "--select-class=de.rub.bi.inf.openbimrl.pathfinding.PathfindingMinimalIfcTest",
         "--select-class=de.rub.bi.inf.openbimrl.visualization.GltfVisualComposerTest",
         "--select-class=de.rub.bi.inf.openbimrl.functions.annotations.FunctionPortDiscoveryTest",
         "--select-class=de.rub.bi.inf.openbimrl.functions.math.MaximumTest",
         "--select-class=de.rub.bi.inf.openbimrl.functions.math.BinaryNumericFunctionsTest",
-        "--select-class=de.rub.bi.inf.openbimrl.utils.pathfinding.PathFindingMovementCostTest",
         "--select-class=de.rub.bi.inf.openbimrl.utils.ifc.ElementApproximationServiceTest",
         "--select-class=de.rub.bi.inf.openbimrl.utils.math.DistanceTest",
+        "--select-class=de.rub.bi.inf.openbimrl.parallel.ParallelChecksOpenBimRLTest",
+    ],
+    data = TEST_FIXTURES,
+    jvm_flags = [
+        "-Djava.awt.headless=true",
+    ],
+    main_class = "org.junit.platform.console.ConsoleLauncher",
+    tags = [
+        "native",
+    ],
+    use_testrunner = False,
+    runtime_deps = [
+        ":engine_tests_lib",
+        "@maven//:org_junit_platform_junit_platform_console",
+    ],
+)
+
+java_test(
+    name = "engine_jni_smoke_test",
+    size = "medium",
+    args = [
+        "--disable-banner",
+        "--details=tree",
+        "--select-class=de.rub.bi.inf.nativelib.NativeEngineSmokeTest",
+    ],
+    data = TEST_FIXTURES,
+    jvm_flags = [
+        "-Djava.awt.headless=true",
+    ],
+    main_class = "org.junit.platform.console.ConsoleLauncher",
+    tags = [
+        "native",
+    ],
+    use_testrunner = False,
+    runtime_deps = [
+        ":engine_tests_lib",
+        "@maven//:org_junit_platform_junit_platform_console",
+    ],
+)
+
+# Pathfinding IFC integration (manual opt-in; PathfindingMinimalIfcTest hangs >60s).
+java_test(
+    name = "pathfinding_minimal_ifc_test",
+    size = "medium",
+    args = [
+        "--disable-banner",
+        "--details=tree",
+        "--select-class=de.rub.bi.inf.openbimrl.pathfinding.PathfindingMinimalIfcTest",
+    ],
+    data = TEST_FIXTURES,
+    jvm_flags = [
+        "-Djava.awt.headless=true",
+    ],
+    main_class = "org.junit.platform.console.ConsoleLauncher",
+    tags = [
+        "manual",
+        "native",
+    ],
+    use_testrunner = False,
+    runtime_deps = [
+        ":engine_tests_lib",
+        "@maven//:org_junit_platform_junit_platform_console",
+    ],
+)
+
+# Heavy pathfinding IFC integration tests (manual opt-in; show_distances ~2-5 min on GPU).
+java_test(
+    name = "show_distances_test",
+    size = "large",
+    args = [
+        "--disable-banner",
+        "--details=tree",
+        "--select-class=de.rub.bi.inf.openbimrl.pathfinding.ShowDistancesTest",
+    ],
+    data = TEST_FIXTURES,
+    jvm_flags = [
+        "-Djava.awt.headless=true",
+    ],
+    main_class = "org.junit.platform.console.ConsoleLauncher",
+    tags = [
+        "manual",
+        "native",
+    ],
+    use_testrunner = False,
+    runtime_deps = [
+        ":engine_tests_lib",
+        "@maven//:org_junit_platform_junit_platform_console",
+    ],
+)
+
+java_test(
+    name = "pathfinding_movement_cost_test",
+    size = "medium",
+    args = [
+        "--disable-banner",
+        "--details=tree",
+        "--select-class=de.rub.bi.inf.openbimrl.utils.pathfinding.PathFindingMovementCostTest",
+    ],
+    data = TEST_FIXTURES,
+    jvm_flags = [
+        "-Djava.awt.headless=true",
+    ],
+    main_class = "org.junit.platform.console.ConsoleLauncher",
+    tags = [
+        "manual",
+        "native",
+    ],
+    use_testrunner = False,
+    runtime_deps = [
+        ":engine_tests_lib",
+        "@maven//:org_junit_platform_junit_platform_console",
+    ],
+)
+
+# Parallel IFC rule checks (rails + walls parallelism fixtures).
+java_test(
+    name = "parallel_checks_test",
+    size = "medium",
+    args = [
+        "--disable-banner",
+        "--details=tree",
+        "--select-class=de.rub.bi.inf.openbimrl.parallel.ParallelChecksOpenBimRLTest",
     ],
     data = TEST_FIXTURES,
     jvm_flags = [

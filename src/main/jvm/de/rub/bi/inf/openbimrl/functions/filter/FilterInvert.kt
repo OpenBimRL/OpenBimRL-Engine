@@ -21,9 +21,12 @@ class FilterInvert(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
             filterMap["0"] = mask
         }
 
-        if (input0 is LinkedHashMap<*, *>) {
-            // dangerous cast!
-            filterMap = input0 as LinkedHashMap<Any, List<Boolean>>
+        if (input0 is Map<*, *>) {
+            filterMap = LinkedHashMap(
+                input0.mapNotNull { (key, value) ->
+                    if (value is List<*>) (key as Any) to value.filterIsInstance<Boolean>() else null
+                }.toMap(),
+            )
         }
 
         val resultValues = LinkedHashMap<Any, ArrayList<*>>()

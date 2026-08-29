@@ -78,13 +78,33 @@ class MapInvert(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
     }
 
     private fun appendInverted(target: LinkedHashMap<Any, Any>, item: Any?, key: Any?) {
-        val bucket = target.computeIfAbsent(item as Any) { ArrayList<Any>() } as ArrayList<Any>
-        bucket.add(key as Any)
+        val nonNullItem = item as Any
+        val nonNullKey = key as Any
+        when (val existing = target[nonNullItem]) {
+            is ArrayList<*> -> {
+                val list = ArrayList<Any>(existing.size + 1)
+                list.addAll(existing.filterIsInstance<Any>())
+                list.add(nonNullKey)
+                target[nonNullItem] = list
+            }
+            null -> target[nonNullItem] = arrayListOf(nonNullKey)
+            else -> target[nonNullItem] = arrayListOf(existing as Any, nonNullKey)
+        }
     }
 
     private fun appendInvertedSet(target: LinkedHashMap<Any, Any>, item: Any?, key: Any?) {
-        val bucket = target.computeIfAbsent(item as Any) { HashSet<Any>() } as HashSet<Any>
-        bucket.add(key as Any)
+        val nonNullItem = item as Any
+        val nonNullKey = key as Any
+        when (val existing = target[nonNullItem]) {
+            is HashSet<*> -> {
+                val set = HashSet<Any>(existing.size + 1)
+                set.addAll(existing.filterIsInstance<Any>())
+                set.add(nonNullKey)
+                target[nonNullItem] = set
+            }
+            null -> target[nonNullItem] = hashSetOf(nonNullKey)
+            else -> target[nonNullItem] = hashSetOf(existing as Any, nonNullKey)
+        }
     }
 }
 

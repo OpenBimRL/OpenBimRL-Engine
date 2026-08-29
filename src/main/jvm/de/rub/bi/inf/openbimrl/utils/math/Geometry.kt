@@ -36,5 +36,3 @@ fun normalized(vector: Vector3d): Vector3d =
 
 fun planeNormal(plane: Plane): Vector3d =
     normalized(Vector3d().apply { cross(plane.axisU, plane.axisV) })
-
-private fun Vector3d.lengthSquared(): Double = x * x + y * y + z * z

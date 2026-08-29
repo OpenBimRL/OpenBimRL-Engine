@@ -41,6 +41,10 @@ build --repo_env=CXX=/usr/bin/clang++
 # Requires /opt/rocm/llvm and an arch (env or rocminfo auto-detect).
 # Example:
 #   OPENBIMRL_ROCM_OFFLOAD_ARCH=gfx1100 bazel build //:native_lib_so --config=rocm_offload
+# Native RelWithDebInfo (.so keeps debug symbols for LLDB/GDB during JNI debugging).
+build:native_dbg --define=OPENBIMRL_NATIVE_DEBUG=ON
+test:native_dbg --define=OPENBIMRL_NATIVE_DEBUG=ON
+
 build:rocm_offload --define=OPENBIMRL_ENABLE_ROCM_OFFLOAD=ON
 
 # Opt-in NVIDIA CUDA OpenMP offload (WIP — see BUILD.md / nvcc.dockerfile).
@@ -60,6 +64,7 @@ build --curses=yes
 
 # Pass through host paths / offload toggles used by native cmake / IfcOpenShell
 build --action_env=HOME
+build --action_env=JAVA_HOME
 build --action_env=OPENBIMRL_IFCOPENSHELL_PREFIX
 build --action_env=OPENBIMRL_USE_PREBUILT_IFCOPENSHELL
 build --action_env=OPENBIMRL_ENABLE_ROCM_OFFLOAD

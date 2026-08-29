@@ -1,9 +1,7 @@
-"""OpenBimRL-Engine Bazel module (RFC-2 Track A).
+"""OpenBimRL-Engine Bazel module (RFC-2 Track A + B).
 
-Builds Kotlin/JVM and embeds the JNA C-ABI native library
-(libOpenBimRL-Engine-Native-x86_64.so) from the openbimrl_native module
-(git submodule at src/main/cpp).
-JNI / jni-bind is Track B and intentionally out of scope here.
+Builds Kotlin/JVM and embeds the JNI native library (libopenbimrl_jni.so)
+from the openbimrl_native module (git submodule at src/main/cpp).
 """
 
 module(
@@ -41,8 +39,6 @@ maven.install(
         # JVM deps for Engine (formerly listed in the removed Maven pom.xml).
         "commons-io:commons-io:2.17.0",
         "org.reflections:reflections:0.10.2",
-        "net.java.dev.jna:jna:5.15.0",
-        "com.google.code.gson:gson:2.11.0",
         "javax.xml.bind:activation:1.0.2",
         "javax.xml.bind:jaxb-api:2.3.1",
         "org.glassfish.jaxb:jaxb-runtime:2.3.1",
@@ -57,9 +53,14 @@ maven.install(
         "org.jetbrains.kotlin:kotlin-stdlib:2.3.10",
         "org.jetbrains.kotlin:kotlin-test-junit:2.3.10",
         # Tests (pom used junit-jupiter:RELEASE — pin a current Jupiter).
+        # Pin the full JUnit Platform stack: the monorepo @maven hub merges Engine +
+        # Engine-REST (spring-boot-starter-test → junit-jupiter:5.10.5 / platform 1.10.5).
         "org.junit.jupiter:junit-jupiter-api:5.11.4",
         "org.junit.jupiter:junit-jupiter-engine:5.11.4",
         "org.junit.jupiter:junit-jupiter-params:5.11.4",
+        "org.junit.platform:junit-platform-commons:1.11.4",
+        "org.junit.platform:junit-platform-engine:1.11.4",
+        "org.junit.platform:junit-platform-reporting:1.11.4",
         "org.junit.platform:junit-platform-console:1.11.4",
         "org.junit.platform:junit-platform-launcher:1.11.4",
     ],

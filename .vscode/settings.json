@@ -1,5 +1,13 @@
 {
-    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.configuration.updateBuildConfiguration": "disabled",
+    "java.import.maven.enabled": false,
+    "java.import.gradle.enabled": false,
+    "java.import.exclusions": [
+        "**/bazel-bin/**",
+        "**/bazel-out/**",
+        "**/bazel-testlogs/**",
+        "**/external/**"
+    ],
     "files.associations": {
         "*.css": "tailwindcss",
         "iostream": "cpp",

@@ -2,26 +2,18 @@ package de.rub.bi.inf.openbimrl
 
 import de.rub.bi.inf.logger.RuleLogger
 import de.rub.bi.inf.model.RuleBase
-import de.rub.bi.inf.nativelib.FunctionsNative
+import de.rub.bi.inf.nativelib.NativeEngine
 import de.rub.bi.inf.openbimrl.utils.OpenBimRLReader
 import java.io.File
 import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
     try {
-        FunctionsNative.create()
+        NativeEngine.loadNative()
     } catch (_: Exception) {
         println("Could not load native lib! Aborting...")
         exitProcess(42)
     }
-
-    try {
-        // ThreeDTester()
-    } catch (e: RuntimeException) {
-        // ignore
-    }
-
-    val functions = FunctionsNative.getInstance()
 
     if (args.isEmpty()) {
         println(usage())
@@ -31,7 +23,7 @@ fun main(args: Array<String>) {
     val openBimRlFiles = args.filter { arg -> arg.endsWith(".openbimrl") }.map { arg -> File(arg) }
     val ifcFile = args.find { arg -> arg.endsWith(".ifc") }
 
-    if (ifcFile != null && functions.initIfc(ifcFile)) {
+    if (ifcFile != null && NativeEngine.initIfc(ifcFile)) {
         println("model loaded successfully")
     } else println("no model loaded")
 
@@ -39,7 +31,7 @@ fun main(args: Array<String>) {
         println("no checking file loaded")
         exitProcess(1)
     }
-    val test = OpenBimRLReader(openBimRlFiles)
+    OpenBimRLReader(openBimRlFiles)
 
     for (ruleDef in RuleBase.getInstance().rules) {
         ruleDef.check(RuleLogger())
@@ -47,11 +39,6 @@ fun main(args: Array<String>) {
         println(ruleDef.resultObjects.size)
         println(ruleDef.getCheckingProtocol())
     }
-    /*
-    while (true) {
-         Thread.sleep(100000)
-    }
-    */
 
     exitProcess(0)
 }

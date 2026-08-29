@@ -1,101 +1,120 @@
 package de.rub.bi.inf.nativelib
 
-import com.google.gson.Gson
-import com.google.gson.annotations.SerializedName
-import com.sun.jna.Memory
-import com.sun.jna.Pointer
-import java.awt.geom.Path2D
-import java.awt.geom.Point2D
-import java.nio.charset.StandardCharsets
-import java.util.*
-import kotlin.collections.ArrayList
+@JvmInline
+value class IfcHandle(val value: Long) {
+    val isValid: Boolean get() = value != 0L
+}
 
 data class IfcData(
-    @SerializedName("ifc_class") val ifcClass: String,
-    @SerializedName("guid") val guid: String,
-    @SerializedName("properties") val propertySets: Map<String, Map<String, String>>,
-    @SerializedName("quantities") val quantitySets: Map<String, Map<String, Double>>,
+    val ifcClass: String,
+    val guid: String,
+    val propertySets: Map<String, Map<String, String>>,
+    val quantitySets: Map<String, Map<String, Double>>,
 )
 
-/**
- * for whatever reason the calculation of every memory allocation is wrong by a factor of 8. idk...
- */
-class IfcPointer : Pointer {
-    constructor(peer: Long) : super(peer)
+class IfcPointer(val handle: Long) {
+    private val ifcData: IfcData by lazy { loadIfcData() }
 
-    constructor(pointer: Pointer) : super(nativeValue(pointer))
+    val type: String get() = ifcData.ifcClass
+    val guid: String get() = ifcData.guid
+    val properties: Map<String, Map<String, String>> get() = ifcData.propertySets
+    val quantities: Map<String, Map<String, Double>> get() = ifcData.quantitySets
 
-    private val nativeLib: FunctionsLibrary = FunctionsNative.getInstance()
-    private val ifcData: IfcData = let {
-        val size = nativeLib.request_ifc_object_json_size(this)
-        val buffer = Memory(size.toLong() + 1)
-        buffer.clear()
-        nativeLib.ifc_object_to_json(buffer)
-
-        val test = Gson().fromJson(buffer.getString(0, StandardCharsets.UTF_8.name()), IfcData::class.java)
-
-        return@let test
+    val polygon: Lazy<java.util.Optional<java.awt.geom.Path2D.Double>> = lazy {
+        buildFootprintPolygon(NativeEngine.footprintPolygonXY(handle))
     }
 
-    val type = ifcData.ifcClass.trim()
-    val guid = ifcData.guid
-    val properties = ifcData.propertySets
-    val quantities = ifcData.quantitySets
+    fun toHandle(): IfcHandle = IfcHandle(handle)
 
-    val polygon: Lazy<Optional<Path2D.Double>> = lazy {
-        try {
-            val size = nativeLib.request_geometry_polygon(this)
-            if (size.toLong() < 1) return@lazy Optional.empty()
-            val memory = Memory(size.toLong() * Double.SIZE_BYTES)
-            nativeLib.copy_geometry_polygon(memory)
-            val values = memory.getDoubleArray(0, size.toInt()) // toInt is risky!
+    private fun loadIfcData(): IfcData {
+        val ifcClass = NativeEngine.ifcClass(handle).trim()
+        val guid = NativeEngine.ifcGuid(handle)
 
-            if (values.size < 2) return@lazy Optional.empty()
+        val propertySets = linkedMapOf<String, LinkedHashMap<String, String>>()
+        val flat = NativeEngine.ifcPropertiesFlat(handle)
+        var index = 0
+        while (index + 2 < flat.size) {
+            val psetName = flat[index++]
+            val propertyName = flat[index++]
+            val propertyValue = flat[index++]
+            propertySets.getOrPut(psetName) { linkedMapOf() }[propertyName] = propertyValue
+        }
 
-            val coordsList = ArrayList<Point2D.Double>(values.size / 2)
-            var x = .0
+        val quantitySets = linkedMapOf<String, LinkedHashMap<String, Double>>()
+        val quantityKeys = NativeEngine.ifcQuantityKeys(handle)
+        val quantityValues = NativeEngine.ifcQuantityValues(handle)
+        quantityKeys.forEachIndexed { valueIndex, encodedKey ->
+            val separator = encodedKey.indexOf('\t')
+            if (separator <= 0 || valueIndex >= quantityValues.size) return@forEachIndexed
+            val qsetName = encodedKey.substring(0, separator)
+            val quantityName = encodedKey.substring(separator + 1)
+            quantitySets.getOrPut(qsetName) { linkedMapOf() }[quantityName] =
+                quantityValues[valueIndex]
+        }
+
+        return IfcData(
+            ifcClass = ifcClass,
+            guid = guid,
+            propertySets = propertySets,
+            quantitySets = quantitySets,
+        )
+    }
+
+    companion object {
+        fun fromHandle(handle: Long): IfcPointer? = if (handle == 0L) null else IfcPointer(handle)
+
+        fun fromHandles(handles: LongArray): List<IfcPointer> = buildList {
+            for (handle in handles) {
+                fromHandle(handle)?.let { add(it) }
+            }
+        }
+
+        private fun buildFootprintPolygon(values: DoubleArray): java.util.Optional<java.awt.geom.Path2D.Double> {
+            if (values.size < 2) return java.util.Optional.empty()
+
+            val coords = ArrayList<java.awt.geom.Point2D.Double>(values.size / 2)
+            var x = 0.0
             for ((index, coordinate) in values.withIndex()) {
                 if (index % 2 == 0) {
                     x = coordinate
                     continue
                 }
-                val y = coordinate
-                coordsList.add(Point2D.Double(x, y))
+                coords.add(java.awt.geom.Point2D.Double(x, coordinate))
             }
 
-            val triangleList = ArrayList<Path2D.Double>(coordsList.size / 3)
-            var triangle: Optional<Path2D.Double> = Optional.empty()
+            val triangles = ArrayList<java.awt.geom.Path2D.Double>(coords.size / 3)
+            var triangle: java.util.Optional<java.awt.geom.Path2D.Double> = java.util.Optional.empty()
 
-            for ((index, coordinate) in coordsList.withIndex()) {
-                //ThreeDTester.addPoint(coordinate)
-                if (triangle.isEmpty)
-                {
-                    val tri = Path2D.Double()
-                    tri.moveTo(coordinate.x, coordinate.y)
-                    triangle = Optional.of(tri)
+            for ((index, coordinate) in coords.withIndex()) {
+                if (triangle.isEmpty) {
+                    val path = java.awt.geom.Path2D.Double()
+                    path.moveTo(coordinate.x, coordinate.y)
+                    triangle = java.util.Optional.of(path)
                     continue
                 }
 
-                val tri = triangle.get()
-                tri.lineTo(coordinate.x, coordinate.y)
-                if (index % 3 == 2){
-                    tri.closePath()
-                    // ThreeDTester.addShape(tri)
-                    triangleList.add(tri)
-                    triangle = Optional.empty()
+                val path = triangle.get()
+                path.lineTo(coordinate.x, coordinate.y)
+                if (index % 3 == 2) {
+                    path.closePath()
+                    triangles.add(path)
+                    triangle = java.util.Optional.empty()
                 }
             }
 
-            if (triangleList.isEmpty()) return@lazy Optional.empty()
-            if (triangleList.size == 1) return@lazy Optional.of(triangleList[0])
+            if (triangles.isEmpty()) return java.util.Optional.empty()
+            if (triangles.size == 1) return java.util.Optional.of(triangles[0])
 
-            val polygon = Path2D.Double()
-            triangleList.forEach { polygon.append(it, false) }
-            return@lazy Optional.of(polygon)
-        } catch (e: Exception) {
-            throw RuntimeException("encountered: " + e.stackTraceToString())
+            val polygon = java.awt.geom.Path2D.Double()
+            triangles.forEach { polygon.append(it, false) }
+            return java.util.Optional.of(polygon)
         }
     }
+
+    override fun equals(other: Any?): Boolean =
+        other is IfcPointer && handle == other.handle
+
+    override fun hashCode(): Int = handle.hashCode()
+
+    override fun toString(): String = "IfcPointer(handle=$handle, guid=$guid, type=$type)"
 }
-
-

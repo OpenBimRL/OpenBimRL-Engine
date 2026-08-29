@@ -16,7 +16,7 @@ class PrecalculationGraphOrderTest {
         @BeforeAll
         @JvmStatic
         fun loadNative() {
-            // Graph construction instantiates NativeFunction subclasses which touch JNA.
+            // Graph construction instantiates NativeFunction subclasses which touch JNI.
             IfcTestHelper.loadNativeLibrary()
         }
     }

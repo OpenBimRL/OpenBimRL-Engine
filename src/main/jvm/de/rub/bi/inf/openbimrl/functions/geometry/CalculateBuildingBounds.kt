@@ -1,19 +1,15 @@
 package de.rub.bi.inf.openbimrl.functions.geometry
 
+import de.rub.bi.inf.nativelib.NativeEngine
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.NativeFunction
 import de.rub.bi.inf.openbimrl.functions.annotations.FunctionOutput
 import de.rub.bi.inf.openbimrl.functions.annotations.FunctionPort
 import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction
-import de.rub.bi.inf.openbimrl.utils.boundingBoxFromMemory
-import java.util.*
+import de.rub.bi.inf.openbimrl.utils.boundingBoxFromDoubles
 import javax.media.j3d.BoundingBox
 import javax.vecmath.Point3d
 
-/**
- * returns the Buildings bounding box
- * @author Florian Becker
- */
 @OpenBIMRLFunction(
     description = "Returns the building's bounding box.",
     outputs = [
@@ -28,10 +24,9 @@ class CalculateBuildingBounds(nodeProxy: NodeProxy) : NativeFunction(nodeProxy) 
     @FunctionOutput(1)
     var centerPoint: Point3d? = null
 
-    override fun executeNative() = nativeLib.calculatingBuildingBounds()
-
-    override fun handleMemory(memoryQueue: Queue<MemoryStructure>) {
-        val (center, bbox) = boundingBoxFromMemory(memoryQueue.remove())
+    override fun executeNative() {
+        val values = NativeEngine.calculatingBuildingBounds() ?: return
+        val (center, bbox) = boundingBoxFromDoubles(values)
         bounds = bbox
         centerPoint = center
     }

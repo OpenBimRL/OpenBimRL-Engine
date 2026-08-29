@@ -1,13 +1,12 @@
 package de.rub.bi.inf.openbimrl.functions.ifc
 
-import com.sun.jna.Pointer
 import de.rub.bi.inf.nativelib.IfcPointer
+import de.rub.bi.inf.nativelib.NativeEngine
 import de.rub.bi.inf.openbimrl.NodeProxy
 import de.rub.bi.inf.openbimrl.functions.NativeFunction
 import de.rub.bi.inf.openbimrl.functions.annotations.FunctionPort
 import de.rub.bi.inf.openbimrl.functions.annotations.OpenBIMRLFunction
-import de.rub.bi.inf.openbimrl.utils.boundingBoxFromMemory
-import java.util.*
+import de.rub.bi.inf.openbimrl.utils.boundingBoxFromDoubles
 import javax.media.j3d.BoundingBox
 import javax.vecmath.Point3d
 
@@ -22,47 +21,29 @@ import javax.vecmath.Point3d
     ],
 )
 class GetBoundingBox(nodeProxy: NodeProxy) : NativeFunction(nodeProxy) {
-    private var currentPointer: IfcPointer? = null
-
-    override fun handlePointerInput(at: Int): Pointer? {
-        if (currentPointer == null) throw IndexOutOfBoundsException("tried to call native function with insufficient elements")
-        return currentPointer
-    }
-
     override fun executeNative() {
         when (val input = getInput<Any>(0)) {
-            is IfcPointer -> {
-                currentPointer = input
-                nativeLib.getBoundingBox()
-            }
-
-            is Collection<*> -> input.filterIsInstance<IfcPointer>().forEach {
-                currentPointer = it
-                nativeLib.getBoundingBox()
+            is IfcPointer -> applyBoundingBox(input)
+            is Collection<*> -> {
+                val elements = input.filterIsInstance<IfcPointer>()
+                val centers = ArrayList<Point3d>(elements.size)
+                val boxes = ArrayList<BoundingBox>(elements.size)
+                elements.forEach { element ->
+                    val bounds = NativeEngine.getBoundingBox(element.handle) ?: return@forEach
+                    val (center, box) = boundingBoxFromDoubles(bounds)
+                    centers.add(center)
+                    boxes.add(box)
+                }
+                setResult(0, boxes)
+                setResult(1, centers)
             }
         }
     }
 
-    override fun handleMemory(memoryQueue: Queue<MemoryStructure>) {
-        when (getInput<Any>(0)) {
-            is IfcPointer -> {
-                val result = boundingBoxFromMemory(memoryQueue.remove())
-                setResult(0, result.second)
-                setResult(1, result.first)
-            }
-
-            is Collection<*> -> {
-                val centerPoints = ArrayList<Point3d>(memoryQueue.size)
-                val bBoxes = ArrayList<BoundingBox>(memoryQueue.size)
-
-                for ((index, element) in memoryQueue.withIndex()) {
-                    val result = boundingBoxFromMemory(element)
-                    centerPoints.add(index, result.first)
-                    bBoxes.add(index, result.second)
-                }
-                setResult(0, bBoxes)
-                setResult(1, centerPoints)
-            }
-        }
+    private fun applyBoundingBox(element: IfcPointer) {
+        val bounds = NativeEngine.getBoundingBox(element.handle) ?: return
+        val (center, box) = boundingBoxFromDoubles(bounds)
+        setResult(0, box)
+        setResult(1, center)
     }
 }

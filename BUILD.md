@@ -1,8 +1,7 @@
 # Bazel build (primary)
 
-OpenBimRL-Engine builds with **Bazel** (Bzlmod). The Kotlin/JVM sources and the JNA
-C-ABI native library are produced as classpath resource
-`libOpenBimRL-Engine-Native-x86_64.so` (no JNI / jni-bind).
+OpenBimRL-Engine builds with **Bazel** (Bzlmod). The Kotlin/JVM sources and the JNI
+native library are produced as classpath resource `libopenbimrl_jni.so`.
 
 ## Prerequisites (DevContainer)
 
@@ -23,20 +22,29 @@ C-ABI native library are produced as classpath resource
 From `OpenBimRL-Engine/`:
 
 ```bash
-# Native cmake (rules_foreign_cc) + Kotlin/JVM library with embedded native .so
+# Native cmake (rules_foreign_cc) + Kotlin/JVM library with embedded JNI .so
 bazel build //:engine_lib
 
 # Console entrypoint
 bazel build //:console
 
-# Fat jar for Docker / `java -jar` (Main-Class + embedded native .so)
+# Fat jar for Docker / `java -jar` (Main-Class + embedded JNI .so)
 bazel build //:console_app_deploy.jar
 
 # Fast JVM-only tests (no IFC execute paths required)
 bazel test //:engine_unit_tests
 
-# Full Engine Surefire-equivalent suite (loads native .so via JNA)
+# Full Engine Surefire-equivalent suite (loads libopenbimrl_jni.so via JNI).
+# Includes parallel rails/walls IFC checks; pathfinding integration stays manual.
 bazel test //:engine_tests
+
+# Standalone parallel IFC checks (also covered by //:engine_tests):
+bazel test //:parallel_checks_test
+
+# Manual opt-in pathfinding IFC integration (hangs under investigation — RFC-2):
+bazel test //:pathfinding_minimal_ifc_test
+bazel test //:show_distances_test
+bazel test //:pathfinding_movement_cost_test
 ```
 
 `bazel test //...` from Engine is **JVM-focused** (e.g. `engine_unit_tests`,
@@ -59,7 +67,7 @@ Useful flags:
 
 ```bash
 bazel test //:engine_tests --test_output=all
-bazel build //:native_lib_so      # JNA resource only
+bazel build //:native_lib_so      # JNI resource only
 bazel build //:openbimrl_native  # alias → @openbimrl_native//:openbimrl_native
 ```
 
@@ -108,19 +116,18 @@ OPENBIMRL_ROCM_OFFLOAD_ARCH=gfx1100 bazel build //:engine_lib --config=rocm_offl
 - `//:openbimrl_native` aliases `@openbimrl_native//:openbimrl_native`
   (`OPENBIMRL_USE_PREBUILT_IFCOPENSHELL=ON`).
 - `//:native_lib_so` renames/copies that artifact to classpath resource
-  `libOpenBimRL-Engine-Native-x86_64.so` (stable name; arch = amd64/x86_64 only.
-  Engine version stays on the Maven GAV / `OPENBIMRL_ENGINE_VERSION`, not in the
-  resource filename, so JNA lookup does not churn with each publish).
-- JNA loads it via `FunctionsNative.create()`
-  (`FunctionsNative.NATIVE_LIBRARY_RESOURCE`).
-- Default compilers are `/usr/bin/clang` and `/usr/bin/clang++` in the Native
-  module BUILD (`generate_crosstool_file = False`); `--config=rocm_offload`
-  selects `/opt/rocm/llvm`; `--config=cuda_offload` keeps host clang + CUDA env.
-- `OpenBIMRL_Native` links `-static-libstdc++ -static-libgcc` by default
-  (`OPENBIMRL_STATIC_LIBSTDCXX=ON`): C++ runtime symbols ship inside the JNA
+  `libopenbimrl_jni.so` (Engine version stays on the Maven GAV /
+  `OPENBIMRL_ENGINE_VERSION`, not in the resource filename).
+- JVM loads it via `NativeEngine.loadNative()` (`System.loadLibrary("openbimrl_jni")`
+  with classpath extraction fallback).
+- `openbimrl_jni` links `-static-libstdc++ -static-libgcc` by default
+  (`OPENBIMRL_STATIC_LIBSTDCXX=ON`): C++ runtime symbols ship inside the JNI
   `.so` so published jars are not tied to the host `libstdc++.so.6` version.
   IfcOpenShell / OCCT remain dynamic (Engine runtime image / `LD_LIBRARY_PATH`).
   Does not remove the need for a compatible **glibc** or **libomp** on the host.
+- Default compilers are `/usr/bin/clang` and `/usr/bin/clang++` in the Native
+  module BUILD (`generate_crosstool_file = False`); `--config=rocm_offload`
+  selects `/opt/rocm/llvm`; `--config=cuda_offload` keeps host clang + CUDA env.
 
 ## Private / non-Central JVM deps
 
@@ -210,9 +217,13 @@ on push to `main`/`master` (linux/amd64):
 | `:rocm`, `:<YYYY.MM.DD>-rocm` | `rocm.dockerfile` |
 | `:nvcc`, `:<YYYY.MM.DD>-nvcc` | `nvcc.dockerfile` |
 
-The DevContainer `Dockerfile.dev` remains the ROCm-equipped image (system clang for
-Bazel defaults + ROCm on PATH for `--gpu` / `rocm_offload`).
+The DevContainer `Dockerfile.dev` uses Ubuntu 24.04 (matches ROCm LLVM glibc),
+system clang for Bazel defaults, and `--config=rocm_offload` when needed. Java 21
+is installed via `.devcontainer/devcontainer.json` features.
 
-## Out of scope (Track B)
+## JNI / jni-bind (Track B)
 
-JNI, jni-bind, rewriting `FunctionsLibrary` / `init_function` callbacks.
+JVM↔native interop uses `NativeEngine` (`external` methods) and `libopenbimrl_jni.so`
+built with [jni-bind](https://github.com/google/jni-bind) Release-1.5.1 via Bazel
+`http_archive` (`@jni-bind//:jni_bind`, `#include "jni_bind.h"`). Opaque IFC handles
+are `jlong` / `IfcPointer.handle`.
