@@ -117,7 +117,11 @@ jobs:
 
     - name: Set publish version
       id: version
-      run: echo "value=$(date -u +%Y).$(date -u +%m).$(date -u +%d)" >> "$GITHUB_OUTPUT"
+      run: |
+        # Keep Maven GAV in sync with MODULE.bazel (REST shim pins this version).
+        version=$(grep -E '^\s*version\s*=' MODULE.bazel | head -1 | sed -E 's/.*"([^"]+)".*/\1/')
+        echo "value=${version}" >> "$GITHUB_OUTPUT"
+        echo "Publishing Engine Maven package as ${version}"
 
     - name: Publish to GitHub Packages
       env:
