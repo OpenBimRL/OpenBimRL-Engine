@@ -131,11 +131,13 @@ OPENBIMRL_ROCM_OFFLOAD_ARCH=gfx1100 bazel build //:engine_lib --config=rocm_offl
 
 ## Private / non-Central JVM deps
 
-`OpenBimRL schema` (`@openbimrl_api_src`) and `BVH` are built from pinned GitHub
-source archives in `MODULE.bazel` via Bzlmod `use_repo_rule` + `http_archive`
-(`@openbimrl_api_src`, `@bvh_src`). Overlay BUILD files live under `third_party/`.
-All other deps use `rules_jvm_external`. Those private jars are **bundled** into
-the published Maven artifact (they are not published as separate packages).
+`OpenBimRL schema` is a Bzlmod dep (`@openbimrl_schema//:openbimrl_api`) pinned
+via `archive_override` to a GitHub source archive in `MODULE.bazel` (standalone
+Engine / CI). In the monorepo, the Workspace root replaces that with
+`local_path_override` → `OpenBimRL-Schema/`. `BVH` is still an `http_archive`
+(`@bvh_src`) with an overlay BUILD under `third_party/`. All other deps use
+`rules_jvm_external`. Those private jars are **bundled** into the published
+Maven artifact (they are not published as separate packages).
 
 ## Publish to GitHub Packages (Maven)
 
