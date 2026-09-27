@@ -67,7 +67,7 @@ ENGINE_JVM_SRCS = glob(
 
 ENGINE_JVM_DEPS = [
     "@bvh_src//:bvh",
-    "@openbimrl_api_src//:openbimrl_api",
+    "@openbimrl_schema//:openbimrl_api",
     "@maven//:com_github_ajalt_colormath_colormath_jvm",
     "@maven//:commons_io_commons_io",
     "@maven//:io_arrow_kt_arrow_core_jvm",
@@ -79,6 +79,13 @@ ENGINE_JVM_DEPS = [
     "@maven//:org_codeberg_iljo_kmp_gltf_model_kmp_gltf_model_jvm",
     "@maven//:org_glassfish_jaxb_jaxb_runtime",
     "@maven//:org_jetbrains_kotlin_kotlin_stdlib",
+    "@maven//:org_jetbrains_kotlin_kotlin_scripting_common",
+    "@maven//:org_jetbrains_kotlin_kotlin_scripting_jvm",
+    "@maven//:org_jetbrains_kotlin_kotlin_scripting_jvm_host",
+    "@maven//:org_jetbrains_kotlin_kotlin_scripting_compiler_embeddable",
+    "@maven//:org_jetbrains_kotlin_kotlin_scripting_compiler_impl_embeddable",
+    "@maven//:org_jetbrains_kotlin_kotlin_compiler_embeddable",
+    "@maven//:org_jetbrains_kotlinx_kotlinx_coroutines_core_jvm",
     "@maven//:org_jetbrains_kotlinx_kotlinx_serialization_json_jvm",
     "@maven//:org_reflections_reflections",
 ]
@@ -355,6 +362,7 @@ java_test(
         "--select-class=de.rub.bi.inf.openbimrl.functions.math.MaximumTest",
         "--select-class=de.rub.bi.inf.openbimrl.functions.annotations.FunctionPortDiscoveryTest",
         "--select-class=de.rub.bi.inf.openbimrl.visualization.GltfVisualComposerTest",
+        "--select-class=de.rub.bi.inf.openbimrl.functions.script.CustomScriptFunctionTest",
     ],
     jvm_flags = [
         "-Djava.awt.headless=true",
