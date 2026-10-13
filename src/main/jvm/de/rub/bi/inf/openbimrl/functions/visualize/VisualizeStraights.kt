@@ -25,7 +25,7 @@ class VisualizeStraights(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy), Vi
     lateinit var straights: Collection<Straight>
 
     @FunctionInput(1, nullable = true)
-    var segmentLength: String? = null
+    var segmentLength: Double? = null
 
     @FunctionInput(2, nullable = true)
     var referencePointSize: String? = null
@@ -42,7 +42,7 @@ class VisualizeStraights(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy), Vi
     override fun execute() {
         composer?.addStraights(
             straights,
-            parseOptionalDouble(segmentLength, DEFAULT_SEGMENT_LENGTH),
+            segmentLength ?: DEFAULT_SEGMENT_LENGTH,
             parseOptionalDouble(referencePointSize, DEFAULT_REFERENCE_POINT_SIZE),
             parseColor(color, SRGB.from255(0, 128, 255, 255)),
         )

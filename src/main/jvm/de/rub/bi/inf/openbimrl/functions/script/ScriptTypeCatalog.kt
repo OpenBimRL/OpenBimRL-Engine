@@ -2,6 +2,7 @@ package de.rub.bi.inf.openbimrl.functions.script
 
 import de.rub.bi.inf.openbimrl.utils.math.Plane
 import de.rub.bi.inf.openbimrl.utils.math.Straight
+import javax.media.j3d.BoundingBox
 import javax.vecmath.Point3d
 import javax.vecmath.Vector3d
 import kotlin.reflect.KClass
@@ -24,6 +25,7 @@ object ScriptTypeCatalog {
         Entry("Boolean", "Boolean flag", Boolean::class),
         Entry("Point3d", "javax.vecmath.Point3d", Point3d::class),
         Entry("Vector3d", "javax.vecmath.Vector3d", Vector3d::class),
+        Entry("BoundingBox", "javax.media.j3d.BoundingBox", BoundingBox::class),
         Entry("Straight", "Infinite line (point + direction)", Straight::class),
         Entry("Plane", "Infinite plane (point + two axes)", Plane::class),
         Entry("Collection", "Untyped collection", Collection::class),

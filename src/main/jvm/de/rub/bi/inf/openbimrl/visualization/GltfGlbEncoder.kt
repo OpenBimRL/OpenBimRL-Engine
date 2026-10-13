@@ -51,6 +51,7 @@ internal object GltfGlbEncoder {
         spheres: List<SphereInstance>,
         boxes: List<BoxInstance>,
         lines: List<LineSegmentInstance> = emptyList(),
+        textLabels: List<TextLabelInstance> = emptyList(),
         originX: Double = 0.0,
         originY: Double = 0.0,
         originZ: Double = 0.0,
@@ -181,6 +182,22 @@ internal object GltfGlbEncoder {
                 indices[index * 2 + 1] = (index * 2 + 1).toShort()
             }
             addLineMesh(assembly, "geometryLines", vertices, indices)
+        }
+
+        textLabels.forEachIndexed { index, label ->
+            assembly.nodes.add(
+                Node(
+                    name = "label$index",
+                    translation = listOf(
+                        label.x.toFloat(),
+                        label.y.toFloat(),
+                        label.z.toFloat(),
+                    ),
+                    extras = buildJsonObject {
+                        put(GltfVisualComposer.LABEL_EXTRAS_KEY, label.text)
+                    },
+                ),
+            )
         }
 
         val contentNodeIndices = assembly.nodes.indices.toSet()

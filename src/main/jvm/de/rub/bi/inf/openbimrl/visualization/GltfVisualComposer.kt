@@ -49,6 +49,17 @@ internal data class LineSegmentInstance(
 )
 
 /**
+ * Billboard text anchor in Three.js Y-up viewer space (same frame as [LineSegmentInstance]).
+ * Encoded as an empty glTF node with [LABEL_EXTRAS_KEY] in extras.
+ */
+internal data class TextLabelInstance(
+    val x: Double,
+    val y: Double,
+    val z: Double,
+    val text: String,
+)
+
+/**
  * Accumulates check visuals and encodes them as a binary GLB (glTF 2.0).
  *
  * Input geometry from IFC uses Z-up world coordinates (x, y, z).
@@ -64,9 +75,13 @@ class GltfVisualComposer {
     private val sphereInstances = mutableListOf<SphereInstance>()
     private val boxInstances = mutableListOf<BoxInstance>()
     private val lineInstances = mutableListOf<LineSegmentInstance>()
+    private val textLabelInstances = mutableListOf<TextLabelInstance>()
 
     val isEmpty: Boolean
-        get() = sphereInstances.isEmpty() && boxInstances.isEmpty() && lineInstances.isEmpty()
+        get() = sphereInstances.isEmpty() &&
+            boxInstances.isEmpty() &&
+            lineInstances.isEmpty() &&
+            textLabelInstances.isEmpty()
 
     fun addDistanceHeatmap(
         points: Collection<Point3d>,
@@ -162,6 +177,8 @@ class GltfVisualComposer {
 
             addLineSegment(start, end)
             addSphere(center, referencePointSize, srgb)
+            val labelPos = Point3d(center).apply { y += referencePointSize * 4.0 }
+            addText(labelPos, formatLength(effectiveLength))
         }
     }
 
@@ -197,6 +214,8 @@ class GltfVisualComposer {
             }
             addLineSegment(origin, normalEnd)
             addSphere(origin, referencePointSize, srgb)
+            val labelPos = Point3d(origin).apply { y += referencePointSize * 4.0 }
+            addText(labelPos, formatLength(halfExtent * 2.0))
         }
     }
 
@@ -249,6 +268,19 @@ class GltfVisualComposer {
         )
     }
 
+    /** [point] is engine XZY; converted to Three.js viewer space like spheres/lines. */
+    private fun addText(point: Point3d, text: String) {
+        if (text.isBlank()) return
+        textLabelInstances.add(
+            TextLabelInstance(
+                x = point.x,
+                y = point.y,
+                z = -point.z,
+                text = text,
+            ),
+        )
+    }
+
     fun toGlb(): ByteArray? {
         if (isEmpty) return null
         val origin = computeLocalOrigin()
@@ -256,6 +288,7 @@ class GltfVisualComposer {
             localizeSpheres(origin),
             localizeBoxes(origin),
             localizeLines(origin),
+            localizeTextLabels(origin),
             originX = origin[0],
             originY = origin[1],
             originZ = origin[2],
@@ -283,6 +316,12 @@ class GltfVisualComposer {
             sx += (it.x1 + it.x2) * 0.5
             sy += (it.y1 + it.y2) * 0.5
             sz += (it.z1 + it.z2) * 0.5
+            count++
+        }
+        textLabelInstances.forEach {
+            sx += it.x
+            sy += it.y
+            sz += it.z
             count++
         }
         if (count == 0) return doubleArrayOf(0.0, 0.0, 0.0)
@@ -315,7 +354,23 @@ class GltfVisualComposer {
             )
         }
 
+    private fun localizeTextLabels(origin: DoubleArray): List<TextLabelInstance> =
+        textLabelInstances.map {
+            it.copy(x = it.x - origin[0], y = it.y - origin[1], z = it.z - origin[2])
+        }
+
     companion object {
         private const val DEFAULT_SPHERE_RADIUS = 0.25
+        internal const val LABEL_EXTRAS_KEY = "openbimrlLabel"
+
+        private fun formatLength(value: Double): String {
+            if (!value.isFinite()) return value.toString()
+            val rounded = kotlin.math.round(value * 100.0) / 100.0
+            return if (rounded == rounded.toLong().toDouble()) {
+                rounded.toLong().toString()
+            } else {
+                rounded.toString()
+            }
+        }
     }
 }

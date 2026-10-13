@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import javax.media.j3d.BoundingBox
 import javax.vecmath.Point3d
 
 class CustomScriptFunctionTest {
@@ -53,6 +54,25 @@ class CustomScriptFunctionTest {
         assertTrue(wrapped.contains("var result: Any? = null"))
         assertTrue(wrapped.contains("var other: Any? = null"))
         assertTrue(wrapped.contains("""mapOf("result" to result, "other" to other)"""))
+    }
+
+    @Test
+    fun `evaluator resolves BoundingBox lower upper extensions`() {
+        val box = BoundingBox(Point3d(0.0, 1.0, 2.0), Point3d(3.0, 4.0, 5.0))
+        val result = KtsScriptEvaluator.eval(
+            userSource = """
+                val lo = box.lower()
+                val hi = box.upper()
+                result = Point3d(hi.x - lo.x, hi.y - lo.y, hi.z - lo.z)
+            """.trimIndent(),
+            inputBindings = mapOf("box" to box),
+            inputPorts = listOf(ScriptPort("box", typeHint = "BoundingBox")),
+            outputPorts = listOf(ScriptPort("result", typeHint = "Point3d")),
+        )
+        val out = result.outputs["result"] as Point3d
+        assertEquals(3.0, out.x, 1e-9)
+        assertEquals(3.0, out.y, 1e-9)
+        assertEquals(3.0, out.z, 1e-9)
     }
 
     @Test

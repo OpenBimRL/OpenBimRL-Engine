@@ -66,6 +66,8 @@ class GltfVisualComposerTest {
         val json = String(glb!!, Charsets.UTF_8)
         assertTrue(json.contains("geometryLines"))
         assertTrue(json.contains("unitSphere"))
+        assertTrue(json.contains("openbimrlLabel"))
+        assertTrue(json.contains("\"20\""))
         // Local-origin encoding: IFC y=1.435 → Three z=-1.435 is preserved via
         // crsOrigin translation and/or relative mesh data.
         assertTrue(json.contains("crsOrigin") || json.contains("-1.435"))
@@ -91,6 +93,9 @@ class GltfVisualComposerTest {
         val json = String(glb!!, Charsets.UTF_8)
         assertTrue(json.contains("geometryLines"))
         assertTrue(json.contains("unitSphere"))
+        assertTrue(json.contains("openbimrlLabel"))
+        // halfExtent=2.0 → full edge length label "4"
+        assertTrue(json.contains("\"4\""))
     }
 
     @Test

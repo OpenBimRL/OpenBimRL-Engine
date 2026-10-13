@@ -161,11 +161,30 @@ class OpenRule(modelCheck: ModelCheckType, precalculations: PrecalculationsType?
     private fun handleRuleIdentifier(logger: RuleLogger): Boolean {
         var allParametersAvailable = true
 
-        modelCheck.getRuleIdentifiers().getRuleIdentifier().forEach { ri ->
+        modelCheck.getRuleIdentifiers()?.getRuleIdentifier()?.forEach { ri ->
+            val sourceId = ri.getSource()
+            if (sourceId.isNullOrBlank()) {
+                allParametersAvailable = false
+                checkingProtocol.add(
+                    "RuleIdentifier '${ri.getLabel()}' has no source (not connected to a precalculation node)",
+                )
+                ruleIDtoValueMap[ri.getLabel()] = null
+                return@forEach
+            }
 
-            // unsafe assumption of not null
-            val nodeProxy = precalculationContext!!.getNodeProxy(ri.getSource())
-            val value = nodeProxy.function.results[ri.getSourceHandle()]
+            val nodeProxy = precalculationContext?.getNodeProxy(sourceId)
+            if (nodeProxy == null) {
+                allParametersAvailable = false
+                checkingProtocol.add(
+                    "RuleIdentifier '${ri.getLabel()}' references missing node '$sourceId'",
+                )
+                ruleIDtoValueMap[ri.getLabel()] = null
+                return@forEach
+            }
+
+            val handle = ri.getSourceHandle()
+            val results = nodeProxy.function.results
+            val value = results.getOrNull(handle)
 
             logger.logResult(ri.getLabel(), value)
 

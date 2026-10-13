@@ -22,6 +22,11 @@ object OpenBimRlScriptCompilationConfiguration : ScriptCompilationConfiguration(
     defaultImports(
         "javax.vecmath.Point3d",
         "javax.vecmath.Vector3d",
+        "javax.media.j3d.BoundingBox",
+        "de.rub.bi.inf.extensions.lower",
+        "de.rub.bi.inf.extensions.upper",
+        "de.rub.bi.inf.extensions.center",
+        "de.rub.bi.inf.extensions.toRect",
         "de.rub.bi.inf.openbimrl.utils.math.Straight",
         "de.rub.bi.inf.openbimrl.utils.math.Plane",
         "kotlin.collections.listOf",

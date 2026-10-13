@@ -131,3 +131,21 @@ jobs:
       run: |
         bazel run //:openbimrl_engine_maven.publish \
           --define OPENBIMRL_ENGINE_VERSION=${{ steps.version.outputs.value }}
+
+    # Optional: re-trigger REST as soon as the JAR is published (same-org PAT with
+    # repo scope on OpenBimRL-Engine-REST → secret CROSS_REPO_DISPATCH_TOKEN).
+    # REST also polls for the package on push, so this is only an accelerator.
+    - name: Notify Engine-REST (repository_dispatch)
+      env:
+        DISPATCH_TOKEN: ${{ secrets.CROSS_REPO_DISPATCH_TOKEN }}
+        ENGINE_VERSION: ${{ steps.version.outputs.value }}
+      run: |
+        set -euo pipefail
+        if [ -z "${DISPATCH_TOKEN}" ]; then
+          echo "CROSS_REPO_DISPATCH_TOKEN unset — REST will pick up via its Maven wait step"
+          exit 0
+        fi
+        GH_TOKEN="${DISPATCH_TOKEN}" gh api repos/OpenBimRL/OpenBimRL-Engine-REST/dispatches \
+          -f event_type=engine-maven-published \
+          -f "client_payload[engine_version]=${ENGINE_VERSION}" \
+          -f "client_payload[engine_sha]=${GITHUB_SHA}"
