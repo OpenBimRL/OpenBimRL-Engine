@@ -41,10 +41,13 @@ abstract class AbstractFunction(@JvmField protected var nodeProxy: NodeProxy) {
                         this, getInputAsTypedCollection(position, annotation.collectionType.java)
                     )
                 } else {
-                    if (!annotation.nullable && getInput<Any?>(position) == null) throw InvalidFunctionInputException("Parameter with name ${it.name} is not Nullable!")
+                    val raw = getInput<Any?>(position)
+                    if (!annotation.nullable && raw == null) {
+                        throw InvalidFunctionInputException("Parameter with name ${it.name} is not Nullable!")
+                    }
                     try {
                         it.isAccessible = true
-                        it.set(this, it.type.cast(getInput(position)))
+                        it.set(this, coerceScalarInput(raw, it.type))
                     } catch (e: IllegalAccessException) {
                         throw InvalidFunctionDefinitionException(
                             "cannot access member ${it.name} of class ${javaClass.name}",
@@ -112,6 +115,23 @@ abstract class AbstractFunction(@JvmField protected var nodeProxy: NodeProxy) {
 
     private fun isNumericCollectionType(type: Class<*>): Boolean =
         type == Double::class.java || type == java.lang.Double.TYPE
+
+    private fun isDoubleFieldType(type: Class<*>): Boolean =
+        type == Double::class.javaObjectType || type == Double::class.javaPrimitiveType
+
+    /**
+     * Coerce edge data into the annotated field type.
+     * TextInput nodes always emit [String]; numeric ports (e.g. visualize segment length)
+     * need String/Number → Double conversion — same as [coerceToDouble] for collections.
+     */
+    private fun coerceScalarInput(value: Any?, fieldType: Class<*>): Any? {
+        if (value == null) return null
+        if (fieldType.isInstance(value)) return value
+        if (isDoubleFieldType(fieldType)) {
+            return coerceToDouble(value)
+        }
+        return fieldType.cast(value)
+    }
 
     private fun coerceToDouble(value: Any?): Double {
         if (value == null) {

@@ -60,12 +60,32 @@ class CustomScriptFunction(nodeProxy: NodeProxy) : AbstractFunction(nodeProxy) {
 
         val bindings = LinkedHashMap<String, Any?>()
         inputPorts.forEach { port ->
-            bindings[port.name] = getInput<Any?>(port.position)
+            // Mirror AbstractFunction injectInputs: coerce by mapper typeHint
+            // (e.g. Double ← String / single-element Collection).
+            bindings[port.name] = ScriptInputCoercion.coerce(getInput<Any?>(port.position), port)
         }
 
-        val evalResult = KtsScriptEvaluator.eval(source, bindings, inputPorts, outputPorts)
-        outputPorts.forEach { port ->
-            setResult(port.position, evalResult.outputs[port.name])
+        val consolePrefix = consolePrefix(node.alias, node.id)
+
+        try {
+            val evalResult = KtsScriptEvaluator.eval(source, bindings, inputPorts, outputPorts)
+            ScriptConsole.appendPrefixed(consolePrefix, evalResult.stdout)
+            outputPorts.forEach { port ->
+                setResult(port.position, evalResult.outputs[port.name])
+            }
+        } catch (e: KtsScriptEvaluator.ScriptEvalException) {
+            ScriptConsole.appendPrefixed(consolePrefix, e.stdout)
+            ScriptConsole.append("$consolePrefix: ERROR ${e.message}")
+            e.reports.forEach { ScriptConsole.append("$consolePrefix:   $it") }
+            throw e
+        }
+    }
+
+    companion object {
+        fun consolePrefix(alias: String?, nodeId: String?): String {
+            val name = alias?.takeIf { it.isNotBlank() } ?: "Script"
+            val id = nodeId?.takeIf { it.isNotBlank() } ?: "?"
+            return "$name-$id"
         }
     }
 }

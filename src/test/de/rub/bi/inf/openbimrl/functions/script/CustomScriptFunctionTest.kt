@@ -87,4 +87,65 @@ class CustomScriptFunctionTest {
         }
         assertTrue(ex.reports.isNotEmpty() || ex.message!!.isNotBlank())
     }
+
+    @Test
+    fun `evaluator captures println stdout`() {
+        val result = KtsScriptEvaluator.eval(
+            userSource = """
+                println("hello-debug")
+                result = 1
+            """.trimIndent(),
+            inputBindings = emptyMap(),
+            inputPorts = emptyList(),
+            outputPorts = listOf(ScriptPort("result")),
+        )
+        assertEquals(1, result.outputs["result"])
+        assertTrue(result.stdout.contains("hello-debug"), "stdout was: ${result.stdout}")
+    }
+
+    @Test
+    fun `compile only reports success for valid script`() {
+        val result = KtsScriptEvaluator.compile(
+            userSource = "result = 42",
+            inputPorts = emptyList(),
+            outputPorts = listOf(ScriptPort("result")),
+        )
+        assertTrue(result.ok)
+    }
+
+    @Test
+    fun `consolePrefix uses alias and node id`() {
+        assertEquals("MyScript-n1", CustomScriptFunction.consolePrefix("MyScript", "n1"))
+        assertEquals("Script-n1", CustomScriptFunction.consolePrefix(null, "n1"))
+    }
+
+    @Test
+    fun `Double port coerces String and single-element collection`() {
+        val port = ScriptPort("a", typeHint = "Double")
+        assertEquals(10.5, ScriptInputCoercion.coerce("10,5", port))
+        assertEquals(12.0, ScriptInputCoercion.coerce(listOf(12.0), port))
+        assertEquals(3.0, ScriptInputCoercion.coerce(listOf("3"), port))
+        assertEquals(7.0, ScriptInputCoercion.coerce(listOf(1, 7.0), port)) // filterIsInstance<Double> first
+    }
+
+    @Test
+    fun `script with Double port skips manual conversion when coerced`() {
+        val port = ScriptPort("a", typeHint = "Double")
+        val coerced = ScriptInputCoercion.coerce(listOf(12.5), port)
+        val result = KtsScriptEvaluator.eval(
+            userSource = """
+                val limit = 10.0
+                bigger = a != null && a > limit
+                smaller = a != null && a <= limit
+            """.trimIndent(),
+            inputBindings = mapOf("a" to coerced),
+            inputPorts = listOf(port),
+            outputPorts = listOf(
+                ScriptPort("bigger", typeHint = "Boolean"),
+                ScriptPort("smaller", typeHint = "Boolean"),
+            ),
+        )
+        assertEquals(true, result.outputs["bigger"])
+        assertEquals(false, result.outputs["smaller"])
+    }
 }
